@@ -22,11 +22,56 @@
     const predictedTeamsContainer = document.getElementById('predictedTeamsContainer');
     const gameSyncNotice = document.getElementById('gameSyncNotice');
 
+    const fixtureSelect = document.getElementById('fixtureSelect');
+    const leagueButtons = document.querySelectorAll('.league-btn');
+
     let currentSelectedImage = null;
+    let selectedLeague = 'england';
     let detectedMatches = [];
 
-    // All known teams in SportyBet Instant Virtuals
+    // Complete catalog of all teams across England, Spain, Germany, and Italy
+    const ALL_LEAGUES_FIXTURES = {
+        england: [
+            ['NRW', 'NEW', 'Norwich vs Newcastle'],
+            ['WAT', 'WHU', 'Watford vs West Ham'],
+            ['EVE', 'AST', 'Everton vs Aston Villa'],
+            ['WOL', 'SOU', 'Wolves vs Southampton'],
+            ['CRY', 'BUR', 'Crystal Palace vs Burnley'],
+            ['CHE', 'LEE', 'Chelsea vs Leeds'],
+            ['ARS', 'BRE', 'Arsenal vs Brentford'],
+            ['MCI', 'FUL', 'Man City vs Fulham'],
+            ['BHA', 'TOT', 'Brighton vs Tottenham']
+        ],
+        spain: [
+            ['RMA', 'BAR', 'Real Madrid vs Barcelona'],
+            ['ATM', 'SEV', 'Atl. Madrid vs Sevilla'],
+            ['VIL', 'BET', 'Villarreal vs Real Betis'],
+            ['RSO', 'ATH', 'Real Sociedad vs Athletic Bilbao'],
+            ['VAL', 'CEL', 'Valencia vs Celta Vigo'],
+            ['GET', 'GIR', 'Getafe vs Girona'],
+            ['ESP', 'MAL', 'Espanyol vs Mallorca'],
+            ['RAY', 'OSA', 'Rayo Vallecano vs Osasuna']
+        ],
+        germany: [
+            ['BAY', 'DOR', 'Bayern Munich vs Dortmund'],
+            ['LEI', 'LEV', 'RB Leipzig vs Leverkusen'],
+            ['FRA', 'WOB', 'Frankfurt vs Wolfsburg'],
+            ['STU', 'MGL', 'Stuttgart vs Monchengladbach'],
+            ['HOF', 'FRE', 'Hoffenheim vs Freiburg'],
+            ['AUG', 'MAI', 'Augsburg vs Mainz'],
+            ['UNI', 'BRE', 'Union Berlin vs Werder Bremen']
+        ],
+        italy: [
+            ['INT', 'MIL', 'Inter Milan vs AC Milan'],
+            ['JUV', 'NAP', 'Juventus vs Napoli'],
+            ['ROM', 'LAZ', 'AS Roma vs Lazio'],
+            ['ATA', 'FIO', 'Atalanta vs Fiorentina'],
+            ['TOR', 'BOL', 'Torino vs Bologna']
+        ]
+    };
+
     const KNOWN_TEAMS = [
+        // England
         { code: 'NRW', name: 'Norwich', aliases: ['norwich', 'nrw'] },
         { code: 'NEW', name: 'Newcastle', aliases: ['newcastle', 'new'] },
         { code: 'WAT', name: 'Watford', aliases: ['watford', 'wat'] },
@@ -46,19 +91,59 @@
         { code: 'MUN', name: 'Man United', aliases: ['man united', 'manchester united', 'mun'] },
         { code: 'LIV', name: 'Liverpool', aliases: ['liverpool', 'liv'] },
         { code: 'TOT', name: 'Tottenham', aliases: ['tottenham', 'spurs', 'tot'] },
-        { code: 'BHA', name: 'Brighton', aliases: ['brighton', 'bha'] }
+        { code: 'BHA', name: 'Brighton', aliases: ['brighton', 'bha'] },
+        // Spain
+        { code: 'RMA', name: 'Real Madrid', aliases: ['real madrid', 'rma', 'madrid'] },
+        { code: 'BAR', name: 'Barcelona', aliases: ['barcelona', 'bar', 'barca'] },
+        { code: 'ATM', name: 'Atl. Madrid', aliases: ['atletico', 'atm'] },
+        { code: 'SEV', name: 'Sevilla', aliases: ['sevilla', 'sev'] },
+        { code: 'VIL', name: 'Villarreal', aliases: ['villarreal', 'vil'] },
+        { code: 'BET', name: 'Real Betis', aliases: ['betis', 'bet'] },
+        { code: 'RSO', name: 'Real Sociedad', aliases: ['sociedad', 'rso'] },
+        { code: 'ATH', name: 'Athletic Bilbao', aliases: ['bilbao', 'ath'] },
+        { code: 'VAL', name: 'Valencia', aliases: ['valencia', 'val'] },
+        // Germany
+        { code: 'BAY', name: 'Bayern Munich', aliases: ['bayern', 'bay'] },
+        { code: 'DOR', name: 'Dortmund', aliases: ['dortmund', 'dor', 'bvb'] },
+        { code: 'LEI', name: 'RB Leipzig', aliases: ['leipzig', 'lei'] },
+        { code: 'LEV', name: 'Leverkusen', aliases: ['leverkusen', 'lev'] },
+        // Italy
+        { code: 'INT', name: 'Inter Milan', aliases: ['inter', 'int'] },
+        { code: 'MIL', name: 'AC Milan', aliases: ['milan', 'mil'] },
+        { code: 'JUV', name: 'Juventus', aliases: ['juventus', 'juv', 'juve'] },
+        { code: 'NAP', name: 'Napoli', aliases: ['napoli', 'nap'] },
+        { code: 'ROM', name: 'AS Roma', aliases: ['roma', 'rom'] },
+        { code: 'LAZ', name: 'Lazio', aliases: ['lazio', 'laz'] }
     ];
 
-    const DEFAULT_MATCHUPS = [
-        ['NRW', 'NEW'],
-        ['WAT', 'WHU'],
-        ['EVE', 'AST'],
-        ['WOL', 'SOU'],
-        ['CRY', 'BUR'],
-        ['CHE', 'LEE'],
-        ['ARS', 'BRE'],
-        ['MCI', 'FUL']
-    ];
+    // Populate fixture dropdown
+    function populateFixtures(league) {
+        if (!fixtureSelect) return;
+        const matches = ALL_LEAGUES_FIXTURES[league] || ALL_LEAGUES_FIXTURES.england;
+        fixtureSelect.innerHTML = matches.map(m => `
+            <option value="${m[0]}_${m[1]}">${m[2]} (${m[0]} vs ${m[1]})</option>
+        `).join('');
+    }
+
+    // League buttons handler
+    leagueButtons.forEach(btn => {
+        btn.addEventListener('click', () => {
+            leagueButtons.forEach(b => {
+                b.classList.remove('active');
+                b.style.borderColor = 'rgba(255,255,255,0.1)';
+                b.style.background = 'transparent';
+                b.style.color = 'var(--muted)';
+            });
+            btn.classList.add('active');
+            btn.style.borderColor = '#ea0725';
+            btn.style.background = 'rgba(234,7,37,0.15)';
+            btn.style.color = '#fff';
+            selectedLeague = btn.getAttribute('data-league');
+            populateFixtures(selectedLeague);
+        });
+    });
+
+    populateFixtures('england');
 
     // Load active voucher state
     let voucherState = JSON.parse(localStorage.getItem('activeVoucher') || JSON.stringify({
@@ -95,7 +180,7 @@
         fetchCurrentPrediction();
     })();
 
-    // Handle File Selection with OCR and Team Extraction
+    // Handle File Selection with OCR and Exact Team Matching
     fileInput.addEventListener('change', async (e) => {
         const file = e.target.files[0];
         if (!file) return;
@@ -108,53 +193,73 @@
 
             detectedTeamsBadge.style.display = 'inline-flex';
             detectedTeamsText.textContent = 'Scanning screenshot for match fixtures...';
-            statusMsg.textContent = 'Extracting team names & odds matrix from image...';
+            statusMsg.textContent = 'Analyzing image characters and teams...';
             statusMsg.style.color = 'var(--gold)';
 
             let extractedTeams = [];
 
-            // Run Tesseract OCR if available
+            // Run Tesseract OCR
             if (window.Tesseract) {
                 try {
                     const result = await Tesseract.recognize(currentSelectedImage, 'eng', {
                         logger: m => {
                             if (m.status === 'recognizing text') {
-                                detectedTeamsText.textContent = `OCR Analyzing (${Math.round(m.progress * 100)}%)...`;
+                                detectedTeamsText.textContent = `OCR Scanning (${Math.round(m.progress * 100)}%)...`;
                             }
                         }
                     });
 
                     const textLower = (result.data.text || '').toLowerCase();
-                    // Match against known teams
+
+                    // Detect which league is shown in the screenshot
+                    if (textLower.includes('spain') || textLower.includes('laliga')) selectedLeague = 'spain';
+                    else if (textLower.includes('germany') || textLower.includes('bundesliga')) selectedLeague = 'germany';
+                    else if (textLower.includes('italy') || textLower.includes('serie a')) selectedLeague = 'italy';
+                    else if (textLower.includes('england') || textLower.includes('premier')) selectedLeague = 'england';
+
+                    // Update league buttons
+                    leagueButtons.forEach(b => {
+                        if (b.getAttribute('data-league') === selectedLeague) {
+                            b.click();
+                        }
+                    });
+
+                    // Search for known teams in the OCR text
                     KNOWN_TEAMS.forEach(t => {
-                        const matched = t.aliases.some(alias => textLower.includes(alias));
+                        const matched = t.aliases.some(alias => {
+                            // match whole words or code
+                            const regex = new RegExp(`\\b${alias}\\b`, 'i');
+                            return regex.test(textLower) || textLower.includes(alias);
+                        });
                         if (matched && !extractedTeams.some(x => x.code === t.code)) {
                             extractedTeams.push(t);
                         }
                     });
                 } catch (ocrErr) {
-                    console.warn('OCR fallback triggered:', ocrErr);
+                    console.warn('OCR error:', ocrErr);
                 }
             }
 
-            // Build match pairs from extracted teams or fallback pairs
+            // Build match pairs
             detectedMatches = [];
             if (extractedTeams.length >= 2) {
                 for (let i = 0; i < extractedTeams.length - 1; i += 2) {
                     detectedMatches.push([extractedTeams[i].code, extractedTeams[i+1].code]);
                 }
+                detectedTeamsBadge.style.display = 'inline-flex';
+                detectedTeamsText.textContent = `Extracted from Screenshot: ${detectedMatches.map(m => `${m[0]} vs ${m[1]}`).join(' | ')}`;
+                statusMsg.textContent = `Detected ${extractedTeams.length} teams from screenshot. Ready to resolve!`;
+                statusMsg.style.color = '#34c759';
+            } else {
+                // If OCR couldn't detect clear text, use selected fixture
+                const selVal = fixtureSelect ? fixtureSelect.value : 'NRW_NEW';
+                const [h, a] = selVal.split('_');
+                detectedMatches = [[h, a]];
+                detectedTeamsBadge.style.display = 'inline-flex';
+                detectedTeamsText.textContent = `Selected Fixture: ${h} vs ${a}`;
+                statusMsg.textContent = `Using ${h} vs ${a} from ${selectedLeague.toUpperCase()}. You can change it above anytime.`;
+                statusMsg.style.color = '#34c759';
             }
-
-            // If fewer than 2 teams recognized, use default authentic match list
-            if (detectedMatches.length === 0) {
-                const shuffled = [...DEFAULT_MATCHUPS].sort(() => 0.5 - Math.random());
-                detectedMatches = shuffled.slice(0, 4);
-            }
-
-            detectedTeamsBadge.style.display = 'inline-flex';
-            detectedTeamsText.textContent = `Identified: ${detectedMatches.map(m => `${m[0]} vs ${m[1]}`).join(' | ')}`;
-            statusMsg.textContent = 'Teams identified! Click below to resolve winning predictions.';
-            statusMsg.style.color = '#34c759';
         };
         reader.readAsDataURL(file);
     });
