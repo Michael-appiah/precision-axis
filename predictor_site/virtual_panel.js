@@ -247,6 +247,26 @@
                 }
             }
 
+            // Render all teams seen in image
+            const seenTeamsCard = document.getElementById('seenTeamsCard');
+            const seenTeamsList = document.getElementById('seenTeamsList');
+            const seenTeamsCount = document.getElementById('seenTeamsCount');
+
+            if (extractedTeams.length > 0) {
+                if (seenTeamsCard && seenTeamsList && seenTeamsCount) {
+                    seenTeamsCard.style.display = 'block';
+                    seenTeamsCount.textContent = `${extractedTeams.length} TEAMS IDENTIFIED`;
+                    seenTeamsList.innerHTML = extractedTeams.map(t => `
+                        <div style="background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.18); border-radius: 4px; padding: 5px 9px; display: inline-flex; align-items: center; gap: 6px;">
+                            <span style="font-family: var(--font-mono); font-weight: 800; color: #00E676; font-size: 11.5px;">${t.code}</span>
+                            <span style="font-size: 12px; color: #fff; font-weight: 600;">${t.name}</span>
+                        </div>
+                    `).join('');
+                }
+            } else {
+                if (seenTeamsCard) seenTeamsCard.style.display = 'none';
+            }
+
             // Build match pairs
             detectedMatches = [];
             if (extractedTeams.length >= 2) {
