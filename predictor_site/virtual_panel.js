@@ -197,6 +197,8 @@
             statusMsg.style.color = 'var(--gold)';
 
             let extractedTeams = [];
+            const ocrDebugDetails = document.getElementById('ocrDebugDetails');
+            const ocrDebugText = document.getElementById('ocrDebugText');
 
             // Run Tesseract OCR
             if (window.Tesseract) {
@@ -209,7 +211,13 @@
                         }
                     });
 
-                    const textLower = (result.data.text || '').toLowerCase();
+                    const rawText = result.data.text || '';
+                    const textLower = rawText.toLowerCase();
+
+                    if (ocrDebugDetails && ocrDebugText) {
+                        ocrDebugDetails.style.display = 'block';
+                        ocrDebugText.textContent = `OCR Detected Raw Words: ${rawText.replace(/\s+/g, ' ').slice(0, 150)}...`;
+                    }
 
                     // Detect which league is shown in the screenshot
                     if (textLower.includes('spain') || textLower.includes('laliga')) selectedLeague = 'spain';
@@ -227,7 +235,6 @@
                     // Search for known teams in the OCR text
                     KNOWN_TEAMS.forEach(t => {
                         const matched = t.aliases.some(alias => {
-                            // match whole words or code
                             const regex = new RegExp(`\\b${alias}\\b`, 'i');
                             return regex.test(textLower) || textLower.includes(alias);
                         });
@@ -248,16 +255,26 @@
                 }
                 detectedTeamsBadge.style.display = 'inline-flex';
                 detectedTeamsText.textContent = `Extracted from Screenshot: ${detectedMatches.map(m => `${m[0]} vs ${m[1]}`).join(' | ')}`;
-                statusMsg.textContent = `Detected ${extractedTeams.length} teams from screenshot. Ready to resolve!`;
+                statusMsg.textContent = `Identified ${detectedMatches.length} match pairs from screenshot. Ready to resolve!`;
+                statusMsg.style.color = '#34c759';
+            } else if (extractedTeams.length === 1) {
+                // Find a fixture containing this team
+                const foundTeam = extractedTeams[0].code;
+                const matches = ALL_LEAGUES_FIXTURES[selectedLeague] || ALL_LEAGUES_FIXTURES.england;
+                const match = matches.find(m => m[0] === foundTeam || m[1] === foundTeam) || matches[0];
+                detectedMatches = [[match[0], match[1]]];
+                detectedTeamsBadge.style.display = 'inline-flex';
+                detectedTeamsText.textContent = `Identified from Screenshot: ${match[0]} vs ${match[1]}`;
+                statusMsg.textContent = `Detected ${foundTeam} in screenshot. Matched to ${match[0]} vs ${match[1]}. Ready!`;
                 statusMsg.style.color = '#34c759';
             } else {
-                // If OCR couldn't detect clear text, use selected fixture
+                // If OCR text was unreadable or blurry, use the selected fixture
                 const selVal = fixtureSelect ? fixtureSelect.value : 'NRW_NEW';
                 const [h, a] = selVal.split('_');
                 detectedMatches = [[h, a]];
                 detectedTeamsBadge.style.display = 'inline-flex';
                 detectedTeamsText.textContent = `Selected Fixture: ${h} vs ${a}`;
-                statusMsg.textContent = `Using ${h} vs ${a} from ${selectedLeague.toUpperCase()}. You can change it above anytime.`;
+                statusMsg.textContent = `Screenshot text unclear. Using ${h} vs ${a} from ${selectedLeague.toUpperCase()}. You can select your match above.`;
                 statusMsg.style.color = '#34c759';
             }
         };
