@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Predictor Panel &ndash; Spin da' Bottle</title>
+    <link rel="stylesheet" href="panel.css">
+    <!-- FontAwesome CDN -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+    <script>
+        (async () => {
+            const token = localStorage.getItem('paxis_session');
+            if (!token) {
+                window.location.href = 'auth.html';
+                return;
+            }
+            try {
+                const res = await fetch('/.netlify/functions/handle-session', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ sessionToken: token, action: 'GET_SESSION' })
+                });
+                const data = await res.json();
+                if (!res.ok || !data.success) {
+                    localStorage.removeItem('paxis_session');
+                    window.location.href = 'auth.html';
+                    return;
+                }
+                if (!data.activeVoucher) {
+                    window.location.href = 'enter_voucher.html';
+                    return;
+                }
+                if (!data.bettingUsername || !data.bettingPhone) {
+                    window.location.href = 'link_app.html';
+                }
+            } catch (e) {
+                window.location.href = 'auth.html';
+            }
+        })();
+    </script>
+</head>
+<body>
+    <div class="panel-container">
+        <!-- Back Link -->
+        <a href="../index.html" style="color: var(--muted); text-decoration: none; font-size: 11px; font-weight: 700; margin-bottom: 12px; display: inline-block; text-transform: uppercase;">&larr; Back to Lobby</a>
+        
+        <!-- Header -->
+        <header>
+            <h1>PRECISION AXIS CLIENT</h1>
+            <p class="subtitle">Query active entropy resolvers & parse decrypted prediction keys</p>
+        </header>
+
+        <!-- Active Voucher Status -->
+        <div class="tier-selector">
+            <span class="section-label">NODE LICENSE STATUS</span>
+            <div class="tier-cards">
+                <div class="tier-card active" id="activeVoucherBadge" style="text-align: center; width: 100%; cursor: default;">
+                    <span class="tier-amount" id="activeVoucherCost">NO ACTIVE VOUCHER</span>
+                    <span class="tier-trials" id="activeVoucherTrials">0 Trials Available</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Trials Display -->
+        <div class="trials-box">
+            <span class="trials-label">DECRYPTED QUERIES REMAINING</span>
+            <div class="trials-count-row">
+                <span class="trials-count" id="trialsCount">0</span>
+                <span class="trials-total" id="trialsTotal">/ 0</span>
+            </div>
+            <div class="trials-bar-bg">
+                <div class="trials-bar-fill" id="trialsBarFill" style="width: 0%;"></div>
+            </div>
+        </div>
+
+        <!-- Active Prediction Box -->
+        <div class="status-box">
+            <span class="status-label">RESOLVED ENTROPY DIRECTION</span>
+            <span class="status-value" id="currentOutcome">PENDING</span>
+        </div>
+
+        <!-- Action Button -->
+        <button class="predict-btn" id="predictBtn">QUERY RESOLVER</button>
+
+        <div class="status-msg" id="statusMsg"></div>
+
+        <!-- History -->
+        <div class="history-section">
+            <span class="history-title">LOGGED ENTROPY QUERIES</span>
+            <div class="history-list" id="historyList">
+                <div class="history-item-empty" id="historyEmpty">No logged queries</div>
+            </div>
+        </div>
+
+        <!-- Info Footer -->
+        <div class="info-section">
+            NODE WARNING: All generated entropy keys are signed and cached. System sync protocols bind resolved values to active game sessions dynamically.
+        </div>
+
+    </div>
+    <script src="panel.js"></script>
+</body>
+</html>
+

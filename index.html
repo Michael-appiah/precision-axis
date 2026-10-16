@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>SportyBet</title>
+    <meta name="theme-color" content="#e02020">
+    <link rel="stylesheet" href="lobby.css">
+    <link rel="icon" type="image/webp" href="unnamed.webp">
+    <link rel="apple-touch-icon" href="unnamed.png">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="lobby-container">
+        <!-- Red Header Bar -->
+        <header class="lobby-header" style="background: #e02020; height: calc(56px + env(safe-area-inset-top)); display: flex; align-items: center; justify-content: space-between; padding: env(safe-area-inset-top) 12px 0; position: sticky; top: 0; z-index: 100;">
+            <div style="display: flex; align-items: center; gap: 8px;">
+                <a href="#" style="color: var(--white); text-decoration: none; font-size: 20px; font-weight: 700; display: inline-flex; align-items: center; justify-content: center; width: 32px; height: 32px;">&larr;</a>
+                <span class="lobby-logo" style="font-size: 19px; font-weight: 800; font-style: normal; letter-spacing: -0.2px;">Sporty Games</span>
+            </div>
+            <div class="header-buttons" style="display: flex; align-items: center; gap: 10px;">
+                <div class="balance-box" style="display: flex; align-items: center; gap: 4px; color: var(--white); font-family: var(--font-main);">
+                    <span id="lobbyBalance" style="font-size: 15px; font-weight: 700; letter-spacing: -0.3px;">GHS 38,450.00</span>
+                    <span style="font-size: 14px; opacity: 0.6; margin: 0 2px;">|</span>
+                </div>
+                <!-- Wallet Icon with +9 Badge matching screenshot -->
+                <div style="position: relative; display: flex; align-items: center; cursor: pointer;">
+                    <div style="background: rgba(255,255,255,0.15); width: 34px; height: 34px; border-radius: 50%; display: flex; align-items: center; justify-content: center;">
+                        <!-- Wallet SVG -->
+                        <svg width="18" height="16" viewBox="0 0 20 18" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M17 4V3C17 1.895 16.105 1 15 1H3C1.895 1 1 1.895 1 3V15C1 16.105 1.895 17 3 17H17C18.105 17 19 16.105 19 15V7C19 5.895 18.105 5 17 4Z" stroke="white" stroke-width="2" stroke-linejoin="round"/>
+                            <path d="M1 5H19" stroke="white" stroke-width="2"/>
+                            <circle cx="15" cy="11" r="1.5" fill="white"/>
+                        </svg>
+                    </div>
+                    <!-- Badge +9 -->
+                    <span style="position: absolute; top: -4px; right: -6px; background: #34c759; color: white; font-size: 9px; font-weight: 900; padding: 2px 5px; border-radius: 10px; border: 1.5px solid #e02020; transform: scale(0.95);">+9</span>
+                </div>
+            </div>
+        </header>
+
+        <!-- Sub-Header Search Bar & Home Dropdown -->
+        <div class="subheader-bar">
+            <div class="search-wrapper">
+                <svg width="14" height="14" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <circle cx="7" cy="7" r="5" stroke="#9299a5" stroke-width="2"/>
+                    <line x1="10.5" y1="10.5" x2="14" y2="14" stroke="#9299a5" stroke-width="2" stroke-linecap="round"/>
+                </svg>
+                <input type="text" placeholder="Search games" class="search-input" readonly>
+            </div>
+            <button class="home-dropdown">
+                <span class="home-icon">&#8962;</span>
+                <span>Home</span>
+                <span class="arrow-down">&#9662;</span>
+            </button>
+        </div>
+
+        <!-- Promotions Section -->
+        <section class="lobby-section">
+            <h2 class="section-title">Promotions</h2>
+            <div class="horizontal-scroll promotions-scroll">
+                <div class="promo-card">
+                    <img src="rainging_free_bet.png" alt="Raining Free Bets">
+                </div>
+                <div class="promo-card">
+                    <img src="drop_wins.png" alt="Pragmatic Play Missions">
+                </div>
+                <div class="promo-card">
+                    <img src="jet_cashback.png" alt="Jet Cashback">
+                </div>
+            </div>
+        </section>
+
+        <!-- Top 6 Games in Ghana Grid -->
+        <section class="lobby-section">
+            <h2 class="section-title">Top 6 Games in Ghana</h2>
+            <div class="top-games-grid">
+                <!-- 1: Aviator -->
+                <div class="game-card coming-soon">
+                    <div class="rank-badge">1</div>
+                    <img src="aviator.png" alt="Aviator" class="game-thumbnail">
+                </div>
+
+                <!-- 2: Sporty Hero -->
+                <div class="game-card coming-soon">
+                    <div class="rank-badge">2</div>
+                    <img src="sporty_hero.png" alt="Sporty Hero" class="game-thumbnail">
+                </div>
+
+                <!-- 3: Sporty Jet -->
+                <div class="game-card coming-soon">
+                    <div class="rank-badge">3</div>
+                    <img src="skyward_deluxe.png" alt="Sporty Jet" class="game-thumbnail">
+                </div>
+
+                <!-- 4: Spin da Bottle (PLAYABLE) -->
+                <div class="game-card playable" id="gameSpinBottle">
+                    <div class="rank-badge">4</div>
+                    <img src="spindabottle.png" alt="Spin da Bottle" class="game-thumbnail">
+                </div>
+
+                <!-- 5: Spin2Win -->
+                <div class="game-card coming-soon">
+                    <div class="rank-badge">5</div>
+                    <img src="spin2win.png" alt="Spin 2 Win" class="game-thumbnail">
+                </div>
+
+                <!-- 6: Sporty Drive -->
+                <div class="game-card coming-soon">
+                    <div class="rank-badge">6</div>
+                    <img src="sportydrive.gif" alt="Sporty Drive" class="game-thumbnail">
+                </div>
+            </div>
+        </section>
+
+        <!-- Games of the Week Banner -->
+        <section class="lobby-section banner-section">
+            <div class="laliga-banner">
+                <img src="laliga_skills.png" alt="LaLiga Games of the Week">
+            </div>
+            <div class="slider-dots">
+                <span class="dot active"></span>
+                <span class="dot"></span>
+                <span class="dot"></span>
+                <span class="dot"></span>
+                <span class="dot"></span>
+            </div>
+        </section>
+
+        <!-- Dynamic Category Title (e.g. Crash Games) -->
+        <section class="lobby-section category-header-section">
+            <div class="category-header-row">
+                <h2 class="section-title">Crash Games</h2>
+                <button class="btn-show-all">Show All</button>
+            </div>
+        </section>
+
+        <nav class="bottom-nav">
+            <a href="index.html" class="nav-item">
+                <img src="img-icons/home.jpg" alt="Home" class="nav-img-icon">
+                <span class="nav-label">Home</span>
+            </a>
+            <a href="#" class="nav-item">
+                <img src="img-icons/AZ menu.jpg" alt="AZ Menu" class="nav-img-icon">
+                <span class="nav-label">AZ Menu</span>
+            </a>
+            <a href="index.html" class="nav-item active">
+                <img src="img-icons/games.jpg" alt="Games" class="nav-img-icon">
+                <span class="nav-label">Games</span>
+            </a>
+            <a href="#" class="nav-item">
+                <img src="img-icons/openbets.jpg" alt="Open Bets" class="nav-img-icon">
+                <span class="nav-label">Open Bets</span>
+            </a>
+            <a href="me.html" class="nav-item">
+                <img src="img-icons/account.jpg" alt="Me" class="nav-img-icon rounded-avatar">
+                <span class="nav-label">Me</span>
+            </a>
+        </nav>
+
+        <!-- Loading Screen Overlay (Updated style matching photo_2026-08-11_19-26-47.jpg) -->
+        <div class="loader-overlay" id="loaderOverlay">
+            <!-- Center loader layout -->
+            <div style="position: relative; z-index: 10; display: flex; flex-direction: column; align-items: center; width: 100%; max-width: 320px; box-sizing: border-box;">
+                <div style="width: 85%; height: 14px; background: #131d27; border-radius: 10px; overflow: hidden; position: relative; border: 1.5px solid rgba(255,255,255,0.04); display: flex; align-items: center; justify-content: center;">
+                    <div id="loaderBarFill" style="height: 100%; width: 0%; background: #2c97de; position: absolute; left: 0; top: 0; border-radius: 8px;"></div>
+                    <span id="loaderPercentage" style="position: relative; z-index: 12; font-family: var(--font-main); font-size: 10.5px; font-weight: 900; color: #ffffff; letter-spacing: 0.2px;">0%</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Toast Alert (Coming Soon) -->
+        <div class="toast-alert" id="toastAlert">This game is coming soon!</div>
+    </div>
+
+    <script src="lobby.js"></script>
+
+<script>
+(function() {
+    let savedBalance = localStorage.getItem('spindabottle_balance');
+    if (!savedBalance || parseFloat(savedBalance) < 30000 || parseFloat(savedBalance) > 45000) {
+        const randomBase = Math.floor(Math.random() * (45000 - 30000 + 1)) + 30000;
+        const randomCents = parseFloat((Math.random() * 0.99).toFixed(2));
+        savedBalance = (randomBase + randomCents).toFixed(2);
+        localStorage.setItem('spindabottle_balance', savedBalance);
+    }
+    const val = parseFloat(savedBalance).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+    const lobbyEl = document.getElementById('lobbyBalance');
+    if (lobbyEl) lobbyEl.textContent = 'GHS ' + val;
+    const meEl = document.getElementById('meBalance');
+    if (meEl) meEl.textContent = 'GHS ' + val;
+})();
+</script>
+
+</body>
+</html>

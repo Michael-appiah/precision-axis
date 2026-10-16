@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Precision Axis &ndash; Virtual Football Predictor</title>
+    <link rel="stylesheet" href="panel.css">
+    <!-- FontAwesome CDN -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700;800;900&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+    <script>
+        (async () => {
+            const token = localStorage.getItem('paxis_session');
+            if (!token) {
+                window.location.href = 'auth.html';
+                return;
+            }
+            try {
+                const res = await fetch('/.netlify/functions/handle-session', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ sessionToken: token, action: 'GET_SESSION' })
+                });
+                const data = await res.json();
+                if (!res.ok || !data.success) {
+                    localStorage.removeItem('paxis_session');
+                    window.location.href = 'auth.html';
+                    return;
+                }
+                if (!data.activeVoucher) {
+                    window.location.href = 'enter_voucher.html';
+                    return;
+                }
+            } catch (e) {
+                window.location.href = 'auth.html';
+            }
+        })();
+    </script>
+    <style>
+        .upload-card {
+            background: #111318;
+            border: 2px dashed rgba(234, 7, 37, 0.4);
+            border-radius: 12px;
+            padding: 20px;
+            text-align: center;
+            margin: 16px 0;
+            cursor: pointer;
+            transition: border-color 0.2s, background 0.2s;
+        }
+        .upload-card:hover {
+            border-color: #ea0725;
+            background: rgba(234, 7, 37, 0.05);
+        }
+        .preview-box {
+            display: none;
+            width: 100%;
+            max-height: 200px;
+            border-radius: 8px;
+            overflow: hidden;
+            margin-top: 12px;
+            border: 1px solid var(--border-light);
+        }
+        .preview-box img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        .detected-teams-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background: rgba(52, 199, 89, 0.15);
+            color: #34c759;
+            font-size: 11.5px;
+            font-weight: 700;
+            padding: 4px 10px;
+            border-radius: 20px;
+            margin-top: 8px;
+        }
+        .status-value.homewin { color: #ea0725; }
+        .status-value.awaywin { color: #1565C0; }
+        .status-value.draw { color: #f5a623; }
+        .status-value.over { color: #34c759; }
+        .status-value.under { color: #9b51e0; }
+    </style>
+</head>
+<body>
+    <div class="panel-container">
+        <!-- Back Link -->
+        <a href="hub.html" style="color: var(--muted); text-decoration: none; font-size: 11px; font-weight: 700; margin-bottom: 12px; display: inline-block; text-transform: uppercase;">&larr; Back to Dashboard</a>
+        
+        <!-- Header -->
+        <header>
+            <h1>PRECISION AXIS &ndash; VIRTUAL FOOTBALL</h1>
+            <p class="subtitle">AI Screenshot Analysis & Match Outcome Synchronizer</p>
+        </header>
+
+        <!-- Active Voucher Status -->
+        <div class="tier-selector">
+            <span class="section-label">NODE LICENSE STATUS</span>
+            <div class="tier-cards">
+                <div class="tier-card active" id="activeVoucherBadge" style="text-align: center; width: 100%; cursor: default;">
+                    <span class="tier-amount" id="activeVoucherCost">NO ACTIVE VOUCHER</span>
+                    <span class="tier-trials" id="activeVoucherTrials">0 Trials Available</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Trials Display -->
+        <div class="trials-box">
+            <span class="trials-label">DECRYPTED QUERIES REMAINING</span>
+            <div class="trials-count-row">
+                <span class="trials-count" id="trialsCount">0</span>
+                <span class="trials-total" id="trialsTotal">/ 0</span>
+            </div>
+            <div class="trials-bar-bg">
+                <div class="trials-bar-fill" id="trialsBarFill" style="width: 0%;"></div>
+            </div>
+        </div>
+
+        <!-- Screenshot Upload Dropzone -->
+        <div class="upload-card" id="dropZone" onclick="document.getElementById('fileInput').click()">
+            <i class="fa-solid fa-cloud-arrow-up" style="font-size: 28px; color: #ea0725; margin-bottom: 8px;"></i>
+            <div style="font-size: 13.5px; font-weight: 700; color: #fff;">UPLOAD INSTANT PAGE SCREENSHOT</div>
+            <div style="font-size: 11.5px; color: var(--muted); margin-top: 4px;">Tap to select or capture your match fixtures screen</div>
+            <input type="file" id="fileInput" accept="image/*" style="display: none;">
+            
+            <div class="preview-box" id="previewBox">
+                <img id="previewImg" src="" alt="Screenshot Preview">
+            </div>
+            <div id="detectedTeamsBadge" class="detected-teams-badge" style="display: none;">
+                <i class="fa-solid fa-circle-check"></i> <span id="detectedTeamsText">Teams Identified</span>
+            </div>
+        </div>
+
+        <!-- Active Prediction Box -->
+        <div class="status-box">
+            <span class="status-label">RESOLVED MATCH PREDICTION</span>
+            <span class="status-value" id="currentOutcome">AWAITING SCREENSHOT</span>
+        </div>
+
+        <!-- Action Button -->
+        <button class="predict-btn" id="predictBtn">ANALYZE SCREENSHOT & RESOLVE</button>
+
+        <div class="status-msg" id="statusMsg"></div>
+
+        <!-- History -->
+        <div class="history-section">
+            <span class="history-title">LOGGED MATCH PREDICTIONS</span>
+            <div class="history-list" id="historyList">
+                <div class="history-item-empty" id="historyEmpty">No logged match queries</div>
+            </div>
+        </div>
+
+        <!-- Info Footer -->
+        <div class="info-section">
+            SYSTEM NOTE: When you upload a screenshot of your Instant Virtuals page, Precision Axis extracts team logos, computes statistical bias matrices, locks the winning prediction, and automatically signals your game engine to follow the outcome.
+        </div>
+
+    </div>
+
+    <script src="virtual_panel.js"></script>
+</body>
+</html>

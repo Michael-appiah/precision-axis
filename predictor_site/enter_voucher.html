@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Precision Axis &ndash; Enter Voucher</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700;800;900&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+    <script>
+        (async () => {
+            const token = localStorage.getItem('paxis_session');
+            if (!token) {
+                window.location.href = 'auth.html';
+                return;
+            }
+            try {
+                const res = await fetch('/.netlify/functions/handle-session', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ sessionToken: token, action: 'GET_SESSION' })
+                });
+                const data = await res.json();
+                if (!res.ok || !data.success) {
+                    localStorage.removeItem('paxis_session');
+                    window.location.href = 'auth.html';
+                    return;
+                }
+                if (data.activeVoucher) {
+                    localStorage.setItem('activeVoucher', JSON.stringify(data.activeVoucher));
+                }
+            } catch (e) {
+                window.location.href = 'auth.html';
+            }
+        })();
+    </script>
+</head>
+<body>
+    <div class="landing-container">
+        <!-- Technical Border Frame decoration -->
+        <div class="border-marker top-left"></div>
+        <div class="border-marker top-right"></div>
+        <div class="border-marker bottom-left"></div>
+        <div class="border-marker bottom-right"></div>
+
+        <!-- Header -->
+        <header class="landing-header">
+            <div class="logo-box">
+                <span class="logo-txt">Precision Axis</span>
+                <span class="logo-sub">Enter Voucher</span>
+            </div>
+            <div style="display: flex; gap: 12px; align-items: center;">
+                <a href="pricing.html" style="color: var(--gold); text-decoration: none; font-family: var(--font-mono); font-size: 12px; font-weight: 700; border: 1px solid var(--gold); padding: 5px 10px; border-radius: 4px;">Buy voucher</a>
+                <a href="hub.html" style="color: var(--muted); text-decoration: none; font-family: var(--font-mono); font-size: 12px; font-weight: 700;">&larr; Back to Dashboard</a>
+            </div>
+        </header>
+
+        <!-- Main Content -->
+        <main class="landing-main" style="display: flex; justify-content: center; align-items: center; flex-grow: 1; padding: 40px 0;">
+            
+            <!-- Gated verification card -->
+            <section class="material-panel" style="max-width: 420px; width: 100%; margin: 0; box-shadow: 8px 8px 0px #000;">
+                <div class="panel-header">
+                    <span class="panel-title">Enter Voucher</span>
+                    <span class="status-indicator live"></span>
+                </div>
+                
+                <div style="padding: 24px; display: flex; flex-direction: column; gap: 20px;">
+                    <div style="display: flex; flex-direction: column; gap: 8px;">
+                        <h2 style="font-size: 20px; font-weight: 800; letter-spacing: -0.5px; color: var(--text-primary);">Enter voucher code</h2>
+                        <p style="font-size: 13px; line-height: 1.5; color: var(--muted);">
+                            Enter your Precision Axis voucher code to start a prediction session. Don't have one? Purchase a voucher below.
+                        </p>
+                    </div>
+
+                    <!-- Input Form -->
+                    <form id="voucherForm" style="display: flex; flex-direction: column; gap: 14px;">
+                        <div style="display: flex; flex-direction: column; gap: 6px;">
+                            <label style="font-size: 12px; color: var(--muted); font-weight: 600;">Voucher code</label>
+                            <input type="text" id="voucherCode" style="background: var(--bg-card); border: 1px solid var(--border); color: var(--white); padding: 12px; font-size: 14px; border-radius: 4px; outline: none; font-family: var(--font-mono); letter-spacing: 1px; text-transform: uppercase;" placeholder="SHAFT-XXXX-XXXX" required>
+                        </div>
+                        <button type="submit" class="primary-btn-3d" style="width: 100%; text-align: center; font-size: 13px; padding: 12px 0;">Verify voucher</button>
+                    </form>
+
+                    <div class="status-msg" id="verifyStatus" style="text-align: center; font-size: 13px; min-height: 18px;"></div>
+
+                    <!-- Purchase Redirect -->
+                    <div style="text-align: center; border-top: 1px solid var(--border); padding-top: 16px; margin-top: 8px;">
+                        <span style="font-size: 12.5px; color: var(--muted);">Want to buy a voucher? </span>
+                        <a href="pricing.html" style="font-size: 12.5px; color: var(--gold); text-decoration: none; font-weight: 700;">Purchase here</a>
+                    </div>
+                </div>
+            </section>
+
+        </main>
+
+        <!-- Technical Footer -->
+        <footer class="landing-footer">
+            <span class="footer-left"></span>
+            <span class="footer-right">&copy; 2026 Precision Axis Ltd.</span>
+        </footer>
+    </div>
+
+    <!-- Script to handle verification -->
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const voucherForm = document.getElementById('voucherForm');
+            const voucherCodeInput = document.getElementById('voucherCode');
+            const verifyStatus = document.getElementById('verifyStatus');
+
+            voucherForm.addEventListener('submit', async (e) => {
+                e.preventDefault();
+                const code = voucherCodeInput.value.trim().toUpperCase();
+
+                verifyStatus.textContent = 'Verifying voucher...';
+                verifyStatus.style.color = 'var(--white)';
+
+                try {
+                    const res = await fetch('/.netlify/functions/voucher-verify', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ code })
+                    });
+                    const data = await res.json();
+
+                    if (!res.ok) {
+                        throw new Error(data.error || 'Voucher decryption failed');
+                    }
+
+                    // Save active voucher details to database and session storage
+                    const token = localStorage.getItem('paxis_session');
+                    const linkRes = await fetch('/.netlify/functions/handle-session', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ sessionToken: token, action: 'LINK_VOUCHER', code: data.code })
+                    });
+                    const linkData = await linkRes.json();
+
+                    if (!linkRes.ok) {
+                        throw new Error(linkData.error || 'Failed to bind voucher to session');
+                    }
+
+                    localStorage.setItem('activeVoucher', JSON.stringify({
+                        code: linkData.code,
+                        remaining: linkData.remaining,
+                        total: linkData.total,
+                        cost: linkData.cost
+                    }));
+
+                    verifyStatus.textContent = 'Voucher verified! Loading dashboard...';
+                    verifyStatus.style.color = 'var(--green)';
+
+                    setTimeout(() => {
+                        window.location.href = 'hub.html';
+                    }, 1200);
+
+                } catch (err) {
+                    verifyStatus.textContent = `Error: ${err.message}`;
+                    verifyStatus.style.color = '#ff3333';
+                }
+            });
+        });
+    </script>
+</body>
+</html>
+

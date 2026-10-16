@@ -1,0 +1,531 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AXIS AURA ADMIN – Executive Web App</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+
+    <!-- 1. LOGIN OVERLAY MODAL -->
+    <div id="loginOverlay" class="modal-overlay" style="display: flex;">
+        <div class="modal-content">
+            <div style="text-align: center; margin-bottom: 24px;">
+                <span class="logo-txt">AXIS AURA ADMIN</span>
+                <p class="logo-sub">Executive Authorization Gateway</p>
+            </div>
+            
+            <form id="loginForm">
+                <div class="form-group">
+                    <label>Admin ID Email</label>
+                    <input type="email" id="adminEmail" class="form-control" placeholder="admin@node.net" required>
+                </div>
+                <div class="form-group">
+                    <label>Security Secret Phrase</label>
+                    <input type="password" id="adminPassword" class="form-control" placeholder="••••••••" required>
+                </div>
+                <button type="submit" class="primary-btn" style="width: 100%; margin-top: 12px;">Authorize Dashboard Workspace</button>
+            </form>
+            <div id="loginStatus" class="status-message"></div>
+        </div>
+    </div>
+
+    <!-- 2. MAIN SINGLE PAGE APPLICATION (SPA) WORKSPACE -->
+    <div id="adminWorkspace" style="display: none;">
+        
+        <!-- App Top Header -->
+        <header class="admin-header">
+            <div style="display: flex; align-items: center; gap: 24px;">
+                <div class="logo-box">
+                    <span class="logo-txt">AXIS AURA ADMIN</span>
+                    <span class="logo-sub">Executive Web App</span>
+                </div>
+                <!-- Search Accounts Bar -->
+                <div class="global-search-box">
+                    <i class="fa-solid fa-magnifying-glass search-icon"></i>
+                    <input type="text" id="accountSearchInput" placeholder="Search user accounts by email, password, profile..." class="global-search-input">
+                </div>
+            </div>
+            
+            <div style="display: flex; gap: 16px; align-items: center;">
+                <div class="health-ping-badge">
+                    <span class="pulse-dot"></span>
+                    <span style="font-family: var(--font-mono); font-size: 11px;">DB Pool Active · <span id="livePingVal">14ms</span></span>
+                </div>
+                <div class="user-badge">
+                    <i class="fa-solid fa-user-shield" style="color: var(--primary-aura);"></i>
+                    <span id="activeAdminEmail">admin@node.net</span>
+                </div>
+                <button id="logoutBtn" class="logout-btn">Deauthorize</button>
+            </div>
+        </header>
+
+        <!-- Web App Navigation Bar (Dedicated Route Pages) -->
+        <nav class="admin-tab-nav">
+            <a href="#overview" class="nav-tab active" data-page="overview"><i class="fa-solid fa-chart-pie"></i> Overview</a>
+            <a href="#users" class="nav-tab" data-page="users"><i class="fa-solid fa-users"></i> Users Directory</a>
+            <a href="#vouchers" class="nav-tab" data-page="vouchers"><i class="fa-solid fa-ticket"></i> Vouchers & Licensing</a>
+            <a href="#support" class="nav-tab" data-page="support"><i class="fa-solid fa-headset"></i> Support Desk <span class="tab-badge" id="ticketBadgeCount">0</span></a>
+            <a href="#node-health" class="nav-tab" data-page="node-health"><i class="fa-solid fa-server"></i> System Node Health</a>
+            <a href="#engine-audit" class="nav-tab" data-page="engine-audit"><i class="fa-solid fa-bullseye"></i> Predictor Engine Audit</a>
+        </nav>
+
+        <!-- Main Viewport Container -->
+        <div class="admin-container">
+
+            <!-- PAGE 1: OVERVIEW PAGE -->
+            <div id="page-overview" class="app-page active">
+                
+                <div class="page-header-row">
+                    <h1 class="page-title">Executive Dashboard Overview</h1>
+                    <span class="page-subtitle">Real-time system telemetry and platform performance</span>
+                </div>
+
+                <!-- KPI Stat Cards -->
+                <div class="kpi-grid">
+                    <div class="kpi-card">
+                        <div class="kpi-header">
+                            <span>TOTAL REGISTERED ACCOUNTS</span>
+                            <i class="fa-solid fa-user-group kpi-icon"></i>
+                        </div>
+                        <div class="kpi-value" id="kpiTotalUsers">0</div>
+                        <div class="kpi-subtext" id="kpiPaidUsersRatio">0 paid signups</div>
+                    </div>
+                    <div class="kpi-card">
+                        <div class="kpi-header">
+                            <span>VOUCHERS IN CIRCULATION</span>
+                            <i class="fa-solid fa-ticket kpi-icon"></i>
+                        </div>
+                        <div class="kpi-value" id="kpiTotalVouchers">0</div>
+                        <div class="kpi-subtext" id="kpiTrialsConsumed">0 trials consumed</div>
+                    </div>
+                    <div class="kpi-card">
+                        <div class="kpi-header">
+                            <span>CONCURRENT ACTIVE SESSIONS</span>
+                            <i class="fa-solid fa-user-check kpi-icon"></i>
+                        </div>
+                        <div class="kpi-value" id="kpiActiveSessions" style="color: var(--primary-aura);">0</div>
+                        <div class="kpi-subtext">Active Session Tokens</div>
+                    </div>
+                    <div class="kpi-card">
+                        <div class="kpi-header">
+                            <span>SYSTEM NODE UPTIME</span>
+                            <i class="fa-solid fa-shield-halved kpi-icon" style="color: var(--green);"></i>
+                        </div>
+                        <div class="kpi-value" style="color: var(--green);">99.98%</div>
+                        <div class="kpi-subtext">AWS Supabase Pooler</div>
+                    </div>
+                </div>
+
+                <!-- Donut Chart & Live Feed -->
+                <div class="grid-cols-2" style="grid-template-columns: 1fr 1.4fr;">
+                    
+                    <section class="admin-card" style="text-align: center; display: flex; flex-direction: column; align-items: center; justify-content: center;">
+                        <h3 class="card-title" style="width: 100%;"><i class="fa-solid fa-chart-donut"></i> Consumed Session Ratio</h3>
+                        <div class="donut-container" style="margin: 20px 0;">
+                            <svg width="160" height="160" viewBox="0 0 160 160">
+                                <circle cx="80" cy="80" r="65" stroke="rgba(255,255,255,0.08)" stroke-width="14" fill="none"/>
+                                <circle id="donutCircle" cx="80" cy="80" r="65" stroke="var(--primary-aura)" stroke-width="14" fill="none" stroke-dasharray="408" stroke-dashoffset="100" stroke-linecap="round" style="transition: stroke-dashoffset 1s ease;"/>
+                            </svg>
+                            <div class="donut-text">
+                                <span id="donutPercentVal" style="font-size: 28px; font-weight: 900;">0%</span>
+                                <span style="font-size: 11px; color: var(--text-secondary);">TRIALS USED</span>
+                            </div>
+                        </div>
+                        <p style="font-size: 12px; color: var(--text-secondary); max-width: 260px;">Calculated live across all active user voucher licenses.</p>
+                    </section>
+
+                    <section class="admin-card">
+                        <h3 class="card-title"><i class="fa-solid fa-wave-square"></i> Live Platform Entry & Activity Monitor</h3>
+                        <div class="activity-feed-list" id="activityFeedList">
+                            <div class="activity-item">
+                                <span class="activity-badge badge-info">INFO</span>
+                                <span>Platform initialized. Listening for user entry events...</span>
+                                <span class="activity-time">Just now</span>
+                            </div>
+                        </div>
+                    </section>
+                </div>
+
+                <!-- Real-Time Monitoring Modules -->
+                <div class="grid-cols-2" style="margin-top: 24px;">
+                    <section class="admin-card">
+                        <h3 class="card-title"><i class="fa-solid fa-filter-circle-dollar"></i> Registration Conversion Funnel</h3>
+                        <div class="funnel-container">
+                            <div class="funnel-step">
+                                <div class="funnel-label"><span>1. Signup Intent</span><strong>100%</strong></div>
+                                <div class="funnel-bar-bg"><div class="funnel-bar-fill" style="width: 100%;"></div></div>
+                            </div>
+                            <div class="funnel-step">
+                                <div class="funnel-label"><span>2. 50 GHS Checkout Init</span><strong>84%</strong></div>
+                                <div class="funnel-bar-bg"><div class="funnel-bar-fill" style="width: 84%;"></div></div>
+                            </div>
+                            <div class="funnel-step">
+                                <div class="funnel-label"><span>3. Paystack Authorization</span><strong>79%</strong></div>
+                                <div class="funnel-bar-bg"><div class="funnel-bar-fill" style="width: 79%;"></div></div>
+                            </div>
+                            <div class="funnel-step">
+                                <div class="funnel-label"><span>4. Session Created & Verified</span><strong>74%</strong></div>
+                                <div class="funnel-bar-bg"><div class="funnel-bar-fill" style="width: 74%; background: var(--green);"></div></div>
+                            </div>
+                        </div>
+                    </section>
+
+                    <section class="admin-card">
+                        <h3 class="card-title"><i class="fa-solid fa-network-wired"></i> Paystack Gateway API & Webhook Monitor</h3>
+                        <div class="diag-row"><span>API Webhook Status</span><strong style="color: var(--green);">100% Operational</strong></div>
+                        <div class="diag-row"><span>Gateway Latency</span><strong style="color: var(--green);">28ms (Fast)</strong></div>
+                        <div class="diag-row"><span>Currency Exchange Rate</span><strong>1 USD = 11.11 GHS (Live Rate)</strong></div>
+                        <div class="diag-row"><span>Callback Verification Rate</span><strong style="color: var(--green);">99.4% Success</strong></div>
+                    </section>
+                </div>
+
+            
+                <!-- Database Tables (Instant Overview Access) -->
+                <div class="table-container" style="margin-top: 28px;">
+                    <div style="display: flex; justify-content: space-between; align-items: center; padding: 18px 24px; border-bottom: 1px solid var(--border-aura); flex-wrap: wrap; gap: 12px;">
+                        <div style="display: flex; align-items: center; gap: 12px;">
+                            <h2 class="table-title" style="padding: 0; border: none; margin: 0;"><i class="fa-solid fa-users-viewfinder"></i> Registered Accounts Directory</h2>
+                            <span class="userMatchCount" style="font-family: var(--font-mono); font-size: 11px; color: var(--primary-aura); background: rgba(139, 92, 246, 0.15); padding: 3px 10px; border-radius: 9999px;"></span>
+                        </div>
+                        <button class="action-btn secondary" onclick="exportUsersCSV()"><i class="fa-solid fa-file-csv"></i> Export Users CSV</button>
+                    </div>
+                    <div style="overflow-x: auto;">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>User Email</th>
+                                    <th>Password Phrase</th>
+                                    <th>Sync Profile</th>
+                                    <th>Active Voucher</th>
+                                    <th>Status</th>
+                                    <th style="text-align: right;">Action Controls</th>
+                                </tr>
+                            </thead>
+                            <tbody class="usersTableBody">
+                                <tr><td colspan="6" style="text-align: center; color: var(--text-secondary); padding: 30px 0;">Loading database records...</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <div class="table-container">
+                    <div style="display: flex; justify-content: space-between; align-items: center; padding: 18px 24px; border-bottom: 1px solid var(--border-aura); flex-wrap: wrap; gap: 12px;">
+                        <div style="display: flex; align-items: center; gap: 12px;">
+                            <h2 class="table-title" style="padding: 0; border: none; margin: 0;"><i class="fa-solid fa-receipt"></i> Vouchers Registry</h2>
+                            <span class="voucherMatchCount" style="font-family: var(--font-mono); font-size: 11px; color: var(--primary-aura); background: rgba(139, 92, 246, 0.15); padding: 3px 10px; border-radius: 9999px;"></span>
+                        </div>
+                        <button class="action-btn secondary" onclick="exportVouchersCSV()"><i class="fa-solid fa-file-csv"></i> Export Vouchers CSV</button>
+                    </div>
+                    <div style="overflow-x: auto;">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Voucher Code</th>
+                                    <th>Assigned Email</th>
+                                    <th>Trials Gauge</th>
+                                    <th>Cost ($)</th>
+                                    <th>Created Date</th>
+                                    <th style="text-align: right;">Action Controls</th>
+                                </tr>
+                            </thead>
+                            <tbody class="vouchersTableBody">
+                                <tr><td colspan="6" style="text-align: center; color: var(--text-secondary); padding: 30px 0;">Loading vouchers registry...</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- PAGE 2: USERS DIRECTORY PAGE -->
+            <div id="page-users" class="app-page">
+                
+                <div class="page-header-row">
+                    <h1 class="page-title">User Accounts Directory</h1>
+                    <span class="page-subtitle">Manage registered accounts, passwords, and permissions</span>
+                </div>
+
+                <div class="grid-cols-2">
+                    <section class="admin-card">
+                        <h2 class="card-title"><i class="fa-solid fa-user-plus"></i> Create User Account</h2>
+                        <form id="createAccountForm">
+                            <div class="form-group">
+                                <label>User Email Address</label>
+                                <input type="email" id="newUserEmail" class="form-control" placeholder="e.g. user@domain.com" required>
+                            </div>
+                            <div class="form-group">
+                                <label>Account Password</label>
+                                <input type="text" id="newUserPassword" class="form-control" placeholder="e.g. Password123!" required>
+                            </div>
+                            <button type="submit" class="primary-btn" style="width: 100%; margin-top: 8px;">Register Account</button>
+                        </form>
+                        <div id="createAccountStatus" class="status-message"></div>
+                    </section>
+
+                    <section class="admin-card">
+                        <h2 class="card-title"><i class="fa-solid fa-paper-plane"></i> Send Apology & Provision Account</h2>
+                        <form id="apologyEmailForm">
+                            <div class="form-group">
+                                <label>Target User Email</label>
+                                <input type="email" id="apologyTargetEmail" class="form-control" placeholder="e.g. customer@domain.com" required>
+                            </div>
+                            <div class="form-group">
+                                <label>Custom Password (Optional)</label>
+                                <input type="text" id="apologyCustomPassword" class="form-control" placeholder="Blank = Auto-generated temporary password">
+                            </div>
+                            <button type="submit" class="primary-btn" style="width: 100%; margin-top: 8px; background: var(--green);">
+                                <i class="fa-solid fa-envelope-open-text"></i> Send Apology Email & Provision
+                            </button>
+                        </form>
+                        <div id="apologyStatus" class="status-message"></div>
+                    </section>
+                </div>
+
+                <div class="table-container">
+                    <div style="display: flex; justify-content: space-between; align-items: center; padding: 18px 24px; border-bottom: 1px solid var(--border-aura); flex-wrap: wrap; gap: 12px;">
+                        <div style="display: flex; align-items: center; gap: 12px;">
+                            <h2 class="table-title" style="padding: 0; border: none; margin: 0;"><i class="fa-solid fa-users-viewfinder"></i> Registered Accounts Table</h2>
+                            <span class="userMatchCount" style="font-family: var(--font-mono); font-size: 11px; color: var(--primary-aura); background: rgba(139, 92, 246, 0.15); padding: 3px 10px; border-radius: 9999px;"></span>
+                        </div>
+                        <div style="display: flex; gap: 12px; align-items: center;">
+                            <div class="global-search-box" style="width: 240px;">
+                                <i class="fa-solid fa-magnifying-glass search-icon"></i>
+                                <input type="text" id="userSearchInput" placeholder="Filter user accounts..." class="global-search-input" style="padding-top: 6px; padding-bottom: 6px;">
+                            </div>
+                            <button class="action-btn secondary" onclick="exportUsersCSV()"><i class="fa-solid fa-file-csv"></i> Export CSV</button>
+                        </div>
+                    </div>
+                    <div style="overflow-x: auto;">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>User Email</th>
+                                    <th>Password Phrase</th>
+                                    <th>Sync Profile</th>
+                                    <th>Active Voucher</th>
+                                    <th>Status</th>
+                                    <th style="text-align: right;">Action Controls</th>
+                                </tr>
+                            </thead>
+                            <tbody class="usersTableBody">
+                                <tr><td colspan="6" style="text-align: center; color: var(--text-secondary); padding: 30px 0;">Loading database records...</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- PAGE 3: VOUCHERS PAGE -->
+            <div id="page-vouchers" class="app-page">
+                
+                <div class="page-header-row">
+                    <h1 class="page-title">Vouchers & Licensing Registry</h1>
+                    <span class="page-subtitle">Generate voucher codes and manage trial entitlements</span>
+                </div>
+
+                <div class="grid-cols-2">
+                    <section class="admin-card">
+                        <h2 class="card-title"><i class="fa-solid fa-ticket"></i> Generate Voucher Code</h2>
+                        <form id="createVoucherForm">
+                            <div class="grid-cols-2" style="margin-bottom: 0; grid-template-columns: 1fr 1fr; gap: 12px;">
+                                <div class="form-group">
+                                    <label>Trials Count</label>
+                                    <select id="voucherTrials" class="form-control">
+                                        <option value="3">3 Trials ($25)</option>
+                                        <option value="5">5 Trials ($70)</option>
+                                        <option value="10">10 Trials ($100)</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label>Assigned Cost ($)</label>
+                                    <input type="number" id="voucherCost" class="form-control" value="25" required min="1">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label>Assign to User Email</label>
+                                <input type="email" id="voucherUserEmail" class="form-control" placeholder="e.g. customer@domain.com" required>
+                            </div>
+                            <button type="submit" class="primary-btn" style="width: 100%; margin-top: 8px;">Generate Voucher Key</button>
+                        </form>
+                        <div id="createVoucherStatus" class="status-message"></div>
+                    </section>
+
+                    <section class="admin-card">
+                        <h2 class="card-title"><i class="fa-solid fa-money-bill-transfer"></i> Process Payment Refund</h2>
+                        <form id="refundForm">
+                            <div class="form-group">
+                                <label>Paystack Reference ID</label>
+                                <input type="text" id="refundReference" class="form-control" placeholder="e.g. prf_z1y2x3..." required>
+                            </div>
+                            <div class="form-group">
+                                <label>Refund Amount ($ USD) (Optional)</label>
+                                <input type="number" id="refundCost" class="form-control" placeholder="Blank = Full Refund">
+                            </div>
+                            <button type="submit" class="primary-btn" style="width: 100%; margin-top: 8px; background: var(--red);">Initiate Paystack Refund</button>
+                        </form>
+                        <div id="refundStatus" class="status-message"></div>
+                    </section>
+                </div>
+
+                <div class="table-container">
+                    <div style="display: flex; justify-content: space-between; align-items: center; padding: 18px 24px; border-bottom: 1px solid var(--border-aura); flex-wrap: wrap; gap: 12px;">
+                        <div style="display: flex; align-items: center; gap: 12px;">
+                            <h2 class="table-title" style="padding: 0; border: none; margin: 0;"><i class="fa-solid fa-receipt"></i> Vouchers Registry Table</h2>
+                            <span class="voucherMatchCount" style="font-family: var(--font-mono); font-size: 11px; color: var(--primary-aura); background: rgba(139, 92, 246, 0.15); padding: 3px 10px; border-radius: 9999px;"></span>
+                        </div>
+                        <div style="display: flex; gap: 12px; align-items: center;">
+                            <div class="global-search-box" style="width: 240px;">
+                                <i class="fa-solid fa-magnifying-glass search-icon"></i>
+                                <input type="text" id="voucherSearchInput" placeholder="Filter vouchers..." class="global-search-input" style="padding-top: 6px; padding-bottom: 6px;">
+                            </div>
+                            <button class="action-btn secondary" onclick="exportVouchersCSV()"><i class="fa-solid fa-file-csv"></i> Export CSV</button>
+                        </div>
+                    </div>
+                    <div style="overflow-x: auto;">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Voucher Code</th>
+                                    <th>Assigned Email</th>
+                                    <th>Trials Gauge</th>
+                                    <th>Cost ($)</th>
+                                    <th>Created Date</th>
+                                    <th style="text-align: right;">Action Controls</th>
+                                </tr>
+                            </thead>
+                            <tbody class="vouchersTableBody">
+                                <tr><td colspan="6" style="text-align: center; color: var(--text-secondary); padding: 30px 0;">Loading vouchers registry...</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- PAGE 4: SUPPORT PAGE -->
+            <div id="page-support" class="app-page">
+                
+                <div class="page-header-row">
+                    <h1 class="page-title">Live Customer Support Desk</h1>
+                    <span class="page-subtitle">Real-time user message threads and ticket resolution</span>
+                </div>
+
+                <section class="admin-card" style="padding: 0; overflow: hidden;">
+                    <div class="support-split-layout">
+                        <div class="support-threads-list" id="supportThreadsList">
+                            <div style="padding: 20px; text-align: center; color: var(--text-secondary);">Loading tickets...</div>
+                        </div>
+                        <div class="support-chat-area" id="supportChatArea">
+                            <div style="padding: 40px; text-align: center; color: var(--text-secondary);">Select a support ticket to start replying.</div>
+                        </div>
+                    </div>
+                </section>
+            </div>
+
+            <!-- PAGE 5: NODE HEALTH PAGE -->
+            <div id="page-node-health" class="app-page">
+                
+                <div class="page-header-row">
+                    <h1 class="page-title">System Node Health & Maintenance</h1>
+                    <span class="page-subtitle">Control serverless maintenance state and inspect live node health</span>
+                </div>
+
+                <div class="grid-cols-2">
+                    <section class="admin-card">
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; flex-wrap: wrap; gap: 8px;">
+                            <h2 class="card-title" style="margin: 0;"><i class="fa-solid fa-power-off"></i> Maintenance Mode Control</h2>
+                            <span id="maintStatusBadge" class="badge" style="background: rgba(16, 185, 129, 0.15); color: #10b981; border: 1px solid #10b981; padding: 4px 10px; font-weight: 800; font-family: var(--font-mono); font-size: 11px;">SITE LIVE</span>
+                        </div>
+                        <p style="font-size: 13px; color: var(--text-secondary); margin-bottom: 20px;">
+                            Enabling Maintenance Mode locks out non-admin users from accessing the main site and shows a scheduled maintenance notice.
+                        </p>
+                        <button id="maintenanceToggleBtn" class="primary-btn" style="background: var(--red); width: 100%; font-weight: 800; padding: 12px;">
+                            Toggle Maintenance Mode
+                        </button>
+                        <div id="maintenanceStatus" class="status-message" style="margin-top: 12px;"></div>
+                    </section>
+
+                    <section class="admin-card">
+                        <h2 class="card-title"><i class="fa-solid fa-microchip"></i> System Node Diagnostics</h2>
+                        <div class="diag-row"><span>Database Latency</span><strong style="color: var(--green);">14ms (Optimal)</strong></div>
+                        <div class="diag-row"><span>Supabase Connection Pool</span><strong>Active (6543)</strong></div>
+                        <div class="diag-row"><span>Paystack API Status</span><strong style="color: var(--green);">Operational</strong></div>
+                        <div class="diag-row"><span>Netlify Serverless Edge</span><strong style="color: var(--green);">19 Functions Active</strong></div>
+                    </section>
+                </div>
+            </div>
+
+            <!-- PAGE 6: ENGINE AUDIT PAGE -->
+            <div id="page-engine-audit" class="app-page">
+                
+                <div class="page-header-row">
+                    <h1 class="page-title">Predictor Engine Audit Stream</h1>
+                    <span class="page-subtitle">Monitor server-side locked predictions and entropy sequence drift</span>
+                </div>
+
+                <section class="admin-card">
+                    <h2 class="card-title"><i class="fa-solid fa-bullseye"></i> Resolved Entropy Direction</h2>
+                    <div style="display: flex; align-items: center; justify-content: space-between; background: rgba(26,11,46,0.85); padding: 28px; border-radius: 16px; border: 1px solid var(--border-aura); margin-bottom: 24px;">
+                        <div>
+                            <span style="font-family: var(--font-mono); font-size: 11px; color: var(--text-secondary); text-transform: uppercase;">Current Locked Outcome</span>
+                            <div id="adminLockedOutcome" style="font-size: 38px; font-weight: 900; color: var(--primary-aura); font-family: var(--font-mono);">UP</div>
+                        </div>
+                        <button class="primary-btn" onclick="fetchDatabaseRecords()"><i class="fa-solid fa-rotate-right"></i> Refresh Engine Sync</button>
+                    </div>
+                </section>
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- WebGL Ambient Aura Canvas -->
+    <canvas id="adminAuraCanvas" style="position:fixed;top:0;left:0;width:100vw;height:100vh;pointer-events:none;z-index:0;opacity:0.85;"></canvas>
+
+    <script src="admin.js"></script>
+    <script>
+    // SPA Single Page Application Router (Hash & Nav Tabs)
+    function routePage() {
+        const hash = (window.location.hash || '#overview').substring(1);
+        const navTabs = document.querySelectorAll('.nav-tab');
+        const pages = document.querySelectorAll('.app-page');
+
+        let matched = false;
+        navTabs.forEach(tab => {
+            const pageName = tab.getAttribute('data-page');
+            if (pageName === hash) {
+                tab.classList.add('active');
+                matched = true;
+            } else {
+                tab.classList.remove('active');
+            }
+        });
+
+        pages.forEach(page => {
+            if (page.id === 'page-' + hash) {
+                page.classList.add('active');
+            } else {
+                page.classList.remove('active');
+            }
+        });
+
+        // Fallback to overview if hash doesn't match
+        if (!matched && navTabs.length > 0) {
+            navTabs[0].classList.add('active');
+            const defaultPage = document.getElementById('page-overview');
+            if (defaultPage) defaultPage.classList.add('active');
+        }
+    }
+
+    window.addEventListener('hashchange', routePage);
+    document.addEventListener('DOMContentLoaded', routePage);
+    </script>
+</body>
+</html>

@@ -1,0 +1,13 @@
+{
+  "name": "spin-da-bottle-game",
+  "version": "1.0.0",
+  "description": "Spin da Bottle game with prediction backend",
+  "main": "app.js",
+  "dependencies": {
+    "@netlify/blobs": "*",
+    "pg": "^8.23.0"
+  },
+  "devDependencies": {
+    "puppeteer-core": "^25.4.0"
+  }
+}

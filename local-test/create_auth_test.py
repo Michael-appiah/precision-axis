@@ -1,0 +1,309 @@
+﻿auth_html = """<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Precision Axis – AI Sports & Casino Analytics [LOCAL TEST]</title>
+    <link rel="stylesheet" href="/style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700;800;900&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+    <style>
+        .test-banner {
+            background: #ff6b00; color: #000; text-align: center;
+            font-family: 'Share Tech Mono', monospace; font-size: 12px;
+            font-weight: 700; padding: 8px; letter-spacing: 1px;
+        }
+        .auth-tabs {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            border-bottom: 1px solid var(--border);
+            margin-bottom: 20px;
+        }
+        .auth-tab {
+            font-family: var(--font-mono);
+            background: transparent;
+            border: none;
+            color: var(--muted);
+            padding: 12px;
+            cursor: pointer;
+            font-weight: 700;
+            text-align: center;
+            font-size: 13px;
+        }
+        .auth-tab.active {
+            color: var(--gold);
+            border-bottom: 2px solid var(--gold);
+        }
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            margin-bottom: 16px;
+        }
+        .form-group label {
+            font-size: 11px;
+            color: var(--muted);
+            text-transform: uppercase;
+            font-weight: 700;
+        }
+        .form-control {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            color: var(--white);
+            padding: 10px 12px;
+            font-size: 13px;
+            border-radius: 4px;
+            outline: none;
+        }
+        .form-control:focus {
+            border-color: var(--gold);
+        }
+    </style>
+</head>
+<body>
+    <!-- TEST BANNER -->
+    <div class="test-banner">⚠ LOCAL TEST SIMULATION — Precision Axis to Martha Solutions Flow — Test Key Active</div>
+
+    <div class="landing-container">
+        <div class="border-marker top-left"></div>
+        <div class="border-marker top-right"></div>
+        <div class="border-marker bottom-left"></div>
+        <div class="border-marker bottom-right"></div>
+
+        <header class="landing-header">
+            <div class="logo-box">
+                <span class="logo-txt">PRECISION AXIS</span>
+                <span class="logo-sub">AI Analytics [LOCAL TEST]</span>
+            </div>
+            <a href="pricing-test.html" style="color: var(--gold); text-decoration: none; font-family: var(--font-mono); font-size: 12px; font-weight: 700; border: 1px solid var(--gold); padding: 5px 10px; border-radius: 4px;">Vouchers Test &rarr;</a>
+        </header>
+
+        <main class="landing-main" style="display: flex; justify-content: center; align-items: center; flex-grow: 1; padding: 40px 0;">
+            <section class="material-panel" style="max-width: 440px; width: 100%; margin: 0;">
+                <div class="auth-tabs">
+                    <button class="auth-tab" id="tabLogin">Log in</button>
+                    <button class="auth-tab active" id="tabSignup">Create account</button>
+                </div>
+                
+                <div style="padding: 0 24px 24px;">
+                    <!-- Login Form -->
+                    <form id="loginForm" style="display: none; flex-direction: column;">
+                        <div class="form-group">
+                            <label>Email address</label>
+                            <input type="email" id="loginEmail" class="form-control" placeholder="user@node.net" required>
+                        </div>
+                        <div class="form-group" style="margin-bottom: 24px;">
+                            <label>Password</label>
+                            <input type="password" id="loginPassword" class="form-control" placeholder="••••••••" required>
+                        </div>
+                        <button type="submit" class="primary-btn-3d" style="width: 100%; text-align: center;">Log in</button>
+                        <div class="status-msg" id="loginStatus" style="margin-top: 14px;"></div>
+                    </form>
+
+                    <!-- Signup Form -->
+                    <form id="signupForm" style="display: flex; flex-direction: column;">
+                        <div class="form-group">
+                            <label>Email address</label>
+                            <input type="email" id="signupEmail" class="form-control" placeholder="user@node.net" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Password</label>
+                            <input type="password" id="signupPassword" class="form-control" placeholder="••••••••" required>
+                        </div>
+
+                        <div style="background: rgba(0,255,136,0.05); border: 1px solid rgba(0,255,136,0.2); border-radius: 4px; padding: 12px; margin-bottom: 16px; font-family: var(--font-mono); font-size: 11px; color: var(--green);">
+                            ℹ <strong>Account Activation Fee:</strong> GHS 50.00 is required upon registration. You will be redirected to the secure gateway.
+                        </div>
+
+                        <button type="submit" class="primary-btn-3d" id="paySignupFeeBtn" style="width: 100%; text-align: center;">
+                            Pay GHS 50.00 & Create Account &rarr;
+                        </button>
+                        <div class="status-msg" id="signupStatus" style="margin-top: 14px; font-size: 12px;"></div>
+                    </form>
+                </div>
+            </section>
+        </main>
+
+        <footer class="landing-footer">
+            <span class="footer-left"></span>
+            <span class="footer-right">&copy; 2026 Precision Axis Ltd. [LOCAL TEST]</span>
+        </footer>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const tabLogin = document.getElementById('tabLogin');
+            const tabSignup = document.getElementById('tabSignup');
+            const loginForm = document.getElementById('loginForm');
+            const signupForm = document.getElementById('signupForm');
+            const signupStatus = document.getElementById('signupStatus');
+            const paySignupFeeBtn = document.getElementById('paySignupFeeBtn');
+
+            tabLogin.addEventListener('click', () => {
+                tabLogin.classList.add('active');
+                tabSignup.classList.remove('active');
+                loginForm.style.display = 'flex';
+                signupForm.style.display = 'none';
+            });
+
+            tabSignup.addEventListener('click', () => {
+                tabSignup.classList.add('active');
+                tabLogin.classList.remove('active');
+                signupForm.style.display = 'flex';
+                loginForm.style.display = 'none';
+            });
+
+            // ── Helper: Full-screen Overlay ──────────────────────────────
+            function showPaymentOverlay(type, message, subtext) {
+                const old = document.getElementById('paxis-payment-overlay');
+                if (old) old.remove();
+
+                const isSuccess = type === 'success';
+                const isLoading = type === 'loading';
+                const iconHtml  = isLoading
+                    ? <div style="width:56px;height:56px;border:4px solid rgba(255,255,255,.15);border-top-color:var(--gold,#d4a017);border-radius:50%;animation:paxis-spin 1s linear infinite;margin:0 auto 20px;"></div>
+                    : isSuccess
+                        ? <div style="font-size:48px;margin-bottom:16px;">✅</div>
+                        : <div style="font-size:48px;margin-bottom:16px;">❌</div>;
+
+                const overlay = document.createElement('div');
+                overlay.id = 'paxis-payment-overlay';
+                overlay.style.cssText = 
+                    position:fixed;inset:0;z-index:9999;
+                    background:rgba(5,8,15,0.97);
+                    display:flex;flex-direction:column;align-items:center;justify-content:center;
+                    text-align:center;padding:32px;
+                ;
+                overlay.innerHTML = 
+                    <style>@keyframes paxis-spin{to{transform:rotate(360deg)}}</style>
+                    
+                    <div style="font-family:'Outfit',sans-serif;font-size:22px;font-weight:800;color:;margin-bottom:10px;">
+                        
+                    </div>
+                    <div style="font-family:'Share Tech Mono',monospace;font-size:13px;color:rgba(255,255,255,.55);max-width:340px;line-height:1.6;">
+                        
+                    </div>
+                    
+                ;
+                document.body.appendChild(overlay);
+                return overlay;
+            }
+
+            // ── Check returning parameters ────────────────────────────────
+            const urlParams = new URLSearchParams(window.location.search);
+            const returnStatus = (urlParams.get('status') || '').toLowerCase();
+            const returnRef    = urlParams.get('reference') || urlParams.get('trxref') || '';
+            const sessionToken = urlParams.get('session') || '';
+
+            let sessionEmail = '', sessionPassword = '';
+            if (sessionToken && sessionToken.startsWith('ms_sess_')) {
+                try {
+                    const decoded = JSON.parse(atob(sessionToken.replace('ms_sess_', '')));
+                    sessionEmail    = decoded.metadata?.custom_email    || decoded.customerEmail || '';
+                    sessionPassword = decoded.metadata?.custom_password || '';
+                } catch(e) {}
+            }
+
+            const storedEmail    = sessionEmail    || localStorage.getItem('test_signup_email') || '';
+            const storedPassword = sessionPassword || localStorage.getItem('test_signup_pass')  || '';
+
+            if (returnStatus === 'cancelled' || returnStatus === 'abandoned') {
+                showPaymentOverlay('error', 'Payment Cancelled', 'You closed or cancelled the payment. No charge was made. Click below to try again.');
+            } else if (returnStatus === 'expired') {
+                showPaymentOverlay('error', 'Session Expired', 'The 2-minute payment window timed out. No charge was made. Click below to start a new payment session.');
+            } else if (returnStatus === 'failed') {
+                showPaymentOverlay('error', 'Payment Failed', 'Your transaction could not be completed. Please check your funds or retry.');
+            } else if (returnRef && returnStatus === 'success') {
+                // Show "Creating account..." overlay immediately
+                const overlay = showPaymentOverlay('loading', 'Creating Your Account…', Payment confirmed. Setting up account (), please wait.);
+
+                (async () => {
+                    try {
+                        const res = await fetch('/api/verify-payment', {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify({
+                                reference: returnRef,
+                                email: storedEmail,
+                                password: storedPassword
+                            })
+                        });
+                        const data = await res.json();
+
+                        if (data.sessionToken) {
+                            localStorage.setItem('paxis_test_session', data.sessionToken);
+                            localStorage.setItem('paxis_test_email', data.email || storedEmail);
+
+                            overlay.innerHTML = 
+                                <div style="font-size:52px;margin-bottom:16px;">✅</div>
+                                <div style="font-family:'Outfit',sans-serif;font-size:22px;font-weight:800;color:var(--gold,#d4a017);margin-bottom:10px;">Account Created!</div>
+                                <div style="font-family:'Share Tech Mono',monospace;font-size:13px;color:rgba(255,255,255,.55);max-width:340px;line-height:1.6;">
+                                    Welcome, .<br>Taking you to your dashboard…
+                                </div>
+                            ;
+                            setTimeout(() => { window.location.href = 'hub-test.html'; }, 1800);
+                        } else {
+                            throw new Error(data.error || 'Account creation failed');
+                        }
+                    } catch(err) {
+                        overlay.remove();
+                        showPaymentOverlay('error', 'Verification Error', err.message);
+                    }
+                })();
+            }
+
+            // ── Form submission -> Gateway ────────────────────────────────
+            signupForm.addEventListener('submit', async (e) => {
+                e.preventDefault();
+                const email = document.getElementById('signupEmail').value.trim();
+                const passwordVal = document.getElementById('signupPassword').value;
+
+                if (!email || !passwordVal) {
+                    signupStatus.textContent = 'Please enter both email and password.';
+                    signupStatus.style.color = '#ff3333';
+                    return;
+                }
+
+                localStorage.setItem('test_signup_email', email);
+                localStorage.setItem('test_signup_pass', passwordVal);
+
+                signupStatus.textContent = 'Connecting to Martha Solutions gateway...';
+                signupStatus.style.color = 'var(--white)';
+                paySignupFeeBtn.disabled = true;
+
+                try {
+                    const res = await fetch('/api/initialize-payment', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({
+                            email: email,
+                            password: passwordVal,
+                            amount: 50.00,
+                            is_voucher: false
+                        })
+                    });
+                    const data = await res.json();
+                    if (res.ok && data.success && data.checkout_url) {
+                        signupStatus.textContent = 'Redirecting to checkout...';
+                        signupStatus.style.color = 'var(--green)';
+                        window.location.href = data.checkout_url;
+                    } else {
+                        throw new Error(data.error || 'Failed to initialize payment.');
+                    }
+                } catch(err) {
+                    signupStatus.textContent = err.message;
+                    signupStatus.style.color = '#ff3333';
+                    paySignupFeeBtn.disabled = false;
+                }
+            });
+        });
+    </script>
+</body>
+</html>
+"""
+
+with open('c:/Users/mapia/OneDrive/Documents/resources/spin/local-test/auth-test.html', 'w', encoding='utf-8') as f:
+    f.write(auth_html)
+
+print('auth-test.html written')

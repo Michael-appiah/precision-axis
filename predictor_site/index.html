@@ -1,0 +1,479 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Precision Axis &ndash; AI Sports & Casino Analytics</title>
+    <meta name="description" content="Precision Axis delivers AI analytic insights and algorithmic probability predictions for sports games, betting markets, and casino outcomes. Access trial vouchers and explore AI models.">
+    <link rel="stylesheet" href="style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800;900&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+</head>
+<body>
+<div class="page-outer">
+
+    <!-- ── Top Navigation ── -->
+    <nav class="pc-nav">
+        <a href="index.html" class="pc-nav-logo">
+            <div class="logo-mark">P</div>
+            <div class="logo-text-wrap">
+                <span class="logo-txt">Precision Axis</span>
+                <span class="logo-sub">AI SPORTS & CASINO ANALYTICS v4.2</span>
+            </div>
+        </a>
+
+        <div class="pc-nav-links" id="desktopNav">
+            <button class="pc-nav-link active" onclick="showTab('home', this)">Home</button>
+            <button class="pc-nav-link" onclick="showTab('pricing', this)">Pricing</button>
+            <button class="pc-nav-link" onclick="showTab('models', this)">Models</button>
+            <button class="pc-nav-link" onclick="showTab('try', this)">Try It</button>
+        </div>
+
+        <div class="pc-nav-actions">
+            <span id="userStatusNav"></span>
+            <a href="auth.html" class="btn-primary btn-sm" id="navCta">Enter Node</a>
+            <button class="mobile-menu-btn" onclick="toggleMobileNav()" aria-label="Menu"><i data-lucide="menu" style="width:20px;height:20px;"></i></button>
+        </div>
+    </nav>
+
+    <!-- Mobile nav drawer -->
+    <div class="mobile-nav-drawer" id="mobileNavDrawer">
+        <button class="pc-nav-link" onclick="showTab('home', this); toggleMobileNav()">Home</button>
+        <button class="pc-nav-link" onclick="showTab('pricing', this); toggleMobileNav()">Pricing</button>
+        <button class="pc-nav-link" onclick="showTab('models', this); toggleMobileNav()">Models</button>
+        <button class="pc-nav-link" onclick="showTab('try', this); toggleMobileNav()">Try It</button>
+        <div style="padding: 12px 0 4px;">
+            <a href="auth.html" class="btn-primary" style="width:100%; text-align:center;" id="mobileNavCta">Enter Node</a>
+        </div>
+    </div>
+
+    <!-- ── Page Body ── -->
+    <div class="page-inner">
+
+        <!-- ════════════════ HOME ════════════════ -->
+        <div class="tab-content active" id="tab-home">
+
+            <!-- Hero -->
+            <div class="hero-wrap">
+                <div>
+                    <h1 class="hero-h1">AI Analytic Insights for Sports & Casinos</h1>
+                    <p class="hero-sub">
+                        Precision Axis provides real-time algorithmic insights, probabilistic trend analysis, and predictive modeling tailored for sports games and casino outcomes.
+                    </p>
+                    <div class="hero-ctas">
+                        <a href="auth.html" class="btn-primary" id="heroCta">Get Started</a>
+                        <button class="btn-ghost" onclick="showTab('pricing', document.querySelector('.pc-nav-link:nth-child(2)'))">See Pricing</button>
+                    </div>
+                </div>
+
+                <!-- Live panel -->
+                <div class="hero-panel">
+                    <div class="hero-panel-header">
+                        <span class="hero-panel-title">AI Engine Status</span>
+                        <div class="online-dot"></div>
+                    </div>
+                    <div class="stat-grid">
+                        <div class="stat-cell">
+                            <span class="stat-value" id="sessionCount">1,247</span>
+                            <span class="stat-label">Sessions</span>
+                        </div>
+                        <div class="stat-cell">
+                            <span class="stat-value">v4.2</span>
+                            <span class="stat-label">Version</span>
+                        </div>
+                        <div class="stat-cell">
+                            <span class="stat-value">20</span>
+                            <span class="stat-label">Cycle Window</span>
+                        </div>
+                        <div class="stat-cell">
+                            <span class="stat-value" style="color: var(--cyan);">4ms</span>
+                            <span class="stat-label">Avg Latency</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <hr class="section-divider">
+
+            <!-- Features -->
+            <div class="section-head">
+                <h2>How AI Analytics Power Predictions</h2>
+                <p>Advanced algorithmic engines process game data to calculate dynamic probabilities.</p>
+            </div>
+
+            <div class="features-grid">
+                <div class="feature-card">
+                    <h3>Sports & Casino Analytics</h3>
+                    <p>Calculates algorithmic win vectors and statistical distributions across binary casino games and sports betting markets.</p>
+                </div>
+                <div class="feature-card">
+                    <h3>Streak & Pattern Recognition</h3>
+                    <p>Identifies short-term run-lengths, cycle shifts, and statistical variance in real-time to optimize entry timing.</p>
+                </div>
+                <div class="feature-card">
+                    <h3>Live Probabilistic Mapping</h3>
+                    <p>Builds a high-precision probability map per query from micro-state data with ultra-low latency processing.</p>
+                </div>
+            </div>
+
+        </div>
+
+        <div class="tab-content" id="tab-pricing">
+            <div class="section-head">
+                <h2>Voucher pricing</h2>
+                <p>One-time vouchers. No subscriptions. Each voucher grants a fixed number of prediction trials.</p>
+            </div>
+
+            <div class="pricing-row">
+
+                <!-- $25 -->
+                <div class="pricing-card">
+                    <div class="pricing-tier">Starter</div>
+                    <div class="pricing-price">$25 <sub>/ voucher</sub></div>
+                    <p class="pricing-desc">Good for short sessions and testing the predictor.</p>
+                    <hr class="pricing-divider">
+                    <ul class="pricing-features">
+                        <li><i data-lucide="check" class="check-icon"></i> 3 Prediction Trials</li>
+                        <li><i data-lucide="check" class="check-icon"></i> Spin da' Bottle Module</li>
+                        <li><i data-lucide="check" class="check-icon"></i> Standard Latency</li>
+                        <li><i data-lucide="check" class="check-icon"></i> Email Support</li>
+                    </ul>
+                    <a href="pricing.html" class="btn-ghost" style="width:100%; text-align:center;">Get Starter</a>
+                </div>
+
+                <!-- $70 (featured) -->
+                <div class="pricing-card featured">
+                    <div class="popular-badge">Most Popular</div>
+                    <div class="pricing-tier">Standard</div>
+                    <div class="pricing-price">$70 <sub>/ voucher</sub></div>
+                    <p class="pricing-desc">Best value. Full trial sessions with priority access.</p>
+                    <hr class="pricing-divider">
+                    <ul class="pricing-features">
+                        <li><i data-lucide="check" class="check-icon"></i> 5 Prediction Trials</li>
+                        <li><i data-lucide="check" class="check-icon"></i> All Active Modules</li>
+                        <li><i data-lucide="check" class="check-icon"></i> Priority Latency</li>
+                        <li><i data-lucide="check" class="check-icon"></i> Full Session Logs</li>
+                        <li><i data-lucide="check" class="check-icon"></i> Email + Chat Support</li>
+                    </ul>
+                    <a href="pricing.html" class="btn-primary" style="width:100%; text-align:center;">Get Standard</a>
+                </div>
+
+                <!-- $100 -->
+                <div class="pricing-card">
+                    <div class="pricing-tier">Pro</div>
+                    <div class="pricing-price">$100 <sub>/ voucher</sub></div>
+                    <p class="pricing-desc">Maximum trials per voucher with dedicated node access.</p>
+                    <hr class="pricing-divider">
+                    <ul class="pricing-features">
+                        <li><i data-lucide="check" class="check-icon"></i> 10 Prediction Trials</li>
+                        <li><i data-lucide="check" class="check-icon"></i> All Active Modules</li>
+                        <li><i data-lucide="check" class="check-icon"></i> Dedicated Node</li>
+                        <li><i data-lucide="check" class="check-icon"></i> Full Session Logs</li>
+                        <li><i data-lucide="check" class="check-icon"></i> Priority Support</li>
+                        <li><i data-lucide="check" class="check-icon"></i> Extended Cycle Analysis</li>
+                    </ul>
+                    <a href="pricing.html" class="btn-ghost" style="width:100%; text-align:center;">Get Pro</a>
+                </div>
+            </div>
+
+            <!-- Disclaimer -->
+            <div style="background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 20px 24px; margin-bottom: 64px; font-size: 12.5px; color: var(--text-secondary); line-height: 1.7;">
+                Precision Axis is an experimental system. All predictions are probabilistic computations — not financial guarantees. By purchasing a voucher you acknowledge the inherent risk of using this system with real money.
+            </div>
+        </div>
+
+        <!-- ════════════════ MODELS ════════════════ -->
+        <div class="tab-content" id="tab-models">
+            <div class="section-head">
+                <h2>Predictor Models</h2>
+                <p>Each resolver module is tuned to a specific game entropy profile and cycle architecture.</p>
+            </div>
+
+            <div class="models-row" style="margin-bottom: 64px;">
+                <div class="model-card">
+                    <div class="model-tag">Active &middot; v4.2</div>
+                    <div class="model-name">Spin da' Bottle Resolver</div>
+                    <p class="model-desc">Designed for the 50/50 UP/DOWN binary game. Uses 20-cycle entropy windows with run-length feedback to generate direction predictions in real-time.</p>
+                    <div class="accuracy-row">
+                        <div class="acc-bar"><div class="acc-fill" style="width: 72%;"></div></div>
+                        <span class="acc-label">72% Calibration</span>
+                    </div>
+                </div>
+
+                <div class="model-card locked">
+                    <div class="model-tag locked-tag">Locked &middot; Region</div>
+                    <div class="model-name">Aviator Predictor</div>
+                    <p class="model-desc">Crash-game multiplier prediction engine with dynamic threshold mapping. Not available in your region.</p>
+                    <div class="accuracy-row">
+                        <div class="acc-bar"><div class="acc-fill" style="width: 0%;"></div></div>
+                        <span class="acc-label" style="color: var(--text-muted);">Unavailable</span>
+                    </div>
+                </div>
+
+                <div class="model-card locked">
+                    <div class="model-tag locked-tag">In Development</div>
+                    <div class="model-name">Spin2Win Module</div>
+                    <p class="model-desc">Wheel-segment resolver using angular momentum entropy sampling. Currently under development.</p>
+                    <div class="accuracy-row">
+                        <div class="acc-bar"><div class="acc-fill" style="width: 0%;"></div></div>
+                        <span class="acc-label" style="color: var(--text-muted);">Unavailable</span>
+                    </div>
+                </div>
+
+                <div class="model-card locked">
+                    <div class="model-tag locked-tag">In Development</div>
+                    <div class="model-name">Skyward Predictor</div>
+                    <p class="model-desc">Altitude-based crash predictor with probabilistic landing-zone mapping. Under development.</p>
+                    <div class="accuracy-row">
+                        <div class="acc-bar"><div class="acc-fill" style="width: 0%;"></div></div>
+                        <span class="acc-label" style="color: var(--text-muted);">Unavailable</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ════════════════ TRY IT ════════════════ -->
+        <div class="tab-content" id="tab-try">
+            <div class="section-head">
+                <h2>Try the Engine</h2>
+                <p>Run a demo prediction. No voucher or account needed — results are fully simulated.</p>
+            </div>
+
+            <div class="try-wrap">
+
+                <!-- Input form -->
+                <div class="try-form">
+                    <div class="panel-top">
+                        <span class="panel-label">Demo Input</span>
+                        <span style="font-size: 10px; color: var(--green); font-family: var(--font-mono); font-weight: 700; display:inline-flex; align-items:center; gap:5px;"><i data-lucide="radio" style="width:10px;height:10px;"></i> DEMO MODE</span>
+                    </div>
+                    <div class="try-fields">
+                        <div>
+                            <label class="field-label">Recent Outcomes</label>
+                            <input type="text" class="field-input" id="demoHistory" placeholder="UP,DOWN,UP,UP,DOWN">
+                            <div style="font-size: 11px; color: var(--text-muted); margin-top: 5px;">Comma-separated UP or DOWN values</div>
+                        </div>
+                        <div>
+                            <label class="field-label">Cycle Position (1–20)</label>
+                            <input type="number" class="field-input" id="demoCycle" placeholder="e.g. 7" min="1" max="20">
+                        </div>
+                        <button onclick="runDemo()" class="btn-primary" style="width:100%; text-align:center;">Run demo</button>
+                        <div class="status-msg" id="demoStatus"></div>
+                    </div>
+                    <div class="demo-notice">
+                        Demo uses a simplified simulation. Full resolver access requires a paid voucher and registered account.
+                    </div>
+                </div>
+
+                <!-- Terminal output -->
+                <div class="try-terminal">
+                    <div class="panel-top">
+                        <span class="panel-label">Output Terminal</span>
+                    </div>
+                    <div class="terminal-body" id="demoTerminal">
+                        <div class="t-dim">// PRECISION AXIS DEMO TERMINAL</div>
+                        <div class="t-dim">// Enter parameters above and click Run</div>
+                        <div>&nbsp;</div>
+                        <div class="t-dim">> Waiting for input...</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div><!-- end page-inner -->
+
+    <!-- Footer -->
+    <footer class="site-footer">
+        <span>Experimental tool. Use at your own risk.</span>
+        <span style="font-family: var(--font-mono); font-size: 11px;">&copy; 2026 Precision Axis Ltd.</span>
+    </footer>
+
+</div><!-- end page-outer -->
+
+<script>
+    // ── Tab switching ──
+    function showTab(tabId, clickedEl) {
+        document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+        document.querySelectorAll('.pc-nav-link').forEach(l => l.classList.remove('active'));
+        document.getElementById('tab-' + tabId).classList.add('active');
+        if (clickedEl) clickedEl.classList.add('active');
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    function toggleMobileNav() {
+        document.getElementById('mobileNavDrawer').classList.toggle('open');
+    }
+
+    // ── Session check ──
+    window.addEventListener('DOMContentLoaded', async () => {
+        const navCta = document.getElementById('navCta');
+        const mobileNavCta = document.getElementById('mobileNavCta');
+        const heroCta = document.getElementById('heroCta');
+        const userStatusNav = document.getElementById('userStatusNav');
+        const sessionToken = localStorage.getItem('paxis_session');
+
+        if (sessionToken) {
+            try {
+                const res = await fetch('/.netlify/functions/handle-session', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ sessionToken, action: 'GET_SESSION' })
+                });
+                const data = await res.json();
+
+                if (res.ok && data.success) {
+                    userStatusNav.textContent = data.email.split('@')[0].toUpperCase();
+                    userStatusNav.style.display = 'inline';
+
+                    const doLogout = async (e) => {
+                        e.preventDefault();
+                        await fetch('/.netlify/functions/handle-session', {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify({ sessionToken, action: 'CLEAR_SESSION' })
+                        }).catch(() => {});
+                        localStorage.removeItem('paxis_session');
+                        window.location.reload();
+                    };
+
+                    [navCta, mobileNavCta].forEach(el => {
+                        el.textContent = 'Logout';
+                        el.href = '#';
+                        el.addEventListener('click', doLogout);
+                    });
+
+                    if (heroCta) {
+                        heroCta.href = 'hub.html';
+                        heroCta.textContent = 'Open Dashboard';
+                    }
+                    return;
+                }
+            } catch (e) {}
+        }
+
+        localStorage.removeItem('paxis_session');
+        if (heroCta) { heroCta.href = 'auth.html'; heroCta.textContent = 'Acquire Voucher'; }
+    });
+
+    // ── Live session counter animation ──
+    let count = 1247;
+    setInterval(() => {
+        if (Math.random() < 0.3) {
+            count += Math.floor(Math.random() * 3) + 1;
+            const el = document.getElementById('sessionCount');
+            if (el) el.textContent = count.toLocaleString();
+        }
+    }, 4000);
+
+    // ── Demo resolver ──
+    function runDemo() {
+        const histIn = document.getElementById('demoHistory').value.trim();
+        const cycleIn = parseInt(document.getElementById('demoCycle').value);
+        const terminal = document.getElementById('demoTerminal');
+        const status = document.getElementById('demoStatus');
+
+        status.className = 'status-msg';
+        status.textContent = '';
+
+        if (!histIn) { status.className = 'status-msg error'; status.textContent = 'Enter at least one outcome.'; return; }
+        if (!cycleIn || cycleIn < 1 || cycleIn > 20) { status.className = 'status-msg error'; status.textContent = 'Cycle must be between 1 and 20.'; return; }
+
+        const outcomes = histIn.split(',').map(s => s.trim().toUpperCase());
+        if (!outcomes.every(o => o === 'UP' || o === 'DOWN')) {
+            status.className = 'status-msg error';
+            status.textContent = 'Only UP or DOWN values allowed.';
+            return;
+        }
+
+        terminal.innerHTML = '';
+
+        const ups = outcomes.filter(o => o === 'UP').length;
+        const downs = outcomes.length - ups;
+        const last = outcomes.slice(-5);
+        const streak = last.filter(o => o === last[last.length - 1]).length;
+        const prediction = ups > downs ? 'DOWN' : ups < downs ? 'UP' : (Math.random() < 0.5 ? 'UP' : 'DOWN');
+        const confidence = Math.min(52 + streak * 5 + Math.floor(Math.random() * 6), 78);
+
+        const lines = [
+            { text: `> input: [${outcomes.join(', ')}]`, cls: 't-white' },
+            { text: `> cycle position: ${cycleIn} / 20`, cls: 't-white' },
+            { text: `> UP: ${ups}  DOWN: ${downs}`, cls: 't-white' },
+            { text: `> last-5 streak: ${streak}× ${last[last.length-1]}`, cls: 't-white' },
+            { text: ' ', cls: '' },
+            { text: '> scanning entropy micro-states...', cls: 't-dim' },
+            { text: '> applying run-length feedback weights...', cls: 't-dim' },
+            { text: '> building probability vector...', cls: 't-dim' },
+            { text: ' ', cls: '' },
+            { text: `> PREDICTION ——— ${prediction}`, cls: 't-gold' },
+            { text: `> CONFIDENCE ——— ~${confidence}%`, cls: 't-gold' },
+            { text: ' ', cls: '' },
+            { text: 'Simulated result. Full resolver requires voucher.', cls: 't-dim' }
+        ];
+
+        let i = 0;
+        const iv = setInterval(() => {
+            if (i >= lines.length) {
+                clearInterval(iv);
+                status.className = 'status-msg success';
+                status.textContent = 'Done. Demo complete.';
+                return;
+            }
+            const d = document.createElement('div');
+            d.className = lines[i].cls;
+            d.textContent = lines[i].text;
+            terminal.appendChild(d);
+            terminal.scrollTop = terminal.scrollHeight;
+            i++;
+        }, 110);
+    }
+    // Init Lucide icons
+    if (typeof lucide !== 'undefined') lucide.createIcons();
+
+    // Check Maintenance Mode Status
+    (async function checkMaintenanceMode() {
+        try {
+            const res = await fetch('/.netlify/functions/site-status');
+            const data = await res.json();
+            if (data && data.maintenance === true) {
+                const token = localStorage.getItem('paxis_session');
+                if (token) {
+                    try {
+                        const sessionRes = await fetch('/.netlify/functions/handle-session', {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify({ sessionToken: token, action: 'GET_SESSION' })
+                        });
+                        const sessionData = await sessionRes.json();
+                        if (sessionData && sessionData.success && sessionData.email === 'admin@node.net') {
+                            return; // Admin bypass
+                        }
+                    } catch(e) {}
+                }
+
+                const mOverlay = document.createElement('div');
+                mOverlay.id = 'maintenanceOverlay';
+                mOverlay.style.cssText = 'position:fixed; top:0; left:0; width:100vw; height:100vh; background:#07080a; color:#ffffff; z-index:999999; display:flex; flex-direction:column; justify-content:center; align-items:center; text-align:center; padding:24px; box-sizing:border-box; font-family:"Share Tech Mono", monospace;';
+                mOverlay.innerHTML = `
+                    <div style="max-width:540px; border:2px solid #ffb300; background:rgba(255,179,0,0.03); padding:40px 28px; border-radius:8px; box-shadow:0 0 40px rgba(255,179,0,0.15); position:relative;">
+                        <div style="font-size:42px; margin-bottom:12px;">🛠️</div>
+                        <div style="color:#ffb300; font-size:11px; font-weight:800; letter-spacing:2px; text-transform:uppercase; margin-bottom:8px;">[ SYSTEM NOTICE ]</div>
+                        <h1 style="font-family:'Outfit', sans-serif; font-size:26px; font-weight:900; color:#ffffff; margin:0 0 14px; line-height:1.2;">SYSTEM UNDER MAINTENANCE</h1>
+                        <p style="font-family:'Outfit', sans-serif; font-size:14px; color:#888899; line-height:1.6; margin:0 0 24px;">
+                            Precision Axis nodes are currently undergoing scheduled algorithmic engine maintenance and system upgrades. Client sessions will resume shortly.
+                        </p>
+                        <div style="display:inline-flex; align-items:center; gap:10px; background:rgba(255,179,0,0.1); border:1px solid #ffb300; padding:8px 16px; border-radius:20px; font-size:12px; color:#ffb300; font-weight:700;">
+                            <span style="width:8px; height:8px; background:#ffb300; border-radius:50%; display:inline-block;"></span>
+                            STATUS: MAINTENANCE ACTIVE
+                        </div>
+                    </div>
+                `;
+                document.body.appendChild(mOverlay);
+                document.body.style.overflow = 'hidden';
+            }
+        } catch(e) {}
+    })();
+</script>
+</body>
+</html>

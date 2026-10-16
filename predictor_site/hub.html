@@ -1,0 +1,1581 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Precision Axis &ndash; Dashboard</title>
+    <!-- FontAwesome CDN -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <script>
+        (async () => {
+            const token = localStorage.getItem('paxis_session');
+            if (!token) {
+                window.location.href = 'auth.html';
+                return;
+            }
+            try {
+                const res = await fetch('/.netlify/functions/handle-session', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ sessionToken: token, action: 'GET_SESSION' })
+                });
+                const data = await res.json();
+                if (!res.ok || !data.success) {
+                    localStorage.removeItem('paxis_session');
+                    window.location.href = 'auth.html';
+                    return;
+                }
+            } catch (e) {
+                window.location.href = 'auth.html';
+            }
+        })();
+    </script>
+    <style>
+        :root {
+            --bg-paypal: #0c0e11;       /* Dark background matching main lobby */
+            --paypal-blue: #ea0725;     /* Sporty red primary accent */
+            --paypal-darkblue: #ffffff; /* Contrast headings */
+            --white: #181a1f;           /* Card/Panel background */
+            --text-main: #ffffff;       /* Primary text */
+            --text-secondary: #9299a5;  /* Secondary text */
+            --border-light: rgba(255, 255, 255, 0.08); /* Subtle border lines */
+            --accent-green: #34c759;    /* Sporty active green */
+            --font-main: 'Outfit', sans-serif;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            -webkit-tap-highlight-color: transparent;
+            font-family: var(--font-main);
+        }
+
+        body {
+            background-color: var(--bg-paypal);
+            color: var(--text-main);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+        }
+
+        /* --- Main responsive layout outer --- */
+        .dashboard-container {
+            width: 100%;
+            max-width: 450px;
+            min-height: 100vh;
+            background: var(--bg-paypal);
+            display: flex;
+            flex-direction: column;
+            position: relative;
+            padding-bottom: 74px; /* Space for bottom tabs */
+            border-left: 1px solid var(--border-light);
+            border-right: 1px solid var(--border-light);
+        }
+
+        /* --- PC left sidebar (hidden on mobile) --- */
+        .pc-sidebar {
+            display: none;
+        }
+
+        .main-content-wrapper {
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            flex: 1;
+        }
+
+        /* --- Header --- */
+        header {
+            padding: 20px 24px;
+            border-bottom: 1px solid var(--border-light);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: var(--white);
+        }
+
+        .logo-section {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .logo-icon {
+            font-size: 22px;
+            color: var(--paypal-blue);
+        }
+
+        .logo-title h1 {
+            font-size: 18px;
+            font-weight: 800;
+            letter-spacing: -0.3px;
+            color: var(--paypal-darkblue);
+        }
+
+        /* --- Tab Contents --- */
+        .tab-content {
+            display: none;
+            padding: 24px;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .tab-content.active {
+            display: flex;
+        }
+
+        /* --- Cards --- */
+        .paypal-card {
+            background: var(--white);
+            border: 1px solid var(--border-light);
+            border-radius: 16px;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+            box-shadow: 0 2px 12px rgba(0,0,0,0.015);
+        }
+
+        .paypal-card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 13px;
+            font-weight: 700;
+            color: var(--text-secondary);
+        }
+
+        .voucher-title {
+            font-size: 24px;
+            font-weight: 800;
+            color: var(--paypal-darkblue);
+        }
+
+        .voucher-trials-detail {
+            font-size: 14px;
+            color: var(--text-main);
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        /* Progress Bar */
+        .progress-container {
+            width: 100%;
+            height: 6px;
+            background: rgba(255, 255, 255, 0.08);
+            border-radius: 3px;
+            overflow: hidden;
+            margin-top: 4px;
+        }
+
+        .progress-bar-fill {
+            height: 100%;
+            background: var(--paypal-blue);
+            width: 0%;
+            transition: width 0.3s ease;
+        }
+
+        /* --- Predictors Grid --- */
+        .hub-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 14px;
+        }
+
+        .hub-card {
+            background: var(--white);
+            border: 1px solid var(--border-light);
+            border-radius: 12px;
+            overflow: hidden;
+            cursor: pointer;
+            transition: transform 0.15s ease;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+        }
+
+        .hub-card:hover {
+            transform: scale(1.02);
+        }
+
+        .hub-thumb-container {
+            width: 100%;
+            height: 90px;
+            background: #111318;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+            border-bottom: 1px solid var(--border-light);
+        }
+
+        .hub-thumb {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .hub-info {
+            padding: 10px 12px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .hub-name {
+            font-size: 12px;
+            font-weight: 700;
+            color: var(--text-main);
+        }
+
+        .hub-badge {
+            font-size: 10px;
+            font-weight: 700;
+            color: var(--accent-green);
+        }
+
+        .hub-badge.locked {
+            color: var(--text-secondary);
+        }
+
+        /* Region locks */
+        .lock-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(12, 14, 17, 0.94);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            gap: 6px;
+            color: var(--text-main);
+            font-size: 11px;
+            font-weight: 700;
+            text-align: center;
+            padding: 10px;
+            opacity: 0;
+            transition: opacity 0.2s ease;
+            pointer-events: none;
+            z-index: 10;
+        }
+
+        .lock-overlay.show {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        /* --- Settings List --- */
+        .settings-list {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .form-group label {
+            font-size: 11px;
+            color: var(--text-secondary);
+            font-weight: 700;
+            text-transform: uppercase;
+        }
+
+        .form-control {
+            background: var(--bg-paypal);
+            border: 1px solid var(--border-light);
+            color: var(--text-main);
+            padding: 12px;
+            font-size: 14px;
+            border-radius: 8px;
+            outline: none;
+            width: 100%;
+            transition: border-color 0.15s;
+        }
+
+        .form-control:focus {
+            border-color: var(--paypal-blue);
+        }
+
+        /* Lobby White/Red Outline Buttons */
+        .btn-paypal-blue {
+            width: 100%;
+            background: #ffffff;
+            color: var(--paypal-blue);
+            border: 1.5px solid var(--paypal-blue);
+            padding: 12px;
+            border-radius: 24px;
+            font-size: 13.5px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: background 0.15s, color 0.15s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .btn-paypal-blue:hover {
+            background: var(--paypal-blue);
+            color: #ffffff;
+        }
+
+        /* ── Pinned Fixed Bottom Navigation Bar ── */
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100%;
+            max-width: 450px;
+            height: 64px;
+            background: #000000; /* Pure black background matching lobby */
+            border-top: 1px solid var(--border-light);
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            z-index: 100;
+        }
+
+        .nav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 4px;
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-size: 11px;
+            font-weight: 500;
+            cursor: pointer;
+            flex: 1;
+            height: 100%;
+            transition: color 0.15s ease;
+        }
+
+        .nav-item.active {
+            color: var(--paypal-blue);
+            font-weight: 700;
+        }
+
+        .nav-item i {
+            font-size: 18px;
+        }
+
+        /* History and Vouchers log lists */
+        .history-list, .voucher-history-list {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .history-item, .voucher-purchase-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px 0;
+            border-bottom: 1px solid var(--border-light);
+        }
+
+        .history-item:last-child, .voucher-purchase-item:last-child {
+            border-bottom: none;
+        }
+
+        .hist-left, .v-left {
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+        }
+
+        .hist-outcome {
+            font-size: 14px;
+            font-weight: 700;
+            color: var(--paypal-darkblue);
+        }
+
+        .hist-date, .v-details {
+            font-size: 11px;
+            color: var(--text-secondary);
+        }
+
+        .hist-trials-change {
+            font-size: 14px;
+            font-weight: 800;
+            color: var(--paypal-blue);
+        }
+
+        .v-code {
+            font-size: 14px;
+            font-weight: 700;
+            color: var(--paypal-darkblue);
+            font-family: 'Share Tech Mono', monospace;
+            letter-spacing: 0.5px;
+        }
+
+        .v-right {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+            gap: 2px;
+        }
+
+        .v-cost {
+            font-size: 14px;
+            font-weight: 800;
+            color: var(--paypal-blue);
+        }
+
+        .v-status {
+            font-size: 10px;
+            font-weight: 700;
+            text-transform: uppercase;
+        }
+        .v-status.active { color: var(--accent-green); }
+        .v-status.used { color: var(--text-secondary); }
+
+        /* ── RESPONSIVE PC SIDEBAR VIEW ── */
+        @media (min-width: 769px) {
+            body {
+                align-items: center;
+                justify-content: center;
+                padding: 40px 20px;
+            }
+            
+            .dashboard-container {
+                max-width: 1000px;
+                flex-direction: row;
+                border: 1px solid var(--border-light);
+                border-radius: 16px;
+                overflow: hidden;
+                box-shadow: 0 12px 40px rgba(0,0,0,0.5);
+                padding-bottom: 0; /* Remove bottom tabs space */
+            }
+
+            /* Show PC Sidebar */
+            .pc-sidebar {
+                display: flex;
+                flex-direction: column;
+                width: 260px;
+                background: var(--white);
+                border-right: 1px solid var(--border-light);
+                flex-shrink: 0;
+            }
+
+            .main-content-wrapper {
+                flex: 1;
+                background: var(--bg-paypal);
+                display: flex;
+                flex-direction: column;
+                height: 720px;
+                overflow-y: auto;
+            }
+
+            /* Hide Mobile headers / tabs */
+            #mainHeader {
+                display: none !important;
+            }
+            .bottom-nav {
+                display: none !important;
+            }
+
+            /* Sidebar menu item styles */
+            .sidebar-item {
+                display: flex;
+                align-items: center;
+                gap: 12px;
+                padding: 12px 18px;
+                color: var(--text-secondary);
+                border-radius: 8px;
+                cursor: pointer;
+                font-weight: 600;
+                font-size: 14.5px;
+                transition: color 0.15s, background 0.15s;
+            }
+            .sidebar-item:hover {
+                color: #fff;
+                background: rgba(255, 255, 255, 0.04);
+            }
+            .sidebar-item.active {
+                color: #fff;
+                background: var(--paypal-blue);
+            }
+        }
+        
+        /* Support Floating Widget Styles */
+        .support-bubble {
+            position: fixed;
+            bottom: 24px;
+            right: 24px;
+            width: 50px;
+            height: 50px;
+            background: var(--paypal-blue);
+            color: #fff;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 20px;
+            cursor: pointer;
+            box-shadow: 0 4px 16px rgba(234, 7, 37, 0.4);
+            z-index: 1000;
+            transition: transform 0.2s;
+        }
+        .support-bubble:hover {
+            transform: scale(1.08);
+        }
+        .support-window {
+            position: fixed;
+            bottom: 86px;
+            right: 24px;
+            width: 320px;
+            height: 420px;
+            background: #181a1f;
+            border: 1px solid var(--border-light);
+            border-radius: 12px;
+            display: none;
+            flex-direction: column;
+            box-shadow: 0 8px 30px rgba(0,0,0,0.5);
+            z-index: 1000;
+            overflow: hidden;
+        }
+        .support-window-header {
+            background: #111318;
+            padding: 12px 16px;
+            border-bottom: 1px solid var(--border-light);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .support-window-title {
+            font-weight: 700;
+            font-size: 13px;
+            color: #fff;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .support-close-btn {
+            background: transparent;
+            border: none;
+            color: var(--text-secondary);
+            font-size: 18px;
+            cursor: pointer;
+            line-height: 1;
+        }
+        .support-chat-viewport {
+            flex: 1;
+            padding: 16px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            max-height: 310px;
+        }
+        .support-input-panel {
+            padding: 10px;
+            border-top: 1px solid var(--border-light);
+            background: #111318;
+            display: flex;
+            gap: 8px;
+        }
+        .support-input {
+            flex: 1;
+            background: #181a1f;
+            border: 1px solid var(--border-light);
+            color: #fff;
+            padding: 8px 12px;
+            font-size: 12.5px;
+            border-radius: 4px;
+            outline: none;
+        }
+        .support-send-btn {
+            background: var(--paypal-blue);
+            color: #fff;
+            border: none;
+            padding: 8px 14px;
+            border-radius: 4px;
+            font-weight: 700;
+            font-size: 12.5px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <div class="dashboard-container">
+        
+        <!-- PC Left Navigation Sidebar (Only visible on wide layouts) -->
+        <aside class="pc-sidebar">
+            <div class="logo-section" style="padding: 24px; border-bottom: 1px solid var(--border-light);">
+                <i class="fa-solid fa-chart-line logo-icon"></i>
+                <div class="logo-title" style="margin-left: 10px;">
+                    <h1 style="color: #fff; font-size: 18px; font-weight: 800; letter-spacing: -0.3px;">Precision Axis</h1>
+                </div>
+            </div>
+            
+            <nav style="padding: 24px 14px; display: flex; flex-direction: column; gap: 8px; flex-grow: 1;">
+                <div class="sidebar-item active" onclick="switchTab('Home', this)">
+                    <i class="fa-solid fa-house"></i>
+                    <span>Home</span>
+                </div>
+                <div class="sidebar-item" onclick="switchTab('Vouchers', this)">
+                    <i class="fa-solid fa-ticket"></i>
+                    <span>Vouchers</span>
+                </div>
+                <div class="sidebar-item" onclick="switchTab('Transactions', this)">
+                    <i class="fa-solid fa-receipt"></i>
+                    <span>Transactions</span>
+                </div>
+                <div class="sidebar-item" onclick="switchTab('History', this)">
+                    <i class="fa-solid fa-clock-rotate-left"></i>
+                    <span>History</span>
+                </div>
+                <div class="sidebar-item" onclick="switchTab('Settings', this)">
+                    <i class="fa-regular fa-user"></i>
+                    <span>Settings</span>
+                </div>
+            </nav>
+
+            <a href="#" class="pc-logout-trigger" id="pcLogoutBtn" style="padding: 20px 24px; border-top: 1px solid var(--border-light); color: var(--text-secondary); text-decoration: none; font-size: 13.5px; font-weight: 600; display: flex; align-items: center; gap: 10px;">
+                <i class="fa-solid fa-right-from-bracket"></i>
+                <span>Logout</span>
+            </a>
+        </aside>
+
+        <!-- Right Side / Main content pane wrapper -->
+        <div class="main-content-wrapper">
+            
+            <!-- Mobile Header (Hidden on PC) -->
+            <header id="mainHeader">
+                <div class="logo-section">
+                    <i class="fa-solid fa-chart-line logo-icon"></i>
+                    <div class="logo-title">
+                        <h1>Precision Axis</h1>
+                    </div>
+                </div>
+                <a href="#" id="logoutBtn" style="color: var(--text-secondary); text-decoration: none; font-size: 13px; font-weight: 600;"><i class="fa-solid fa-right-from-bracket"></i> Logout</a>
+            </header>
+
+            <!-- Tab 1: Home (Choose Predictor modules list) -->
+            <div id="tabContentHome" class="tab-content active">
+                <div style="margin-bottom: 6px;">
+                    <h3 style="font-size: 18px; font-weight: 700; color: var(--paypal-darkblue); margin-bottom: 4px;">AI Predictor Analytics</h3>
+                    <p style="font-size: 12px; color: var(--text-secondary);">AI-powered analytic insights for sports games & casino outcomes</p>
+                </div>
+
+                <!-- Grid list -->
+                <div class="hub-grid">
+                    <!-- Spin the Bottle Module -->
+                    <div class="hub-card" onclick="enterGame()">
+                        <div class="hub-thumb-container">
+                            <img class="hub-thumb" src="spindabottle.png" alt="Spin the Bottle">
+                        </div>
+                        <div class="hub-info">
+                            <span class="hub-name">Spin da' Bottle</span>
+                            <span class="hub-badge"><i class="fa-solid fa-circle-check"></i> Active</span>
+                        </div>
+                    </div>
+
+                    <!-- Virtual Football Module -->
+                    <div class="hub-card" onclick="window.location.href='virtual_panel.html'">
+                        <div class="hub-thumb-container">
+                            <img class="hub-thumb" src="virtuals.png" alt="Virtual Football" style="object-fit: cover;">
+                        </div>
+                        <div class="hub-info">
+                            <span class="hub-name">Virtual Football</span>
+                            <span class="hub-badge" style="color: #34c759;"><i class="fa-solid fa-circle-check"></i> Active</span>
+                        </div>
+                    </div>
+
+                    <!-- Aviator Module -->
+                    <div class="hub-card" onclick="showRegionLock(this)">
+                        <div class="hub-thumb-container">
+                            <img class="hub-thumb" src="aviator.png" alt="Aviator">
+                            <div class="lock-overlay">
+                                <i class="fa-solid fa-lock" style="font-size: 16px; margin-bottom: 4px;"></i>
+                                <span>Not available</span>
+                            </div>
+                        </div>
+                        <div class="hub-info">
+                            <span class="hub-name">Aviator</span>
+                            <span class="hub-badge locked">Locked</span>
+                        </div>
+                    </div>
+
+                    <!-- Spin2Win Module -->
+                    <div class="hub-card" onclick="showRegionLock(this)">
+                        <div class="hub-thumb-container">
+                            <img class="hub-thumb" src="spin2win.png" alt="Spin2Win">
+                            <div class="lock-overlay">
+                                <i class="fa-solid fa-lock" style="font-size: 16px; margin-bottom: 4px;"></i>
+                                <span>Not available</span>
+                            </div>
+                        </div>
+                        <div class="hub-info">
+                            <span class="hub-name">Spin2Win</span>
+                            <span class="hub-badge locked">Locked</span>
+                        </div>
+                    </div>
+
+                    <!-- Skyward Module -->
+                    <div class="hub-card" onclick="showRegionLock(this)">
+                        <div class="hub-thumb-container">
+                            <img class="hub-thumb" src="skyward_deluxe.png" alt="Skyward">
+                            <div class="lock-overlay">
+                                <i class="fa-solid fa-lock" style="font-size: 16px; margin-bottom: 4px;"></i>
+                                <span>Not available</span>
+                            </div>
+                        </div>
+                        <div class="hub-info">
+                            <span class="hub-name">Skyward</span>
+                            <span class="hub-badge locked">Locked</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tab 2: Vouchers (Current Active Voucher and Previous Purchases) -->
+            <div id="tabContentVouchers" class="tab-content">
+                <div style="margin-bottom: 14px; display: flex; justify-content: space-between; align-items: center;">
+                    <div>
+                        <h3 style="font-size: 18px; font-weight: 700; color: var(--paypal-darkblue);">Your Vouchers</h3>
+                        <p style="font-size: 12px; color: var(--text-secondary);">Manage active keys and previous purchases</p>
+                    </div>
+                    <a href="pricing.html" class="btn-paypal-blue" style="width: auto; padding: 6px 14px; border-radius: 20px; font-size: 11.5px; background: var(--paypal-blue); color: #fff; border: none; text-decoration: none; font-weight: 700; display: inline-flex; align-items: center; gap: 6px;">
+                        <i class="fa-solid fa-plus"></i> Get a new voucher
+                    </a>
+                </div>
+
+                <!-- Active Voucher Card (Shown if user has active voucher) -->
+                <div class="paypal-card" id="activeVoucherCard" style="display: none;">
+                    <div class="paypal-card-header">
+                        <span>ACTIVE NODE LICENSE</span>
+                        <i class="fa-solid fa-shield-halved" style="color: var(--accent-green);"></i>
+                    </div>
+                    <div class="voucher-title" id="activeVoucherCost">$0 VOUCHER</div>
+                    <div class="voucher-trials-detail">
+                        <span id="trialsCount" style="font-size: 28px; font-weight: 800; color: var(--paypal-darkblue);">0</span>
+                        <span style="color: var(--text-secondary);">/</span>
+                        <span id="trialsTotal" style="color: var(--text-secondary);">0</span>
+                        <span style="color: var(--text-secondary); font-size: 12px; margin-left: auto;">trials remaining</span>
+                    </div>
+                    <div class="progress-container">
+                        <div id="trialsBarFill" class="progress-bar-fill"></div>
+                    </div>
+                </div>
+
+                <!-- No Active Voucher State (Shown if no active voucher) -->
+                <div class="paypal-card" id="noActiveVoucherCard" style="display: flex; text-align: center; align-items: center; gap: 14px; padding: 30px 20px;">
+                    <i class="fa-solid fa-ticket" style="font-size: 32px; color: var(--text-secondary);"></i>
+                    <div style="font-size: 15px; font-weight: 700; color: var(--paypal-darkblue);">No Active Voucher</div>
+                    <p style="font-size: 12px; color: var(--text-secondary); max-width: 250px;">Purchase a voucher to unlock prediction trials and use the solver.</p>
+                    <a href="pricing.html" class="btn-paypal-blue" style="max-width: 200px; padding: 10px 0; border-radius: 12px; font-size: 12px; background: #ffffff; color: var(--paypal-blue); border-color: var(--paypal-blue);"><i class="fa-solid fa-plus"></i> Buy Voucher</a>
+                </div>
+
+                <!-- Purchase History list & Selection Deletion tools -->
+                <div style="margin-top: 14px; border-top: 1px solid var(--border-light); padding-top: 18px;">
+                    <h4 style="font-size: 14px; font-weight: 700; color: var(--paypal-darkblue); margin-bottom: 12px;"><i class="fa-solid fa-clock-rotate-left" style="margin-right: 6px;"></i> Purchase History</h4>
+                    
+                    <!-- Deletion Toolbar (shown only when checkboxes are checked) -->
+                    <div id="voucherActionsToolbar" style="display: none; justify-content: space-between; align-items: center; margin-bottom: 12px; background: rgba(255,255,255,0.03); border: 1px solid var(--border-light); padding: 10px 14px; border-radius: 8px;">
+                        <span id="selectedCountText" style="font-size: 12px; color: var(--text-secondary); font-weight: 600;">0 selected</span>
+                        <button id="btnDeleteSelectedVouchers" class="btn-paypal-blue" style="width: auto; padding: 6px 14px; border-radius: 6px; font-size: 11px; margin: 0; background: transparent; border-color: var(--paypal-blue); color: var(--paypal-blue);"><i class="fa-solid fa-trash-can"></i> Delete Selected</button>
+                    </div>
+
+                    <div class="paypal-card" style="padding: 16px;">
+                        <div class="voucher-history-list" id="voucherHistoryList">
+                            <div style="text-align: center; color: var(--text-secondary); padding: 20px 0; font-size: 13px;">No purchase history found</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tab 3: History (Prediction query resolves log) -->
+            <div id="tabContentHistory" class="tab-content">
+                <div style="margin-bottom: 8px;">
+                    <h3 style="font-size: 18px; font-weight: 700; color: var(--paypal-darkblue);">Prediction Log</h3>
+                    <p style="font-size: 12px; color: var(--text-secondary);">Your logged query resolves</p>
+                </div>
+
+                <div class="paypal-card" style="padding: 16px;">
+                    <div class="history-list" id="historyList">
+                        <div class="history-item-empty" style="text-align: center; color: var(--text-secondary); padding: 20px 0;">No queries recorded</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tab: Transactions (Track Payment Proof Reviews & Approved Vouchers) -->
+            <div id="tabContentTransactions" class="tab-content">
+                <div style="margin-bottom: 14px; display: flex; justify-content: space-between; align-items: center;">
+                    <div>
+                        <h3 style="font-size: 18px; font-weight: 700; color: var(--paypal-darkblue);">Payment Proof Transactions</h3>
+                        <p style="font-size: 12px; color: var(--text-secondary);">Real-time status of your payment reviews & approved voucher codes</p>
+                    </div>
+                    <button id="refreshTxBtn" style="padding: 6px 14px; border-radius: 20px; font-size: 11.5px; background: var(--paypal-blue); color: #fff; border: none; font-weight: 700; cursor: pointer; display: inline-flex; align-items: center; gap: 6px;">
+                        <i class="fa-solid fa-rotate-right"></i> Refresh
+                    </button>
+                </div>
+
+                <div id="transactionsLoading" style="text-align: center; padding: 30px; font-size: 13px; color: var(--text-secondary);">
+                    <i class="fa-solid fa-circle-notch fa-spin" style="font-size: 20px; color: var(--paypal-blue); margin-bottom: 8px;"></i>
+                    <div>Loading transaction history...</div>
+                </div>
+
+                <div id="transactionsEmpty" style="display: none; text-align: center; padding: 30px 20px; background: #fff; border: 1px solid var(--border-light); border-radius: 12px;">
+                    <div style="font-size: 36px; margin-bottom: 10px;">📜</div>
+                    <h4 style="font-size: 15px; font-weight: 700; color: var(--paypal-darkblue); margin-bottom: 6px;">No Transactions Found</h4>
+                    <p style="font-size: 12px; color: var(--text-secondary); line-height: 1.5; margin-bottom: 16px;">
+                        You haven't submitted any Mobile Money payment proofs yet.
+                    </p>
+                    <a href="pricing.html" style="padding: 8px 18px; font-size: 12px; border-radius: 20px; background: var(--paypal-blue); color: #fff; text-decoration: none; font-weight: 700; display: inline-block;">Buy Voucher</a>
+                </div>
+
+                <div id="transactionsList" class="history-list" style="display: none; gap: 12px;">
+                    <!-- Dynamically rendered transaction cards -->
+                </div>
+            </div>
+
+            <!-- Tab 4: Settings (Clean Account Sync & Security dashboard) -->
+            <div id="tabContentSettings" class="tab-content">
+                <div style="margin-bottom: 4px;">
+                    <h3 style="font-size: 18px; font-weight: 700; color: var(--paypal-darkblue);">Account settings</h3>
+                    <p style="font-size: 12px; color: var(--text-secondary);">Manage linked betting feeds and security credentials</p>
+                </div>
+
+                <!-- Account Summary Card -->
+                <div class="paypal-card">
+                    <div style="display: flex; align-items: center; gap: 14px; border-bottom: 1px solid var(--border-light); padding-bottom: 14px;">
+                        <div style="width: 44px; height: 44px; background: rgba(234, 7, 37, 0.1); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: var(--paypal-blue); font-size: 20px;">
+                            <i class="fa-solid fa-user-shield"></i>
+                        </div>
+                        <div>
+                            <span style="font-size: 15px; font-weight: 700; color: #fff;" id="profileUsername">user@domain.com</span>
+                            <p style="font-size: 12px; color: var(--text-secondary);" id="profilePhone">No phone linked</p>
+                        </div>
+                    </div>
+                    
+                    <div style="display: flex; flex-direction: column; gap: 10px; font-size: 13px;">
+                        <div style="display: flex; justify-content: space-between;">
+                            <span style="color: var(--text-secondary);">Sync Status:</span>
+                            <span style="color: var(--accent-green); font-weight: 700;"><i class="fa-solid fa-circle-check"></i> Connected</span>
+                        </div>
+                        <div style="display: flex; justify-content: space-between;">
+                            <span style="color: var(--text-secondary);">Active Username:</span>
+                            <span style="color: #fff; font-weight: 600;" id="profileBadgeName">None</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Sync Configuration Card -->
+                <div class="paypal-card">
+                    <div class="paypal-card-header">
+                        <span><i class="fa-solid fa-user-pen" style="margin-right: 6px;"></i> LINK BETTING PROFILE</span>
+                    </div>
+                    <form id="accountDetailsForm" class="settings-list">
+                        <div class="form-group">
+                            <label>Betting App Username</label>
+                            <input type="text" id="bettingUsername" class="form-control" placeholder="e.g. WinnerGuy99" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Betting Phone Number</label>
+                            <input type="text" id="bettingPhone" class="form-control" placeholder="e.g. +233200000000" required>
+                        </div>
+                        <button type="submit" class="btn-paypal-blue" style="border-radius: 12px;"><i class="fa-solid fa-circle-check"></i> Save Sync Details</button>
+                    </form>
+                </div>
+
+                <!-- Password Card -->
+                <div class="paypal-card">
+                    <div class="paypal-card-header">
+                        <span><i class="fa-solid fa-key" style="margin-right: 6px;"></i> UPDATE SECURITY CREDENTIALS</span>
+                    </div>
+                    <form id="passwordForm" class="settings-list">
+                        <div class="form-group">
+                            <label>New Password</label>
+                            <input type="password" id="newPassword" class="form-control" placeholder="••••••••" required>
+                        </div>
+                        <button type="submit" class="btn-paypal-blue" style="border-radius: 12px; background: var(--paypal-blue); color: #fff;"><i class="fa-solid fa-shield-halved"></i> Update Password</button>
+                    </form>
+                </div>
+
+                <div class="status-message" id="settingsStatus" style="text-align: center; font-size: 13px;"></div>
+            </div>
+        </div>
+
+        <!-- Mobile Bottom Navigation Bar Tabs -->
+        <nav class="bottom-nav">
+            <div class="nav-item active" onclick="switchTab('Home', this)">
+                <i class="fa-solid fa-house"></i>
+                <span>Home</span>
+            </div>
+            <div class="nav-item" onclick="switchTab('Vouchers', this)">
+                <i class="fa-solid fa-ticket"></i>
+                <span>Vouchers</span>
+            </div>
+            <div class="nav-item" onclick="switchTab('Transactions', this)">
+                <i class="fa-solid fa-receipt"></i>
+                <span>Transactions</span>
+            </div>
+            <div class="nav-item" onclick="switchTab('History', this)">
+                <i class="fa-solid fa-clock-rotate-left"></i>
+                <span>History</span>
+            </div>
+            <div class="nav-item" onclick="switchTab('Settings', this)">
+                <i class="fa-regular fa-user"></i>
+                <span>Settings</span>
+            </div>
+        </nav>
+
+    </div>
+
+    <script>
+        // Tab switching controller logic
+        function switchTab(tabId, el) {
+            // Remove active classes
+            document.querySelectorAll('.nav-item').forEach(item => item.classList.remove('active'));
+            document.querySelectorAll('.sidebar-item').forEach(item => item.classList.remove('active'));
+            document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
+            
+            // Add active classes
+            if (el) el.classList.add('active');
+            
+            // Sync active tab item between sidebar and mobile bottom nav
+            const targetNavs = document.querySelectorAll(`[onclick*="'${tabId}'"]`);
+            targetNavs.forEach(nav => nav.classList.add('active'));
+
+            const targetTab = document.getElementById('tabContent' + tabId);
+            if (targetTab) targetTab.classList.add('active');
+
+            if (tabId === 'Transactions' && typeof window.fetchUserTransactions === 'function') {
+                window.fetchUserTransactions();
+            }
+
+            // Hide/Show mobile header depending on if they are in Settings page tab
+            const mainHeader = document.getElementById('mainHeader');
+            if (mainHeader) {
+                if (tabId === 'Settings') {
+                    mainHeader.style.display = 'none';
+                } else {
+                    if (window.innerWidth <= 768) {
+                        mainHeader.style.display = 'flex';
+                    } else {
+                        mainHeader.style.display = 'none';
+                    }
+                }
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', async () => {
+            const activeVoucherCost = document.getElementById('activeVoucherCost');
+            const trialsCount = document.getElementById('trialsCount');
+            const trialsTotal = document.getElementById('trialsTotal');
+            const trialsBarFill = document.getElementById('trialsBarFill');
+            
+            const logoutBtn = document.getElementById('logoutBtn');
+            const pcLogoutBtn = document.getElementById('pcLogoutBtn');
+            
+            const accountDetailsForm = document.getElementById('accountDetailsForm');
+            const passwordForm = document.getElementById('passwordForm');
+            const settingsStatus = document.getElementById('settingsStatus');
+            const historyList = document.getElementById('historyList');
+            const voucherHistoryList = document.getElementById('voucherHistoryList');
+
+            // Settings/Account elements
+            const profileUsername = document.getElementById('profileUsername');
+            const profilePhone = document.getElementById('profilePhone');
+            const profileBadgeName = document.getElementById('profileBadgeName');
+
+            const token = localStorage.getItem('paxis_session');
+            let history = JSON.parse(localStorage.getItem('predictorHistory') || '[]');
+
+            // Checkbox selection handler
+            window.toggleVoucherSelection = function(event) {
+                event.stopPropagation(); // prevent card clicks
+                const checkboxes = document.querySelectorAll('.voucher-checkbox:checked');
+                const toolbar = document.getElementById('voucherActionsToolbar');
+                const selectedCountText = document.getElementById('selectedCountText');
+                
+                if (checkboxes.length > 0) {
+                    toolbar.style.display = 'flex';
+                    selectedCountText.textContent = `${checkboxes.length} selected`;
+                } else {
+                    toolbar.style.display = 'none';
+                }
+            };
+
+            // Activation handler for previous vouchers in history
+            window.activateVoucher = async function(code) {
+                if (!confirm(`Switch active voucher to ${code}?`)) {
+                    return;
+                }
+                try {
+                    const res = await fetch('/.netlify/functions/handle-session', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({
+                            sessionToken: token,
+                            action: 'LINK_VOUCHER',
+                            code: code
+                        })
+                    });
+                    const data = await res.json();
+                    
+                    if (res.ok && data.success) {
+                        localStorage.setItem('activeVoucher', JSON.stringify({
+                            code: data.code,
+                            remaining: data.remaining,
+                            total: data.total,
+                            cost: data.cost
+                        }));
+                        window.location.reload();
+                    } else {
+                        alert('Activation failed: ' + (data.error || 'Request failed'));
+                    }
+                } catch (e) {
+                    alert('Network error: ' + e.message);
+                }
+            };
+
+            // Pre-fill details from Session call
+            if (token) {
+                try {
+                    const res = await fetch('/.netlify/functions/handle-session', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ sessionToken: token, action: 'GET_SESSION' })
+                    });
+                    const data = await res.json();
+
+                    if (res.ok && data.success) {
+                        // Pre-populate account details forms
+                        if (data.bettingUsername) {
+                            document.getElementById('bettingUsername').value = data.bettingUsername;
+                            profileBadgeName.textContent = data.bettingUsername;
+                        } else {
+                            profileBadgeName.textContent = 'None linked';
+                        }
+                        if (data.bettingPhone) {
+                            document.getElementById('bettingPhone').value = data.bettingPhone;
+                            profilePhone.textContent = data.bettingPhone;
+                        } else {
+                            profilePhone.textContent = 'No phone linked';
+                        }
+                        if (data.email) {
+                            profileUsername.textContent = data.email;
+                        }
+
+                        if (data.activeVoucher) {
+                            const v = data.activeVoucher;
+                            localStorage.setItem('activeVoucher', JSON.stringify(v));
+                            activeVoucherCost.textContent = `$${v.cost} VOUCHER`;
+                            trialsCount.textContent = v.remaining;
+                            trialsTotal.textContent = v.total;
+                            const pct = v.total > 0 ? (v.remaining / v.total) * 100 : 0;
+                            trialsBarFill.style.width = pct + '%';
+                            
+                            document.getElementById('activeVoucherCard').style.display = 'flex';
+                            document.getElementById('noActiveVoucherCard').style.display = 'none';
+                        } else {
+                            localStorage.removeItem('activeVoucher');
+                            document.getElementById('activeVoucherCard').style.display = 'none';
+                            document.getElementById('noActiveVoucherCard').style.display = 'flex';
+                        }
+
+                        // Render Voucher history list with delete checkboxes
+                        if (data.voucherHistory && data.voucherHistory.length > 0) {
+                            voucherHistoryList.innerHTML = data.voucherHistory.map(v => {
+                                const isActive = data.activeVoucher && data.activeVoucher.code === v.code;
+                                const remaining = v.total - v.used;
+                                const dateStr = new Date(v.date).toLocaleDateString() + ' ' + new Date(v.date).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
+                                
+                                let statusText = 'Used';
+                                let statusClass = 'used';
+                                if (isActive) {
+                                    statusText = 'Active';
+                                    statusClass = 'active';
+                                } else if (remaining > 0) {
+                                    statusText = `${remaining} Left`;
+                                    statusClass = 'active';
+                                } else {
+                                    statusText = 'Exhausted';
+                                    statusClass = 'used';
+                                }
+
+                                const clickAttr = (remaining > 0 && !isActive) 
+                                    ? `style="cursor: pointer; opacity: 0.85;" onclick="activateVoucher('${v.code}')" title="Click to use this voucher"` 
+                                    : '';
+
+                                return `
+                                    <div class="voucher-purchase-item" ${clickAttr}>
+                                        <div style="display: flex; align-items: center; flex: 1;">
+                                            <input type="checkbox" class="voucher-checkbox" data-code="${v.code}" style="margin-right: 12px; width: 16px; height: 16px; accent-color: var(--paypal-blue); cursor: pointer;" onclick="event.stopPropagation(); toggleVoucherSelection(event)">
+                                            <div class="v-left">
+                                                <span class="v-code" style="${isActive ? 'color: var(--paypal-blue); font-weight: 800;' : ''}">${v.code} ${isActive ? '★' : ''}</span>
+                                                <span class="v-details">${dateStr} • ${v.total} trials (${remaining} remaining)</span>
+                                            </div>
+                                        </div>
+                                        <div class="v-right">
+                                            <span class="v-cost">$${v.cost}</span>
+                                            <span class="v-status ${statusClass}">${statusText}</span>
+                                        </div>
+                                    </div>
+                                `;
+                            }).join('');
+                        } else {
+                            voucherHistoryList.innerHTML = '<div style="text-align: center; color: var(--text-secondary); padding: 20px 0; font-size: 13px;">No purchase history found</div>';
+                        }
+                    }
+                } catch (e) {
+                    // ignore
+                }
+            }
+
+            // User Payment Review Transactions Fetcher
+            window.fetchUserTransactions = async function() {
+                const txLoading = document.getElementById('transactionsLoading');
+                const txEmpty = document.getElementById('transactionsEmpty');
+                const txList = document.getElementById('transactionsList');
+
+                if (!txLoading || !txList) return;
+
+                txLoading.style.display = 'block';
+                txEmpty.style.display = 'none';
+                txList.style.display = 'none';
+
+                try {
+                    const token = localStorage.getItem('paxis_session');
+                    const storedEmail = localStorage.getItem('paxis_user_email');
+                    
+                    const res = await fetch('/.netlify/functions/get-user-transactions', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ sessionToken: token, email: storedEmail })
+                    });
+                    
+                    const data = await res.json();
+                    
+                    if (res.ok && data.success && data.transactions && data.transactions.length > 0) {
+                        txLoading.style.display = 'none';
+                        txList.style.display = 'flex';
+                        
+                        txList.innerHTML = data.transactions.map(tx => {
+                            const isSignup = tx.review_type === 'SIGNUP';
+                            const title = isSignup ? 'Account Registration Fee' : `Voucher Purchase (${tx.voucher_trials} Trials)`;
+                            const costText = isSignup ? '50 GHS' : (tx.voucher_trials === 3 ? '$25' : (tx.voucher_trials === 5 ? '$70' : '$100'));
+                            const dateStr = new Date(tx.created_at).toLocaleDateString(undefined, { month: 'short', day: 'numeric', year: 'numeric' }) + ' ' + new Date(tx.created_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+                            
+                            let statusBadge = '';
+                            if (tx.status === 'PENDING') {
+                                statusBadge = `<span style="background: rgba(255, 179, 0, 0.15); color: #b78103; padding: 4px 10px; border-radius: 12px; font-size: 11px; font-weight: 800;">🟡 UNDER REVIEW</span>`;
+                            } else if (tx.status === 'APPROVED') {
+                                statusBadge = `<span style="background: rgba(16, 185, 129, 0.15); color: #10b981; padding: 4px 10px; border-radius: 12px; font-size: 11px; font-weight: 800;">🟢 APPROVED</span>`;
+                            } else {
+                                statusBadge = `<span style="background: rgba(239, 68, 68, 0.15); color: #ef4444; padding: 4px 10px; border-radius: 12px; font-size: 11px; font-weight: 800;">🔴 DECLINED</span>`;
+                            }
+
+                            let voucherBox = '';
+                            if (tx.status === 'APPROVED' && tx.voucher_code) {
+                                voucherBox = `
+                                    <div style="margin-top: 12px; background: rgba(0, 112, 224, 0.05); border: 1px dashed var(--paypal-blue); padding: 12px; border-radius: 8px; display: flex; flex-direction: column; gap: 8px;">
+                                        <div style="font-size: 11px; color: var(--text-secondary); font-weight: 700; text-transform: uppercase;">Approved Voucher Code</div>
+                                        <div style="display: flex; align-items: center; justify-content: space-between; gap: 8px; flex-wrap: wrap;">
+                                            <span style="font-family: 'Share Tech Mono', monospace; font-size: 15px; font-weight: 900; color: var(--paypal-darkblue); letter-spacing: 1px;">${tx.voucher_code}</span>
+                                            <div style="display: flex; gap: 6px;">
+                                                <button onclick="copyTxCode('${tx.voucher_code}', this)" style="padding: 6px 12px; font-size: 11px; border-radius: 16px; border: 1px solid var(--paypal-blue); background: #fff; color: var(--paypal-blue); font-weight: 700; cursor: pointer;">Copy</button>
+                                                <button onclick="activateVoucher('${tx.voucher_code}')" style="padding: 6px 12px; font-size: 11px; border-radius: 16px; border: none; background: var(--paypal-blue); color: #fff; font-weight: 700; cursor: pointer;">Claim & Activate</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                `;
+                            }
+
+                            return `
+                                <div class="paypal-card" style="margin-bottom: 0; padding: 16px;">
+                                    <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 4px;">
+                                        <div>
+                                            <div style="font-size: 14px; font-weight: 800; color: var(--paypal-darkblue);">${title}</div>
+                                            <div style="font-size: 11px; color: var(--text-secondary);">${dateStr}</div>
+                                        </div>
+                                        <div style="text-align: right;">
+                                            <div style="font-size: 15px; font-weight: 900; color: var(--paypal-blue);">${costText}</div>
+                                            <div style="margin-top: 4px;">${statusBadge}</div>
+                                        </div>
+                                    </div>
+                                    ${voucherBox}
+                                </div>
+                            `;
+                        }).join('');
+
+                    } else {
+                        txLoading.style.display = 'none';
+                        txEmpty.style.display = 'block';
+                    }
+                } catch (err) {
+                    console.error('Fetch transactions error:', err);
+                    txLoading.style.display = 'none';
+                    txEmpty.style.display = 'block';
+                }
+            };
+
+            window.copyTxCode = function(code, btn) {
+                navigator.clipboard.writeText(code).then(() => {
+                    const originalText = btn.textContent;
+                    btn.textContent = 'Copied!';
+                    setTimeout(() => { btn.textContent = originalText; }, 2000);
+                });
+            };
+
+            const refreshTxBtn = document.getElementById('refreshTxBtn');
+            if (refreshTxBtn) {
+                refreshTxBtn.addEventListener('click', window.fetchUserTransactions);
+            }
+
+            // Deletion handler
+            document.getElementById('btnDeleteSelectedVouchers').addEventListener('click', async () => {
+                const checked = document.querySelectorAll('.voucher-checkbox:checked');
+                const codes = Array.from(checked).map(cb => cb.getAttribute('data-code'));
+                
+                if (codes.length === 0) return;
+                
+                if (!confirm(`Are you sure you want to delete ${codes.length} voucher(s) from your history permanently?`)) {
+                    return;
+                }
+                
+                try {
+                    const res = await fetch('/.netlify/functions/handle-session', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({
+                            sessionToken: token,
+                            action: 'DELETE_VOUCHERS',
+                            codes: codes
+                        })
+                    });
+                    
+                    if (res.ok) {
+                        window.location.reload();
+                    } else {
+                        const data = await res.json();
+                        alert('Error: ' + (data.error || 'Failed to delete vouchers'));
+                    }
+                } catch (e) {
+                    alert('Request failed: ' + e.message);
+                }
+            });
+
+            // Render prediction log history list
+            function renderHistoryList() {
+                if (!history.length) {
+                    historyList.innerHTML = '<div class="history-item-empty" style="text-align:center;color:var(--text-secondary);padding:20px 0;">No queries recorded</div>';
+                    return;
+                }
+                historyList.innerHTML = history.map(h => `
+                    <div class="history-item">
+                        <div class="hist-left">
+                            <span class="hist-outcome">Outcome: ${h.outcome}</span>
+                            <span class="hist-date">${h.date} ${h.time}</span>
+                        </div>
+                        <span class="hist-trials-change">-1 trial</span>
+                    </div>
+                `).join('');
+            }
+            renderHistoryList();
+
+            // Save Account details
+            accountDetailsForm.addEventListener('submit', async (e) => {
+                e.preventDefault();
+                const bettingUsername = document.getElementById('bettingUsername').value.trim();
+                const bettingPhone = document.getElementById('bettingPhone').value.trim();
+
+                settingsStatus.textContent = 'Saving Details...';
+                settingsStatus.style.color = 'var(--text-main)';
+
+                try {
+                    const res = await fetch('/.netlify/functions/handle-session', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({
+                            sessionToken: token,
+                            action: 'UPDATE_USER',
+                            bettingUsername,
+                            bettingPhone
+                        })
+                    });
+
+                    if (res.ok) {
+                        settingsStatus.textContent = 'Profile successfully updated!';
+                        settingsStatus.style.color = 'var(--accent-green)';
+                        
+                        profileBadgeName.textContent = bettingUsername;
+                        profilePhone.textContent = bettingPhone;
+                    } else {
+                        const data = await res.json();
+                        throw new Error(data.error || 'Failed to update details');
+                    }
+                } catch (err) {
+                    settingsStatus.textContent = err.message;
+                    settingsStatus.style.color = '#ea0725';
+                }
+            });
+
+            // Update password
+            passwordForm.addEventListener('submit', async (e) => {
+                e.preventDefault();
+                const password = document.getElementById('newPassword').value;
+
+                settingsStatus.textContent = 'Updating Password...';
+                settingsStatus.style.color = 'var(--text-main)';
+
+                try {
+                    const res = await fetch('/.netlify/functions/handle-session', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({
+                            sessionToken: token,
+                            action: 'UPDATE_USER',
+                            password
+                        })
+                    });
+
+                    if (res.ok) {
+                        settingsStatus.textContent = 'Password updated successfully!';
+                        settingsStatus.style.color = 'var(--accent-green)';
+                        document.getElementById('newPassword').value = '';
+                    } else {
+                        const data = await res.json();
+                        throw new Error(data.error || 'Failed to update password');
+                    }
+                } catch (err) {
+                    settingsStatus.textContent = err.message;
+                    settingsStatus.style.color = '#ea0725';
+                }
+            });
+
+            // Logout handlers
+            const logoutHandler = async (e) => {
+                e.preventDefault();
+                if (token) {
+                    await fetch('/.netlify/functions/handle-session', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ sessionToken: token, action: 'CLEAR_SESSION' })
+                    }).catch(() => {});
+                }
+                localStorage.removeItem('paxis_session');
+                localStorage.removeItem('activeVoucher');
+                window.location.href = 'auth.html';
+            };
+
+            logoutBtn.addEventListener('click', logoutHandler);
+            if (pcLogoutBtn) pcLogoutBtn.addEventListener('click', logoutHandler);
+        });
+
+        function enterGame() {
+            const activeV = localStorage.getItem('activeVoucher');
+            if (activeV) {
+                window.location.href = 'link_app.html';
+            } else {
+                window.location.href = 'enter_voucher.html';
+            }
+        }
+
+        function showRegionLock(cardElement) {
+            const overlay = cardElement.querySelector('.lock-overlay');
+            overlay.classList.add('show');
+            setTimeout(() => {
+                overlay.classList.remove('show');
+            }, 2500);
+        }
+    </script>
+    <!-- Floating Support Chat Bubble -->
+    <div id="supportBubble" class="support-bubble" onclick="toggleSupportChat()">
+        <i class="fa-solid fa-headset"></i>
+    </div>
+
+    <!-- Floating Support Chat Window -->
+    <div id="supportWindow" class="support-window">
+        <div class="support-window-header">
+            <div class="support-window-title">
+                <span style="background: var(--accent-green); width: 8px; height: 8px; border-radius: 50%;"></span>
+                <span>Customer Care Desk</span>
+            </div>
+            <button class="support-close-btn" onclick="toggleSupportChat()">&times;</button>
+        </div>
+        <div id="supportChatViewport" class="support-chat-viewport">
+            <div style="text-align: center; color: var(--text-secondary); margin: auto; font-size: 12px; padding: 20px;">
+                Welcome to support! Type your question below and our administrator will reply soon.
+            </div>
+        </div>
+        <form id="supportChatForm" class="support-input-panel">
+            <input type="text" id="supportChatInput" class="support-input" placeholder="Type support query..." required>
+            <button type="submit" class="support-send-btn">Send</button>
+        </form>
+    </div>
+
+    <script>
+        // Support Chat Widget JavaScript
+        let supportOpen = false;
+        let supportPollInterval = null;
+        let clientMessagesCount = 0;
+        
+        const supportBubble = document.getElementById('supportBubble');
+        const supportWindow = document.getElementById('supportWindow');
+        const clientChatViewport = document.getElementById('supportChatViewport');
+        const supportChatForm = document.getElementById('supportChatForm');
+        const supportChatInput = document.getElementById('supportChatInput');
+        const sessionToken = localStorage.getItem('paxis_session');
+
+        window.toggleSupportChat = function() {
+            supportOpen = !supportOpen;
+            if (supportOpen) {
+                supportWindow.style.display = 'flex';
+                // Fetch log immediately
+                fetchSupportMessages();
+                // Start polling every 4 seconds
+                supportPollInterval = setInterval(fetchSupportMessages, 4000);
+            } else {
+                supportWindow.style.display = 'none';
+                if (supportPollInterval) {
+                    clearInterval(supportPollInterval);
+                    supportPollInterval = null;
+                }
+            }
+        };
+
+        async function fetchSupportMessages() {
+            if (!sessionToken) return;
+            try {
+                const res = await fetch('/.netlify/functions/support', {
+                    method: 'GET',
+                    headers: {
+                        'Authorization': `Bearer ${sessionToken}`
+                    }
+                });
+                const data = await res.json();
+                if (res.ok && data.success) {
+                    if (data.messages.length !== clientMessagesCount) {
+                        clientMessagesCount = data.messages.length;
+                        renderClientSupportChat(data.messages);
+                    }
+                }
+            } catch (e) {
+                console.error('Failed to poll support messages:', e);
+            }
+        }
+
+        function renderClientSupportChat(messages) {
+            if (!messages || messages.length === 0) {
+                clientChatViewport.innerHTML = '<div style="text-align: center; color: var(--text-secondary); margin: auto; font-size: 12px; padding: 20px;">Welcome to support! Type your question below and our administrator will reply soon.</div>';
+                return;
+            }
+
+            clientChatViewport.innerHTML = messages.map(m => {
+                const isUser = m.sender === 'user';
+                const alignStyle = isUser 
+                    ? 'align-self: flex-end; background: var(--paypal-blue); color: #fff;' 
+                    : 'align-self: flex-start; background: #2a2e38; color: #fff; border: 1px solid var(--border-light);';
+                
+                const label = isUser 
+                    ? '<span style="font-size: 9px; opacity: 0.8; display: block; margin-bottom: 2px;">You</span>' 
+                    : '<span style="font-size: 9px; color: var(--gold); display: block; margin-bottom: 2px;">Support Desk</span>';
+
+                const timeStr = new Date(m.created_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+
+                return `
+                    <div style="max-width: 80%; padding: 8px 12px; border-radius: 8px; font-size: 12.5px; line-height: 1.4; ${alignStyle}">
+                        ${label}
+                        <div>${m.message}</div>
+                        <span style="font-size: 8px; opacity: 0.6; display: block; text-align: right; margin-top: 4px;">${timeStr}</span>
+                    </div>
+                `;
+            }).join('');
+
+            clientChatViewport.scrollTop = clientChatViewport.scrollHeight;
+        }
+
+        if (supportChatForm) {
+            supportChatForm.addEventListener('submit', async (e) => {
+                e.preventDefault();
+                const message = supportChatInput.value.trim();
+                if (!message || !sessionToken) return;
+
+                supportChatInput.value = '';
+
+                try {
+                    const res = await fetch('/.netlify/functions/support', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'Authorization': `Bearer ${sessionToken}`
+                        },
+                        body: JSON.stringify({ message })
+                    });
+                    const data = await res.json();
+                    if (res.ok && data.success) {
+                        fetchSupportMessages();
+                    }
+                } catch (err) {
+                    console.error('Error sending support message:', err);
+                }
+            });
+            // Check Maintenance Mode Status
+            (async function checkMaintenanceMode() {
+                try {
+                    const res = await fetch('/.netlify/functions/site-status');
+                    const data = await res.json();
+                    if (data && data.maintenance === true) {
+                        const token = localStorage.getItem('paxis_session');
+                        if (token) {
+                            try {
+                                const sessionRes = await fetch('/.netlify/functions/handle-session', {
+                                    method: 'POST',
+                                    headers: { 'Content-Type': 'application/json' },
+                                    body: JSON.stringify({ sessionToken: token, action: 'GET_SESSION' })
+                                });
+                                const sessionData = await sessionRes.json();
+                                if (sessionData && sessionData.success && sessionData.email === 'admin@node.net') {
+                                    return; // Admin bypass
+                                }
+                            } catch(e) {}
+                        }
+
+                        const mOverlay = document.createElement('div');
+                        mOverlay.id = 'maintenanceOverlay';
+                        mOverlay.style.cssText = 'position:fixed; top:0; left:0; width:100vw; height:100vh; background:#07080a; color:#ffffff; z-index:999999; display:flex; flex-direction:column; justify-content:center; align-items:center; text-align:center; padding:24px; box-sizing:border-box; font-family:"Share Tech Mono", monospace;';
+                        mOverlay.innerHTML = `
+                            <div style="max-width:540px; border:2px solid #ffb300; background:rgba(255,179,0,0.03); padding:40px 28px; border-radius:8px; box-shadow:0 0 40px rgba(255,179,0,0.15); position:relative;">
+                                <div style="font-size:42px; margin-bottom:12px;">🛠️</div>
+                                <div style="color:#ffb300; font-size:11px; font-weight:800; letter-spacing:2px; text-transform:uppercase; margin-bottom:8px;">[ SYSTEM NOTICE ]</div>
+                                <h1 style="font-family:'Outfit', sans-serif; font-size:26px; font-weight:900; color:#ffffff; margin:0 0 14px; line-height:1.2;">SYSTEM UNDER MAINTENANCE</h1>
+                                <p style="font-family:'Outfit', sans-serif; font-size:14px; color:#888899; line-height:1.6; margin:0 0 24px;">
+                                    Precision Axis nodes are currently undergoing scheduled algorithmic engine maintenance and system upgrades. Client sessions will resume shortly.
+                                </p>
+                                <div style="display:inline-flex; align-items:center; gap:10px; background:rgba(255,179,0,0.1); border:1px solid #ffb300; padding:8px 16px; border-radius:20px; font-size:12px; color:#ffb300; font-weight:700;">
+                                    <span style="width:8px; height:8px; background:#ffb300; border-radius:50%; display:inline-block;"></span>
+                                    STATUS: MAINTENANCE ACTIVE
+                                </div>
+                            </div>
+                        `;
+                        document.body.appendChild(mOverlay);
+                        document.body.style.overflow = 'hidden';
+                    }
+                } catch(e) {}
+            })();
+        }
+    </script>
+
+    
+</body>
+</html>

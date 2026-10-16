@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Precision Axis &ndash; AI Analytics Vouchers</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700;800;900&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+    <script>
+        (async () => {
+            const token = localStorage.getItem('paxis_session');
+            if (token) {
+                try {
+                    const res = await fetch('/.netlify/functions/handle-session', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ sessionToken: token, action: 'GET_SESSION' })
+                    });
+                    const data = await res.json();
+                    if (res.ok && data.success) {
+                        if (data.activeVoucher) {
+                            localStorage.setItem('activeVoucher', JSON.stringify(data.activeVoucher));
+                        }
+                        if (data.email) {
+                            localStorage.setItem('paxis_user_email', data.email);
+                            localStorage.setItem('paxis_email', data.email);
+                        }
+                    }
+                } catch (e) {
+                    console.log('Session check error:', e);
+                }
+            }
+
+            // Handle returning Martha Solutions Gateway payment verification
+            const urlParams = new URLSearchParams(window.location.search);
+            const status = (urlParams.get('status') || '').toLowerCase();
+            const ref = urlParams.get('transaction_id') || urlParams.get('reference') || urlParams.get('trxref') || urlParams.get('gateway_ref') || urlParams.get('session');
+
+            if (status === 'cancelled' || status === 'abandoned') {
+                setTimeout(() => {
+                    alert('Payment Notice: Your voucher purchase was cancelled or abandoned. You have not been charged. You can select a voucher plan whenever you are ready.');
+                }, 300);
+            } else if (status === 'expired') {
+                setTimeout(() => {
+                    alert('Payment Notice: The checkout session timed out (2-minute limit). Please select a voucher plan to start a fresh payment.');
+                }, 300);
+            } else if (status === 'failed') {
+                setTimeout(() => {
+                    alert('Payment Failed: Your transaction could not be completed. Please check your funds or payment method and retry.');
+                }, 300);
+            } else if (ref && (status === 'success' || !status)) {
+                try {
+                    const email = localStorage.getItem('paxis_user_email') || localStorage.getItem('paxis_email') || '';
+                    const res = await fetch('/.netlify/functions/create-voucher', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ reference: ref, email: email })
+                    });
+                    const data = await res.json();
+                    if (res.ok && data.success && data.code) {
+                        alert('🎉 Payment Confirmed!
+
+Your Voucher Code is: ' + data.code + '
+
+This voucher (' + (data.trials || 3) + ' trials) has been provisioned to your account! Redirecting to Dashboard...');
+                        localStorage.setItem('activeVoucher', JSON.stringify({ code: data.code, total: data.trials || 3, used: 0, cost: data.cost || 25 }));
+                        window.location.href = 'hub.html';
+                    } else if (data.paid && !data.success) {
+                        alert('Payment Confirmed!
+
+Reference: ' + ref + '
+
+Your payment was received. Our administrator has logged your voucher purchase and will deliver your voucher code shortly.');
+                    }
+                } catch (e) {
+                    console.error('Voucher verification error:', e);
+                }
+            }
+        })();
+    </script>
+</head>
+<body>
+    <div class="landing-container">
+        <!-- Technical Border Frame decoration -->
+        <div class="border-marker top-left"></div>
+        <div class="border-marker top-right"></div>
+        <div class="border-marker bottom-left"></div>
+        <div class="border-marker bottom-right"></div>
+
+        <!-- Header -->
+        <header class="landing-header">
+            <div class="logo-box">
+                <span class="logo-txt">Precision Axis</span>
+                <span class="logo-sub">AI Analytics Vouchers</span>
+            </div>
+            <div style="display: flex; gap: 12px; align-items: center;">
+                <a href="enter_voucher.html" style="color: var(--gold); text-decoration: none; font-family: var(--font-mono); font-size: 12px; font-weight: 700; border: 1px solid var(--gold); padding: 5px 10px; border-radius: 4px;">Enter Voucher</a>
+                <a href="hub.html" style="color: var(--muted); text-decoration: none; font-family: var(--font-mono); font-size: 12px; font-weight: 700;">&larr; Back to Dashboard</a>
+            </div>
+        </header>
+
+        <!-- Main Content -->
+        <main class="landing-main" style="padding: 40px 0;">
+            <div style="text-align: center; margin-bottom: 30px;">
+                <h1 style="font-size: 24px; font-weight: 800; color: var(--text-primary);">AI Analytics Vouchers</h1>
+                <p style="color: var(--muted); font-size: 13px; max-width: 480px; margin: 8px auto 0;">
+                    Select a voucher to unlock AI-powered analytical insights for sports games and casino outcomes. Once trials are used, acquire a new voucher to continue.
+                </p>
+            </div>
+
+            <!-- Pricing Voucher Grid -->
+            <div class="specs-grid" style="grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 20px;">
+                <!-- $25 Tier -->
+                <div class="spec-card-3d" style="display: flex; flex-direction: column; gap: 14px; border: 2px solid var(--border); background: var(--bg-panel); padding: 24px; position: relative;">
+                    <div style="display: flex; justify-content: space-between; align-items: center;">
+                        <div style="font-family: var(--font-mono); font-size: 11px; color: var(--green); border: 1px solid var(--green); padding: 2px 6px; border-radius: 12px;">3 trials</div>
+                        <div style="font-family: var(--font-mono); font-size: 11px; color: var(--muted);">GHS 400</div>
+                    </div>
+                    <h2 style="font-size: 36px; font-weight: 900; line-height: 1; font-family: var(--font-mono);">$25</h2>
+                    <div style="font-size: 15px; font-weight: 700; color: var(--white);">3 prediction sessions</div>
+                    <p style="font-size: 12px; color: var(--muted); line-height: 1.4; flex-grow: 1;">
+                        Good for short sessions and testing the predictor.
+                    </p>
+                    <button class="primary-btn-3d buy-btn" data-cost="25" data-trials="3" style="width: 100%; text-align: center; font-size: 12px; padding: 12px 0;">Buy voucher (400 GHS)</button>
+                </div>
+
+                <!-- $70 Tier -->
+                <div class="spec-card-3d" style="display: flex; flex-direction: column; gap: 14px; border: 2px solid var(--border); background: var(--bg-panel); padding: 24px; position: relative;">
+                    <div style="display: flex; justify-content: space-between; align-items: center;">
+                        <div style="font-family: var(--font-mono); font-size: 11px; color: var(--cyan); border: 1px solid var(--cyan); padding: 2px 6px; border-radius: 12px;">5 trials</div>
+                        <div style="font-family: var(--font-mono); font-size: 11px; color: var(--muted);">GHS 1,120</div>
+                    </div>
+                    <h2 style="font-size: 36px; font-weight: 900; line-height: 1; font-family: var(--font-mono);">$70</h2>
+                    <div style="font-size: 15px; font-weight: 700; color: var(--white);">5 prediction sessions</div>
+                    <p style="font-size: 12px; color: var(--muted); line-height: 1.4; flex-grow: 1;">
+                        Extended sessions with deeper tracking.
+                    </p>
+                    <button class="primary-btn-3d buy-btn" data-cost="70" data-trials="5" style="width: 100%; text-align: center; font-size: 12px; padding: 12px 0; background: var(--cyan);">Buy voucher (1,120 GHS)</button>
+                </div>
+
+                <!-- $100 Tier -->
+                <div class="spec-card-3d" style="display: flex; flex-direction: column; gap: 14px; border: 2px solid var(--border); background: var(--bg-panel); padding: 24px; position: relative;">
+                    <div style="display: flex; justify-content: space-between; align-items: center;">
+                        <div style="font-family: var(--font-mono); font-size: 11px; color: #ffb300; border: 1px solid #ffb300; padding: 2px 6px; border-radius: 12px;">10 trials</div>
+                        <div style="font-family: var(--font-mono); font-size: 11px; color: var(--muted);">GHS 1,600</div>
+                    </div>
+                    <h2 style="font-size: 36px; font-weight: 900; line-height: 1; font-family: var(--font-mono);">$100</h2>
+                    <div style="font-size: 15px; font-weight: 700; color: var(--white);">10 prediction sessions</div>
+                    <p style="font-size: 12px; color: var(--muted); line-height: 1.4; flex-grow: 1;">
+                        Maximum sessions per voucher.
+                    </p>
+                    <button class="primary-btn-3d buy-btn" data-cost="100" data-trials="10" style="width: 100%; text-align: center; font-size: 12px; padding: 12px 0; background: #ffb300; border-color: #000;">Buy voucher (1,600 GHS)</button>
+                </div>
+            </div>
+
+            <!-- Payment / Voucher Modal -->
+            <div id="paymentModal" style="display: none; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(0,0,0,0.85); z-index: 1000; justify-content: center; align-items: center; padding: 20px; box-sizing: border-box;">
+                <section class="material-panel" style="max-width: 420px; width: 100%; margin: 0; box-shadow: 8px 8px 0px #000;">
+                    <div class="panel-header" style="display: flex; justify-content: space-between; align-items: center;">
+                        <span class="panel-title" id="modalPanelTitle">Purchase Voucher</span>
+                        <button id="closePayModalBtn" style="background: none; border: none; color: var(--gold); font-size: 18px; font-weight: 800; cursor: pointer;">?</button>
+                    </div>
+                    <div style="padding: 24px; display: flex; flex-direction: column; gap: 16px; text-align: center;">
+                        <div style="text-align: left;">
+                            <label style="font-size: 11px; color: var(--gold); text-transform: uppercase; font-family: var(--font-mono);">Email Address for Voucher Delivery</label>
+                            <input type="email" id="voucherEmailInput" class="form-control" style="background: var(--bg-card); padding: 12px; color: #fff; width: 100%; border: 1px solid var(--border); border-radius: 4px; margin-top: 6px;" placeholder="Your email address" required>
+                        </div>
+                        <button type="button" class="primary-btn-3d" id="modalPaystackBtn" style="background: #00a84c; border-color: #00a84c; color: #ffffff; font-weight: 900; font-size: 14px; width: 100%; padding: 14px 0; border-radius: 6px; display: flex; align-items: center; justify-content: center; gap: 8px; cursor: pointer;">
+                            ?? Proceed to Payment Gateway
+                        </button>
+                        <div class="status-msg" id="voucherProofStatus" style="font-size: 12px;"></div>
+                    </div>
+                </section>
+            </div>
+        </main>
+
+        <!-- Technical Footer -->
+        <footer class="landing-footer">
+            <span class="footer-left"></span>
+            <span class="footer-right">&copy; 2026 Precision Axis Ltd.</span>
+        </footer>
+    </div>
+
+    <!-- Script to handle Martha Solutions voucher payment gateway session -->
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const buyButtons = document.querySelectorAll('.buy-btn');
+            const paymentModal = document.getElementById('paymentModal');
+            const closePayModalBtn = document.getElementById('closePayModalBtn');
+            const voucherEmailInput = document.getElementById('voucherEmailInput');
+            const modalPaystackBtn = document.getElementById('modalPaystackBtn');
+            const voucherProofStatus = document.getElementById('voucherProofStatus');
+
+            let selectedTrials = 3;
+            let selectedCost = 25;
+
+            // Pre-fill user email if logged in
+            const storedEmail = localStorage.getItem('paxis_user_email') || localStorage.getItem('paxis_email');
+            if (storedEmail) {
+                voucherEmailInput.value = storedEmail;
+            }
+
+            async function initiateGatewayCheckout(providedEmail, cost, trials, targetBtn) {
+                let email = providedEmail || voucherEmailInput.value.trim() || localStorage.getItem('paxis_user_email') || localStorage.getItem('paxis_email');
+                
+                if (!email || !email.trim() || !email.includes('@')) {
+                    email = prompt('Enter your registered email address for your voucher purchase:');
+                }
+
+                if (!email || !email.trim() || !email.includes('@')) {
+                    alert('A valid email address is required to proceed with payment checkout.');
+                    return;
+                }
+
+                const cleanEmail = email.trim().toLowerCase();
+                localStorage.setItem('paxis_user_email', cleanEmail);
+
+                if (targetBtn) {
+                    targetBtn.disabled = true;
+                    targetBtn.textContent = 'Connecting Payment Gateway...';
+                }
+                if (voucherProofStatus) {
+                    voucherProofStatus.textContent = 'Initializing secure payment session...';
+                    voucherProofStatus.style.color = 'var(--white)';
+                }
+
+                try {
+                    const gwRes = await fetch('/.netlify/functions/initialize-payment', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({
+                            amount: cost,
+                            email: cleanEmail,
+                            trials: trials,
+                            currency: 'USD',
+                            is_voucher: true
+                        })
+                    });
+
+                    const data = await gwRes.json();
+                    const forwardUrl = data.checkout_url || data.authorization_url;
+
+                    if (gwRes.ok && data.success && forwardUrl) {
+                        if (voucherProofStatus) {
+                            voucherProofStatus.textContent = 'Redirecting to payment gateway...';
+                            voucherProofStatus.style.color = 'var(--green)';
+                        }
+                        window.location.href = forwardUrl;
+                        return;
+                    }
+                    throw new Error(data.error || data.message || 'Failed to initialize gateway checkout.');
+                } catch (err) {
+                    alert('Payment Error: ' + err.message);
+                    if (voucherProofStatus) {
+                        voucherProofStatus.textContent = err.message;
+                        voucherProofStatus.style.color = '#ff3333';
+                    }
+                } finally {
+                    if (targetBtn) {
+                        targetBtn.disabled = false;
+                        targetBtn.textContent = targetBtn.dataset.origText || 'Buy voucher';
+                    }
+                }
+            }
+
+            buyButtons.forEach(btn => {
+                btn.addEventListener('click', async () => {
+                    selectedTrials = parseInt(btn.getAttribute('data-trials') || '3', 10);
+                    selectedCost = parseInt(btn.getAttribute('data-cost') || '25', 10);
+                    
+                    const token = localStorage.getItem('paxis_session');
+                    let email = localStorage.getItem('paxis_user_email') || localStorage.getItem('paxis_email') || '';
+
+                    if (!token && !email) {
+                        alert('Please create an account or log in first before purchasing a voucher.');
+                        window.location.href = 'auth.html?mode=signup';
+                        return;
+                    }
+
+                    if (email) {
+                        btn.dataset.origText = btn.textContent;
+                        await initiateGatewayCheckout(email, selectedCost, selectedTrials, btn);
+                    } else {
+                        paymentModal.style.display = 'flex';
+                    }
+                });
+            });
+
+            if (modalPaystackBtn) {
+                modalPaystackBtn.addEventListener('click', async () => {
+                    const email = voucherEmailInput.value.trim();
+                    if (!email || !email.includes('@')) {
+                        alert('Please enter your email address to receive your voucher code.');
+                        voucherEmailInput.focus();
+                        return;
+                    }
+                    modalPaystackBtn.dataset.origText = modalPaystackBtn.textContent;
+                    await initiateGatewayCheckout(email, selectedCost, selectedTrials, modalPaystackBtn);
+                });
+            }
+
+            if (closePayModalBtn) {
+                closePayModalBtn.addEventListener('click', () => {
+                    paymentModal.style.display = 'none';
+                });
+            }
+        });
+    </script>
+</body>
+</html>

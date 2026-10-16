@@ -1,0 +1,322 @@
+:root {
+    --bg-dark: #0a0c10;
+    --bg-card: #131722;
+    --bg-input: #1b2030;
+    --border: #2a3146;
+    --text-primary: #ffffff;
+    --text-secondary: #8e9bb5;
+    --gold: #ffa000;
+    --gold-dim: rgba(255, 160, 0, 0.15);
+    --red: #ff3b30;
+    --red-dim: rgba(255, 59, 48, 0.15);
+    --green: #34c759;
+    --green-dim: rgba(52, 199, 89, 0.15);
+    --font-sans: 'Outfit', sans-serif;
+    --font-mono: 'Share Tech Mono', monospace;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    background: var(--bg-dark);
+    color: var(--text-primary);
+    font-family: var(--font-sans);
+    font-size: 14px;
+    line-height: 1.5;
+    min-height: 100vh;
+}
+
+/* Header styling */
+.admin-header {
+    background: var(--bg-card);
+    border-bottom: 1px solid var(--border);
+    padding: 16px 24px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+}
+
+.logo-box {
+    display: flex;
+    flex-direction: column;
+}
+
+.logo-txt {
+    font-family: var(--font-mono);
+    font-size: 20px;
+    font-weight: 900;
+    letter-spacing: 2px;
+    color: var(--gold);
+}
+
+.logo-sub {
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    color: var(--text-secondary);
+    font-weight: 700;
+}
+
+.user-badge {
+    background: var(--border);
+    padding: 6px 12px;
+    border-radius: 20px;
+    font-size: 12px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.logout-btn {
+    background: transparent;
+    border: 1px solid var(--red);
+    color: var(--red);
+    padding: 6px 14px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 12px;
+    font-weight: 600;
+    transition: all 0.2s ease;
+}
+
+.logout-btn:hover {
+    background: var(--red);
+    color: #fff;
+}
+
+/* Layout */
+.admin-container {
+    max-width: 1280px;
+    margin: 0 auto;
+    padding: 24px;
+}
+
+.grid-cols-2 {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+    gap: 24px;
+    margin-bottom: 24px;
+}
+
+/* Card */
+.admin-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 24px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+}
+
+.card-title {
+    font-size: 16px;
+    font-weight: 700;
+    margin-bottom: 16px;
+    color: var(--gold);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    border-bottom: 1px solid var(--border);
+    padding-bottom: 10px;
+}
+
+/* Forms */
+.form-group {
+    margin-bottom: 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.form-group label {
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: var(--text-secondary);
+    font-weight: 700;
+}
+
+.form-control {
+    background: var(--bg-input);
+    border: 1px solid var(--border);
+    color: #fff;
+    padding: 10px 12px;
+    font-size: 13px;
+    border-radius: 4px;
+    outline: none;
+    transition: border-color 0.2s;
+}
+
+.form-control:focus {
+    border-color: var(--gold);
+}
+
+.primary-btn {
+    background: var(--gold);
+    color: #000;
+    border: none;
+    padding: 10px 16px;
+    border-radius: 4px;
+    font-weight: 700;
+    cursor: pointer;
+    font-size: 13px;
+    transition: opacity 0.2s;
+}
+
+.primary-btn:hover {
+    opacity: 0.9;
+}
+
+/* Table styling */
+.table-container {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    overflow-x: auto;
+    margin-bottom: 24px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+}
+
+.table-title {
+    padding: 18px 24px;
+    font-size: 15px;
+    font-weight: 700;
+    color: var(--gold);
+    border-bottom: 1px solid var(--border);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    text-align: left;
+}
+
+th, td {
+    padding: 12px 20px;
+    border-bottom: 1px solid var(--border);
+    white-space: nowrap;
+}
+
+th {
+    background: rgba(255,255,255,0.02);
+    font-size: 11px;
+    text-transform: uppercase;
+    color: var(--text-secondary);
+    letter-spacing: 1px;
+}
+
+tr:last-child td {
+    border-bottom: none;
+}
+
+/* Action button variants */
+.action-btn {
+    border: none;
+    padding: 6px 12px;
+    border-radius: 4px;
+    font-size: 11px;
+    font-weight: 700;
+    cursor: pointer;
+    text-transform: uppercase;
+    transition: all 0.2s;
+}
+
+.action-btn.block {
+    background: var(--red-dim);
+    color: var(--red);
+}
+
+.action-btn.block:hover {
+    background: var(--red);
+    color: #fff;
+}
+
+.action-btn.unblock {
+    background: var(--green-dim);
+    color: var(--green);
+}
+
+.action-btn.unblock:hover {
+    background: var(--green);
+    color: #fff;
+}
+
+.action-btn.delete {
+    background: rgba(255, 255, 255, 0.05);
+    color: var(--text-secondary);
+    border: 1px solid var(--border);
+}
+
+.action-btn.delete:hover {
+    background: var(--red);
+    color: #fff;
+    border-color: var(--red);
+}
+
+.action-btn.secondary {
+    background: rgba(255, 255, 255, 0.05);
+    color: var(--text-primary);
+    border: 1px solid var(--border);
+}
+
+.action-btn.secondary:hover {
+    background: var(--border);
+}
+
+/* Badges */
+.status-badge {
+    padding: 2px 8px;
+    border-radius: 12px;
+    font-size: 10px;
+    text-transform: uppercase;
+    font-weight: 700;
+}
+
+.status-badge.active {
+    background: var(--green-dim);
+    color: var(--green);
+}
+
+.status-badge.blocked {
+    background: var(--red-dim);
+    color: var(--red);
+}
+
+/* Modal Overlay */
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(0,0,0,0.9);
+    z-index: 1000;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+}
+
+.modal-content {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    max-width: 400px;
+    width: 100%;
+    padding: 24px;
+    box-shadow: 0 10px 40px rgba(0,0,0,0.5);
+}
+
+.status-message {
+    font-size: 13px;
+    margin-top: 10px;
+    text-align: center;
+    min-height: 18px;
+}

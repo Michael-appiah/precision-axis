@@ -1,0 +1,14 @@
+# Local dependencies & Netlify
+node_modules/
+.netlify/
+
+# Environment & secrets
+.env
+.env.*
+*.pem
+*.key
+
+# Logs & temp files
+*.log
+scratch/
+.tmp/

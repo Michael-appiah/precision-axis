@@ -1,0 +1,707 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Precision Axis &ndash; AI Sports & Casino Analytics</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700;800;900&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+    <style>
+        .auth-tabs {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            border-bottom: 1px solid var(--border);
+            margin-bottom: 20px;
+        }
+        .auth-tab {
+            font-family: var(--font-mono);
+            background: transparent;
+            border: none;
+            color: var(--muted);
+            padding: 12px;
+            cursor: pointer;
+            font-weight: 700;
+            text-align: center;
+            font-size: 13px;
+        }
+        .auth-tab.active {
+            color: var(--gold);
+            border-bottom: 2px solid var(--gold);
+        }
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            margin-bottom: 16px;
+        }
+        .form-group label {
+            font-size: 11px;
+            color: var(--muted);
+            text-transform: uppercase;
+            font-weight: 700;
+        }
+        .form-control {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            color: var(--white);
+            padding: 10px 12px;
+            font-size: 13px;
+            border-radius: 4px;
+            outline: none;
+        }
+        .form-control:focus {
+            border-color: var(--gold);
+        }
+        .terms-box {
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px solid var(--border);
+            border-radius: 4px;
+            height: 120px;
+            overflow-y: scroll;
+            padding: 10px;
+            font-size: 11px;
+            line-height: 1.5;
+            color: var(--muted);
+            margin-bottom: 16px;
+        }
+    </style>
+</head>
+<body>
+    <div class="landing-container">
+        <!-- Technical Border Frame decoration -->
+        <div class="border-marker top-left"></div>
+        <div class="border-marker top-right"></div>
+        <div class="border-marker bottom-left"></div>
+        <div class="border-marker bottom-right"></div>
+
+        <!-- Header -->
+        <header class="landing-header">
+            <div class="logo-box">
+                <span class="logo-txt">PRECISION AXIS</span>
+                <span class="logo-sub">AI Sports & Casino Analytics</span>
+            </div>
+            <a href="index.html" style="color: var(--muted); text-decoration: none; font-family: var(--font-mono); font-size: 12px; font-weight: 700;">&larr; HOME</a>
+        </header>
+
+        <!-- Main Content -->
+        <main class="landing-main" style="display: flex; justify-content: center; align-items: center; flex-grow: 1; padding: 40px 0;">
+            
+            <!-- Auth Panel -->
+            <section class="material-panel" style="max-width: 440px; width: 100%; margin: 0;">
+                <div class="auth-tabs">
+                    <button class="auth-tab active" id="tabLogin">Log in</button>
+                    <button class="auth-tab" id="tabSignup">Create account</button>
+                </div>
+                
+                <div style="padding: 0 24px 24px;">
+                    <!-- Login Form -->
+                    <form id="loginForm" style="display: flex; flex-direction: column;">
+                        <div class="form-group">
+                            <label>Email address</label>
+                            <input type="email" id="loginEmail" class="form-control" placeholder="user@node.net" required>
+                        </div>
+                        <div class="form-group" style="margin-bottom: 24px;">
+                            <label>Password</label>
+                            <input type="password" id="loginPassword" class="form-control" placeholder="••••••••" required>
+                        </div>
+                        <button type="submit" class="primary-btn-3d" style="width: 100%; text-align: center;">Log in</button>
+                        <div class="status-msg" id="loginStatus" style="margin-top: 14px;"></div>
+                    </form>
+
+                    <!-- Signup Form -->
+                    <form id="signupForm" style="display: none; flex-direction: column;">
+                        <div class="form-group">
+                            <label>Email address</label>
+                            <input type="email" id="signupEmail" class="form-control" placeholder="user@node.net" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Password</label>
+                            <input type="password" id="signupPassword" class="form-control" placeholder="••••••••" required>
+                        </div>
+
+                        <!-- Long Scrollable Terms & Conditions -->
+                        <div class="form-group">
+                            <label>Terms & conditions (scroll to read)</label>
+                            <div class="terms-box" id="termsBox">
+                                <h4 style="color: var(--white); margin-bottom: 8px;">Precision Axis License Agreement</h4>
+                                <p style="margin-bottom: 8px;"><strong>1. experimental testing protocol</strong><br>
+                                By accessing this client node, you explicitly acknowledge that the Precision Axis Cryptographic Entropy Resolver is an experimental mathematical engine. The algorithms, micro-state analysis tools, and trend calculations outputted by the panel are not guaranteed to succeed, map accurately, or maintain uptime.</p>
+                                
+                                <p style="margin-bottom: 8px; color: var(--gold); border: 1px dashed var(--gold); padding: 6px; border-radius: 2px;"><strong>CRITICAL FINANCIAL RISK DISCLAIMER:</strong><br>
+                                THIS IS AN EXPERIMENTAL PROJECT. CHOOSING TO ENGAGE IN SERVICES BINDED BY THESE PREDICTIONS MEANS YOU ARE WILLINGLY TRUSTING REAL MONEY TO AN UNPROVEN SYSTEM THAT MAY FAIL. LOSS OF CAPITAL, DEFLATED BALANCE SHEETS, AND TOTAL FUND LIQUIDATION ARE REAL POTENTIAL OUTCOMES. PARTICIPATE AT YOUR OWN EXCLUSIVE DISCRETION AND RISK.</p>
+                                
+                                <p style="margin-bottom: 8px;"><strong>2. service limits</strong><br>
+                                Vouchers acquired grant finite trials (3, 5, or 10 sessions) linked directly to server-side tokens. Once trials are consumed, session keys are locked and users must obtain new licenses to continue querying.</p>
+                                
+                                <p style="margin-bottom: 8px;"><strong>3. geographical lockouts</strong><br>
+                                Regional licensing structures limit operations. Attempts to bypass locked games or query unauthorized modules via client manipulation violate usage rules and will cause database accounts to be permanently blacklisted.</p>
+                                
+                                <p><strong>4. full release of liability</strong><br>
+                                You release PRECISION AXIS LTD. and all connected node operations from liability or financial losses resulting from predicted spinner outcomes, spin deviations, network latency anomalies, or mathematical engine failures.</p>
+                            </div>
+                            <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 12px;">
+                                <input type="checkbox" id="termsCheck" checked>
+                                <label for="termsCheck" style="font-size: 11px; color: var(--muted); text-transform: none; cursor: pointer;" id="checkLabel">I accept the terms and conditions</label>
+                            </div>
+                        </div>
+                        
+                        <!-- Account Creation Fee Notice -->
+                        <div style="background: rgba(255, 179, 0, 0.05); border: 1px dashed var(--gold); padding: 12px; border-radius: 4px; margin: 0 0 20px; font-size: 12px; line-height: 1.4;">
+                            <span style="color: var(--gold); font-weight: 700;">REGISTRATION GATED:</span>
+                            <span style="color: var(--muted);">A 50 GHS ($3) session creation fee is required to provision secure workspace containers.</span>
+                        </div>
+
+                        <!-- Single Action Button -->
+                        <div style="display: flex; flex-direction: column; gap: 12px;">
+                            <button type="button" class="primary-btn-3d" id="paySignupFeeBtn" style="background: var(--gold); border-color: var(--gold); color: #000000; font-weight: 800; font-size: 13.5px; opacity: 1; cursor: pointer;">
+                                Proceed to Payment (50 GHS)
+                            </button>
+                        </div>
+                        <div class="status-msg" id="signupStatus" style="margin-top: 14px;"></div>
+                    </form>
+
+                    <!-- Mobile Money Payment Proof Upload Form -->
+                    <form id="paymentProofForm" style="display: none; flex-direction: column;">
+                        <div style="background: rgba(255, 179, 0, 0.08); border: 2px solid var(--gold); padding: 18px; border-radius: 6px; margin-bottom: 20px; text-align: left;">
+                            <div style="color: var(--gold); font-weight: 800; font-size: 13px; text-transform: uppercase; margin-bottom: 8px;">
+                                ðŸ“± Step 1: Send 50 GHS via Mobile Money
+                            </div>
+                            <p style="font-size: 12.5px; color: #ffffff; margin-bottom: 8px; line-height: 1.5;">
+                                Send <strong>50 GHS</strong> registration fee to our Mobile Money number:
+                            </p>
+                            <div style="background: var(--bg-card); border: 1px solid var(--gold); padding: 12px; border-radius: 4px; font-family: var(--font-mono); font-size: 18px; color: var(--gold); font-weight: 900; text-align: center; letter-spacing: 1px; margin-bottom: 8px;">
+                                +233 596 459 763
+                            </div>
+                            <div style="font-size: 11px; color: var(--muted); text-align: center;">
+                                Network: MTN Mobile Money | Name: Precision Axis
+                            </div>
+                        </div>
+
+                        <div style="color: var(--gold); font-weight: 800; font-size: 13px; text-transform: uppercase; margin-bottom: 12px; text-align: left;">
+                            ðŸ“¤ Step 2: Confirm Email & Upload Screenshot
+                        </div>
+
+                        <div class="form-group" style="text-align: left;">
+                            <label style="color: var(--gold);">Confirmation Email Address</label>
+                            <input type="email" id="confirmEmailInput" class="form-control" placeholder="Your email to receive login credentials" required>
+                            <div style="font-size: 11px; color: var(--muted); margin-top: 4px;">Once reviewed & approved, your login credentials will be emailed to this address.</div>
+                        </div>
+
+                        <div class="form-group" style="text-align: left;">
+                            <label style="color: var(--gold);">Upload MoMo Payment Screenshot / Receipt</label>
+                            <input type="file" id="screenshotFileInput" accept="image/*" class="form-control" style="background: var(--bg-card); padding: 8px; color: #fff;" required>
+                            <div id="imagePreviewBox" style="display: none; margin-top: 10px; text-align: center;">
+                                <img id="screenshotPreviewImg" style="max-width: 100%; max-height: 200px; border: 1px solid var(--gold); border-radius: 4px;">
+                            </div>
+                        </div>
+
+                        <button type="submit" class="primary-btn-3d" id="submitProofBtn" style="background: var(--gold); border-color: var(--gold); color: #000000; font-weight: 900; font-size: 13.5px; margin-top: 10px;">
+                            Submit Payment Proof for Review
+                        </button>
+                        <div class="status-msg" id="proofStatus" style="margin-top: 14px;"></div>
+                    </form>
+
+                    <!-- Success State / Under Review Message -->
+                    <div id="reviewSuccessState" style="display: none; flex-direction: column; align-items: center; text-align: center; padding: 20px 0;">
+                        <div style="font-size: 48px; margin-bottom: 14px;">â³</div>
+                        <h3 style="font-family: var(--font-mono); color: var(--gold); font-size: 20px; font-weight: 900; margin-bottom: 12px;">DETAILS SENT FOR REVIEW</h3>
+                        <p style="font-size: 13.5px; color: var(--muted); line-height: 1.6; max-width: 440px; margin-bottom: 20px;">
+                            Your payment screenshot and account details have been successfully submitted for review.
+                        </p>
+                        <div style="background: rgba(16, 185, 129, 0.1); border: 1px solid #10b981; padding: 14px 20px; border-radius: 6px; color: #10b981; font-weight: 700; font-size: 13px; margin-bottom: 20px;">
+                            If review is a success, we will send your login details to:<br>
+                            <strong id="sentEmailDisplay" style="color: #ffffff; font-family: var(--font-mono); font-size: 14px;">user@domain.com</strong>
+                        </div>
+                        <a href="auth.html" class="secondary-btn" style="text-decoration: none; padding: 10px 20px;">Back to Login</a>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Gated verification popup container -->
+            <div id="paymentModal" style="display: none; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(0,0,0,0.85); z-index: 1000; justify-content: center; align-items: center; padding: 20px; box-sizing: border-box;">
+                <section class="material-panel" style="max-width: 400px; width: 100%; margin: 0;">
+                    <div class="panel-header">
+                        <span class="panel-title">VERIFYING BILLING PROTOCOL</span>
+                        <span class="status-indicator live">SECURE</span>
+                    </div>
+                    <div style="padding: 24px; display: flex; flex-direction: column; gap: 20px; text-align: center;">
+                        <h3 style="font-family: var(--font-mono); font-size: 18px; color: var(--cyan);">Processing payment</h3>
+                        <p style="font-size: 13px; color: var(--muted);">Authorize the dispatch fee to initialize node variables.</p>
+                        
+                        <div style="display: flex; flex-direction: column; gap: 8px; align-items: center; justify-content: center; margin: 10px 0;">
+                            <div class="loader-spinner" style="border-top-color: var(--cyan);"></div>
+                            <span class="mono" style="font-size: 12px; color: var(--muted);" id="modalStatusText">Connecting to gateway...</span>
+                        </div>
+
+                        <button class="action-btn-3d" id="cancelPayBtn" style="border-color: #ff3b30; color: #ff3b30;">Cancel</button>
+                    </div>
+                </section>
+            </div>
+
+        </main>
+
+        <!-- Technical Footer -->
+        <footer class="landing-footer">
+            <span class="footer-left"></span>
+            <span class="footer-right">&copy; 2026 Precision Axis Ltd.</span>
+        </footer>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const tabLogin = document.getElementById('tabLogin');
+            const tabSignup = document.getElementById('tabSignup');
+            const loginForm = document.getElementById('loginForm');
+            const signupForm = document.getElementById('signupForm');
+            const verifyCodeForm = document.getElementById('verifyCodeForm');
+            
+            const termsBox = document.getElementById('termsBox');
+            const termsCheck = document.getElementById('termsCheck');
+            const checkLabel = document.getElementById('checkLabel');
+
+            const paySignupFeeBtn = document.getElementById('paySignupFeeBtn');
+            const loginStatus = document.getElementById('loginStatus');
+            const signupStatus = document.getElementById('signupStatus');
+            const verifyStatus = document.getElementById('verifyStatus');
+            const verifySentLabel = document.getElementById('verifySentLabel');
+            const verificationCodeInput = document.getElementById('verificationCodeInput');
+
+            let targetEmail = '';
+
+            // Handle terms checkbox change
+            if (termsCheck) {
+                termsCheck.addEventListener('change', () => {
+                    if (paySignupFeeBtn) {
+                        if (termsCheck.checked) {
+                            paySignupFeeBtn.disabled = false;
+                            paySignupFeeBtn.style.opacity = '1';
+                            paySignupFeeBtn.style.cursor = 'pointer';
+                        } else {
+                            paySignupFeeBtn.disabled = true;
+                            paySignupFeeBtn.style.opacity = '0.4';
+                            paySignupFeeBtn.style.cursor = 'not-allowed';
+                        }
+                    }
+                });
+            }
+
+            // Switch tabs
+            if (tabLogin) {
+                tabLogin.addEventListener('click', () => {
+                    tabLogin.classList.add('active');
+                    tabSignup.classList.remove('active');
+                    loginForm.style.display = 'flex';
+                    signupForm.style.display = 'none';
+                    if (verifyCodeForm) verifyCodeForm.style.display = 'none';
+                    if (document.getElementById('paymentProofForm')) document.getElementById('paymentProofForm').style.display = 'none';
+                    if (document.getElementById('reviewSuccessState')) document.getElementById('reviewSuccessState').style.display = 'none';
+                    if (loginStatus) loginStatus.textContent = '';
+                });
+            }
+
+            if (tabSignup) {
+                tabSignup.addEventListener('click', () => {
+                    tabSignup.classList.add('active');
+                    tabLogin.classList.remove('active');
+                    signupForm.style.display = 'flex';
+                    loginForm.style.display = 'none';
+                    if (verifyCodeForm) verifyCodeForm.style.display = 'none';
+                    if (document.getElementById('paymentProofForm')) document.getElementById('paymentProofForm').style.display = 'none';
+                    if (document.getElementById('reviewSuccessState')) document.getElementById('reviewSuccessState').style.display = 'none';
+                    if (signupStatus) signupStatus.textContent = '';
+                });
+            }
+
+            // Auto select tab from URL query params
+            const urlParams = new URLSearchParams(window.location.search);
+            const mode = (urlParams.get('mode') || urlParams.get('tab') || urlParams.get('type') || urlParams.get('action') || '').toLowerCase();
+            if (mode === 'signup' || mode === 'register' || mode === 'create') {
+                if (tabSignup) tabSignup.click();
+            }
+
+            // ── Payment Return Handler ──────────────────────────────────────
+            // Decode session token from URL to recover email/password as fallback
+            const returnStatus = (urlParams.get('status') || '').toLowerCase();
+            const returnRef    = urlParams.get('reference') || urlParams.get('trxref') || urlParams.get('transaction_id') || '';
+            const sessionToken = urlParams.get('session') || '';
+
+            // Try to decode credentials from session token (base64 encoded JSON)
+            let sessionEmail = '', sessionPassword = '';
+            if (sessionToken && sessionToken.startsWith('ms_sess_')) {
+                try {
+                    const decoded = JSON.parse(atob(sessionToken.replace('ms_sess_', '')));
+                    sessionEmail    = decoded.metadata?.custom_email    || decoded.customerEmail || '';
+                    sessionPassword = decoded.metadata?.custom_password || '';
+                } catch(e) {}
+            }
+
+            // localStorage fallback
+            const storedEmail    = sessionEmail    || localStorage.getItem('paxis_signup_email') || '';
+            const storedPassword = sessionPassword || localStorage.getItem('paxis_signup_pass')  || '';
+
+            // ── Helper: show full-screen overlay ──────────────────────────
+            function showPaymentOverlay(type, message, subtext) {
+                // Remove any existing overlay
+                const old = document.getElementById('paxis-payment-overlay');
+                if (old) old.remove();
+
+                const isSuccess = type === 'success';
+                const isLoading = type === 'loading';
+                const iconHtml  = isLoading
+                    ? `<div style="width:56px;height:56px;border:4px solid rgba(255,255,255,.15);border-top-color:var(--gold);border-radius:50%;animation:paxis-spin 1s linear infinite;margin:0 auto 20px;"></div>`
+                    : isSuccess
+                        ? `<div style="font-size:48px;margin-bottom:16px;">✅</div>`
+                        : `<div style="font-size:48px;margin-bottom:16px;">❌</div>`;
+
+                const overlay = document.createElement('div');
+                overlay.id = 'paxis-payment-overlay';
+                overlay.style.cssText = `
+                    position:fixed;inset:0;z-index:9999;
+                    background:rgba(5,8,15,0.97);
+                    display:flex;flex-direction:column;align-items:center;justify-content:center;
+                    text-align:center;padding:32px;
+                `;
+                overlay.innerHTML = `
+                    <style>@keyframes paxis-spin{to{transform:rotate(360deg)}}</style>
+                    ${iconHtml}
+                    <div style="font-family:'Outfit',sans-serif;font-size:22px;font-weight:800;color:${isSuccess||isLoading?'var(--gold, #d4a017)':'#ff3b30'};margin-bottom:10px;">
+                        ${message}
+                    </div>
+                    <div style="font-family:'Share Tech Mono',monospace;font-size:13px;color:rgba(255,255,255,.55);max-width:340px;line-height:1.6;">
+                        ${subtext}
+                    </div>
+                    ${(!isLoading && !isSuccess) ? `
+                    <button onclick="document.getElementById('paxis-payment-overlay').remove(); history.replaceState(null,'',location.pathname); if(document.getElementById('tabSignup')) document.getElementById('tabSignup').click();"
+                        style="margin-top:28px;padding:12px 28px;background:transparent;border:1px solid rgba(255,255,255,.25);color:#fff;font-family:'Share Tech Mono',monospace;font-size:13px;cursor:pointer;border-radius:4px;">
+                        ← Try Again
+                    </button>` : ''}
+                `;
+                document.body.appendChild(overlay);
+                return overlay;
+            }
+
+            // ── Route based on status ──────────────────────────────────────
+            if (returnStatus === 'cancelled' || returnStatus === 'abandoned') {
+                showPaymentOverlay('error', 'Payment Cancelled', 'You closed or cancelled the payment. No charge was made. Click below to try again.');
+                if (storedEmail) {
+                    fetch('/.netlify/functions/log-signup-attempt', {
+                        method: 'POST', headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ email: storedEmail, status: 'PAYMENT_ABANDONED', payment_reference: returnRef })
+                    }).catch(() => {});
+                }
+
+            } else if (returnStatus === 'expired') {
+                showPaymentOverlay('error', 'Session Expired', 'The 2-minute payment window timed out. No charge was made. Click below to start a new payment session.');
+                if (storedEmail) {
+                    fetch('/.netlify/functions/log-signup-attempt', {
+                        method: 'POST', headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ email: storedEmail, status: 'SESSION_EXPIRED', payment_reference: returnRef })
+                    }).catch(() => {});
+                }
+
+            } else if (returnStatus === 'failed') {
+                showPaymentOverlay('error', 'Payment Failed', 'Your transaction could not be completed. Please check your card/mobile money balance and try again.');
+                if (storedEmail) {
+                    fetch('/.netlify/functions/log-signup-attempt', {
+                        method: 'POST', headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ email: storedEmail, status: 'PAYMENT_FAILED', payment_reference: returnRef })
+                    }).catch(() => {});
+                }
+
+            } else if (returnRef && returnStatus === 'success') {
+                // Show "Creating account..." overlay immediately
+                const overlay = showPaymentOverlay('loading', 'Creating Your Account…', `Payment confirmed. Setting up your account (${storedEmail || 'your account'}), please wait.`);
+
+                (async () => {
+                    try {
+                        const res = await fetch('/.netlify/functions/verify-payment', {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify({
+                                reference: returnRef,
+                                email: storedEmail,
+                                password: storedPassword
+                            })
+                        });
+                        const data = await res.json();
+
+                        if (!res.ok && !data.paid) {
+                            throw new Error(data.error || 'Verification failed');
+                        }
+
+                        if (data.sessionToken) {
+                            // ✅ Account created — store session and go to hub
+                            localStorage.setItem('paxis_session', data.sessionToken);
+                            if (data.email) localStorage.setItem('paxis_user_email', data.email);
+                            localStorage.removeItem('paxis_signup_email');
+                            localStorage.removeItem('paxis_signup_pass');
+
+                            // Swap overlay to success
+                            overlay.querySelector('div[id]')?.remove();
+                            overlay.innerHTML = `
+                                <div style="font-size:52px;margin-bottom:16px;">✅</div>
+                                <div style="font-family:'Outfit',sans-serif;font-size:22px;font-weight:800;color:var(--gold,#d4a017);margin-bottom:10px;">Account Created!</div>
+                                <div style="font-family:'Share Tech Mono',monospace;font-size:13px;color:rgba(255,255,255,.55);max-width:340px;line-height:1.6;">
+                                    Welcome, ${data.email || storedEmail}.<br>Taking you to your dashboard…
+                                </div>
+                            `;
+                            setTimeout(() => { window.location.href = 'hub.html'; }, 1800);
+
+                        } else if (data.paid && !data.success) {
+                            // Paid but DB issue — admin will provision manually
+                            overlay.innerHTML = `
+                                <div style="font-size:48px;margin-bottom:16px;">⚠️</div>
+                                <div style="font-family:'Outfit',sans-serif;font-size:20px;font-weight:800;color:#f59e0b;margin-bottom:10px;">Payment Received</div>
+                                <div style="font-family:'Share Tech Mono',monospace;font-size:12px;color:rgba(255,255,255,.55);max-width:360px;line-height:1.7;">
+                                    Your payment was confirmed (Ref: ${returnRef}).<br>
+                                    Our admin has been notified and will activate your account for <strong style="color:#fff">${storedEmail}</strong> shortly.
+                                </div>
+                            `;
+                        } else {
+                            throw new Error('Unexpected response from server');
+                        }
+
+                    } catch(err) {
+                        overlay.remove();
+                        showPaymentOverlay('error', 'Verification Error', err.message + ' — If you were charged, please contact support with ref: ' + returnRef);
+                    }
+                })();
+            }
+
+            // Signup Form submission initializes Paystack Checkout (50 GHS)
+            if (signupForm) {
+                signupForm.addEventListener('submit', async (e) => {
+                    e.preventDefault();
+                    const email = document.getElementById('signupEmail').value.trim();
+                    const passwordVal = document.getElementById('signupPassword').value;
+
+                    if (!email || !passwordVal) {
+                        signupStatus.textContent = 'Please enter both Email and Password first.';
+                        signupStatus.style.color = '#ff3333';
+                        return;
+                    }
+
+                    if (termsCheck && !termsCheck.checked) {
+                        signupStatus.textContent = 'You must read and accept the terms and conditions first.';
+                        signupStatus.style.color = '#ff3333';
+                        return;
+                    }
+
+                    // Save signup credentials locally for returning reference verification
+                    localStorage.setItem('paxis_signup_email', email);
+                    localStorage.setItem('paxis_signup_pass', passwordVal);
+
+                    signupStatus.textContent = 'Initializing secure payment gateway...';
+                    signupStatus.style.color = 'var(--white)';
+                    if (paySignupFeeBtn) paySignupFeeBtn.disabled = true;
+
+                    try {
+                        // Immediately log pre-payment attempt
+                        fetch('/.netlify/functions/log-signup-attempt', {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify({ email: email, password: passwordVal })
+                        }).catch(() => {});
+
+                        // Server-side Gateway Initialization for 50 GHS Account Creation Fee
+                        const gwRes = await fetch('/.netlify/functions/initialize-payment', {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify({
+                                amount: 50.00,
+                                email: email,
+                                password: passwordVal,
+                                is_voucher: false
+                            })
+                        });
+
+                        const resText = await gwRes.text();
+                        let data = {};
+                        try {
+                            data = JSON.parse(resText);
+                        } catch(e) {
+                            throw new Error('Payment service is temporarily busy. Please retry.');
+                        }
+                        const forwardUrl = data.checkout_url || data.authorization_url;
+                        if (gwRes.ok && data.success && forwardUrl) {
+                            signupStatus.textContent = 'Redirecting to payment gateway...';
+                            signupStatus.style.color = 'var(--green)';
+                            window.location.href = forwardUrl;
+                        } else {
+                            throw new Error(data.error || 'Failed to initialize payment gateway.');
+                        }
+                    } catch (err) {
+                        signupStatus.textContent = err.message;
+                        signupStatus.style.color = '#ff3333';
+                        if (paySignupFeeBtn) paySignupFeeBtn.disabled = false;
+                    }
+                });
+            }
+
+            if (paySignupFeeBtn) {
+                paySignupFeeBtn.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    if (signupForm) signupForm.requestSubmit();
+                });
+            }
+
+            // Verification Code Submit
+            if (verifyCodeForm) {
+                verifyCodeForm.addEventListener('submit', async (e) => {
+                    e.preventDefault();
+                    const code = verificationCodeInput.value.trim();
+
+                    verifyStatus.textContent = 'Confirming verification code...';
+                    verifyStatus.style.color = 'var(--white)';
+
+                    try {
+                        const res = await fetch('/.netlify/functions/verify-email', {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify({ email: targetEmail, code, verify: true })
+                        });
+                        const data = await res.json();
+
+                        if (!res.ok) {
+                            throw new Error(data.error || 'Verification check failed');
+                        }
+
+                        // Save session token in local storage
+                        localStorage.setItem('paxis_session', data.sessionToken);
+                        if (data.email) localStorage.setItem('paxis_user_email', data.email);
+
+                        verifyStatus.textContent = 'Email verified and session provisioned! Redirecting...';
+                        verifyStatus.style.color = 'var(--green)';
+
+                        setTimeout(() => {
+                            if (data.activeVoucher) {
+                                localStorage.setItem('activeVoucher', JSON.stringify(data.activeVoucher));
+                            }
+                            window.location.href = 'hub.html';
+                        }, 1200);
+
+                    } catch (err) {
+                        verifyStatus.textContent = `Error: ${err.message}`;
+                        verifyStatus.style.color = '#ff3333';
+                    }
+                });
+            }
+
+            // Login Form submission
+            if (loginForm) {
+                loginForm.addEventListener('submit', async (e) => {
+                    e.preventDefault();
+                    const email = document.getElementById('loginEmail').value.trim();
+                    const password = document.getElementById('loginPassword').value;
+
+                    loginStatus.textContent = 'Verifying credentials...';
+                    loginStatus.style.color = 'var(--white)';
+
+                    try {
+                        const loginRes = await fetch('/.netlify/functions/login-user', {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify({ email, password })
+                        });
+                        const loginData = await loginRes.json();
+
+                        if (!loginRes.ok) {
+                            // If user is unverified, trigger verification redirect code
+                            if (loginRes.status === 403 && verifyCodeForm) {
+                                targetEmail = email;
+                                verificationCodeInput.value = loginData.code;
+                                loginForm.style.display = 'none';
+                                verifyCodeForm.style.display = 'flex';
+                                verifySentLabel.innerHTML = `
+                                    Please enter the confirmation code for <strong>${email}</strong>: <strong style="color: var(--gold); font-size: 16px; font-family: var(--font-mono);">${loginData.code}</strong>.
+                                    <br><a href="#" id="copyConfirmCodeBtn" style="color: var(--cyan); font-size: 11px; text-decoration: underline;">Copy Code</a>
+                                    <span id="copyConfirmFeedback" style="color: var(--green); font-size: 11px; margin-left: 8px;"></span>
+                                `;
+                                
+                                const copyBtn = document.getElementById('copyConfirmCodeBtn');
+                                if (copyBtn) {
+                                    copyBtn.addEventListener('click', (ev) => {
+                                        ev.preventDefault();
+                                        navigator.clipboard.writeText(loginData.code).then(() => {
+                                            const feedback = document.getElementById('copyConfirmFeedback');
+                                            if (feedback) feedback.textContent = 'Copied!';
+                                        });
+                                    });
+                                }
+                                return;
+                            }
+                            throw new Error(loginData.error || 'Authentication failed');
+                        }
+
+                        // Store database session token & email
+                        localStorage.setItem('paxis_session', loginData.sessionToken);
+                        if (email) localStorage.setItem('paxis_user_email', email);
+
+                        loginStatus.textContent = 'Access granted. Redirecting...';
+                        loginStatus.style.color = 'var(--green)';
+
+                        setTimeout(() => {
+                            if (loginData.activeVoucher) {
+                                localStorage.setItem('activeVoucher', JSON.stringify(loginData.activeVoucher));
+                            }
+                            window.location.href = 'hub.html';
+                        }, 1200);
+
+                    } catch (err) {
+                        loginStatus.textContent = `Error: ${err.message}`;
+                        loginStatus.style.color = '#ff3333';
+                    }
+                });
+            }
+
+            // Check Maintenance Mode Status
+            (async function checkMaintenanceMode() {
+                try {
+                    const res = await fetch('/.netlify/functions/site-status');
+                    const data = await res.json();
+                    if (data && data.maintenance === true) {
+                        const token = localStorage.getItem('paxis_session');
+                        if (token) {
+                            try {
+                                const sessionRes = await fetch('/.netlify/functions/handle-session', {
+                                    method: 'POST',
+                                    headers: { 'Content-Type': 'application/json' },
+                                    body: JSON.stringify({ sessionToken: token, action: 'GET_SESSION' })
+                                });
+                                const sessionData = await sessionRes.json();
+                                if (sessionData && sessionData.success && sessionData.email === 'admin@node.net') {
+                                    return; // Admin bypass
+                                }
+                            } catch(e) {}
+                        }
+
+                        const mOverlay = document.createElement('div');
+                        mOverlay.id = 'maintenanceOverlay';
+                        mOverlay.style.cssText = 'position:fixed; top:0; left:0; width:100vw; height:100vh; background:#07080a; color:#ffffff; z-index:999999; display:flex; flex-direction:column; justify-content:center; align-items:center; text-align:center; padding:24px; box-sizing:border-box; font-family:"Share Tech Mono", monospace;';
+                        mOverlay.innerHTML = `
+                            <div style="max-width:540px; border:2px solid #ffb300; background:rgba(255,179,0,0.03); padding:40px 28px; border-radius:8px; box-shadow:0 0 40px rgba(255,179,0,0.15); position:relative;">
+                                <div style="font-size:42px; margin-bottom:12px;">ðŸ› ï¸</div>
+                                <div style="color:#ffb300; font-size:11px; font-weight:800; letter-spacing:2px; text-transform:uppercase; margin-bottom:8px;">[ SYSTEM NOTICE ]</div>
+                                <h1 style="font-family:'Outfit', sans-serif; font-size:26px; font-weight:900; color:#ffffff; margin:0 0 14px; line-height:1.2;">SYSTEM UNDER MAINTENANCE</h1>
+                                <p style="font-family:'Outfit', sans-serif; font-size:14px; color:#888899; line-height:1.6; margin:0 0 24px;">
+                                    Precision Axis nodes are currently undergoing scheduled algorithmic engine maintenance and system upgrades. Client sessions will resume shortly.
+                                </p>
+                                <div style="display:inline-flex; align-items:center; gap:10px; background:rgba(255,179,0,0.1); border:1px solid #ffb300; padding:8px 16px; border-radius:20px; font-size:12px; color:#ffb300; font-weight:700;">
+                                    <span style="width:8px; height:8px; background:#ffb300; border-radius:50%; display:inline-block;"></span>
+                                    STATUS: MAINTENANCE ACTIVE
+                                </div>
+                            </div>
+                        `;
+                        document.body.appendChild(mOverlay);
+                        document.body.style.overflow = 'hidden';
+                    }
+                } catch(e) {}
+            })();
+        });
+    </script>
+</body>
+</html>
+
+

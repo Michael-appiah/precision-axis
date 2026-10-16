@@ -1,0 +1,332 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Payment Status &ndash; SportyBet</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-dark: #000000;
+            --card-bg: #1c2024;
+            --card-inner: #242c32;
+            --red: #ea0725;
+            --green: #00a84c;
+            --white: #ffffff;
+            --muted: #9299a5;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Outfit', sans-serif;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            background-color: var(--bg-dark);
+            color: var(--white);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 16px;
+        }
+
+        .status-container {
+            width: 100%;
+            max-width: 420px;
+            background: var(--card-bg);
+            border-radius: 16px;
+            padding: 30px 24px;
+            text-align: center;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.7);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            position: relative;
+        }
+
+        .status-icon-wrap {
+            width: 72px;
+            height: 72px;
+            border-radius: 50%;
+            margin: 0 auto 18px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 32px;
+        }
+
+        .status-icon-wrap.loading {
+            background: rgba(255, 255, 255, 0.1);
+            color: #fff;
+            animation: spin 1s linear infinite;
+        }
+
+        .status-icon-wrap.success {
+            background: rgba(0, 168, 76, 0.15);
+            color: var(--green);
+            border: 2px solid var(--green);
+        }
+
+        .status-icon-wrap.failed {
+            background: rgba(234, 7, 37, 0.15);
+            color: var(--red);
+            border: 2px solid var(--red);
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .status-title {
+            font-size: 22px;
+            font-weight: 800;
+            margin-bottom: 8px;
+        }
+
+        .status-desc {
+            font-size: 13.5px;
+            color: var(--muted);
+            margin-bottom: 22px;
+            line-height: 1.5;
+        }
+
+        .details-card {
+            background: var(--card-inner);
+            border-radius: 10px;
+            padding: 16px;
+            margin-bottom: 24px;
+            text-align: left;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            font-size: 13px;
+        }
+
+        .detail-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            padding-bottom: 8px;
+        }
+
+        .detail-row:last-child {
+            border-bottom: none;
+            padding-bottom: 0;
+        }
+
+        .detail-label {
+            color: var(--muted);
+        }
+
+        .detail-value {
+            font-weight: 700;
+            color: var(--white);
+            word-break: break-all;
+        }
+
+        .btn-group {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .btn-primary {
+            background: var(--green);
+            color: var(--white);
+            border: none;
+            padding: 14px;
+            border-radius: 8px;
+            font-size: 15px;
+            font-weight: 700;
+            cursor: pointer;
+            text-decoration: none;
+            display: block;
+            transition: opacity 0.2s;
+        }
+
+        .btn-primary:hover {
+            opacity: 0.9;
+        }
+
+        .btn-secondary {
+            background: var(--card-inner);
+            color: var(--muted);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            padding: 12px;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            text-decoration: none;
+            display: block;
+        }
+
+        .btn-secondary:hover {
+            color: var(--white);
+        }
+    </style>
+</head>
+<body>
+    <div class="status-container">
+        <!-- Status Icon -->
+        <div class="status-icon-wrap loading" id="statusIcon">
+            <i class="fa-solid fa-spinner" id="iconGraphic"></i>
+        </div>
+
+        <h1 class="status-title" id="statusTitle">Verifying Deposit...</h1>
+        <p class="status-desc" id="statusDesc">Please wait while we confirm your payment with the Martha Solutions gateway.</p>
+
+        <!-- Transaction Details Card -->
+        <div class="details-card" id="detailsCard" style="display: none;">
+            <div class="detail-row">
+                <span class="detail-label">Reference</span>
+                <span class="detail-value" id="valRef">&mdash;</span>
+            </div>
+            <div class="detail-row">
+                <span class="detail-label">Amount</span>
+                <span class="detail-value" id="valAmount">&mdash;</span>
+            </div>
+            <div class="detail-row">
+                <span class="detail-label">Status</span>
+                <span class="detail-value" id="valStatus" style="color: var(--green);">SUCCESS</span>
+            </div>
+            <div class="detail-row">
+                <span class="detail-label">New Wallet Balance</span>
+                <span class="detail-value" id="valBalance">&mdash;</span>
+            </div>
+        </div>
+
+        <div class="btn-group" id="btnGroup" style="display: none;">
+            <a href="game.html" class="btn-primary"><i class="fa-solid fa-play"></i> Play Spin da' Bottle</a>
+            <a href="index.html" class="btn-secondary"><i class="fa-solid fa-house"></i> Return to Lobby</a>
+            <a href="me.html" class="btn-secondary"><i class="fa-solid fa-user"></i> View Me / Account</a>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', async () => {
+            const urlParams = new URLSearchParams(window.location.search);
+            const statusParam = (urlParams.get('status') || '').toLowerCase();
+            const referenceParam = urlParams.get('reference') || urlParams.get('transaction_id') || urlParams.get('trxref') || urlParams.get('session');
+            const amountParam = urlParams.get('amount');
+            const orderIdParam = urlParams.get('orderId') || urlParams.get('merchant_ref');
+
+            const statusIcon = document.getElementById('statusIcon');
+            const iconGraphic = document.getElementById('iconGraphic');
+            const statusTitle = document.getElementById('statusTitle');
+            const statusDesc = document.getElementById('statusDesc');
+            const detailsCard = document.getElementById('detailsCard');
+            const btnGroup = document.getElementById('btnGroup');
+
+            const valRef = document.getElementById('valRef');
+            const valAmount = document.getElementById('valAmount');
+            const valStatus = document.getElementById('valStatus');
+            const valBalance = document.getElementById('valBalance');
+
+            // Fallback saved pending deposit amount
+            const savedPendingAmount = parseFloat(localStorage.getItem('pending_deposit_amount') || '0');
+
+            let isSuccess = false;
+            let verifiedAmount = parseFloat(amountParam) || savedPendingAmount;
+            let finalRef = referenceParam || ('REF-' + Date.now());
+
+            // Check if status in query indicates failure directly
+            if (statusParam === 'failed' || statusParam === 'cancelled' || statusParam === 'cancel') {
+                showFailure('Payment Cancelled / Failed', 'The payment session was cancelled or could not be completed.');
+                return;
+            }
+
+            // Verify with backend gateway-verify endpoint if reference is present
+            if (referenceParam) {
+                try {
+                    const res = await fetch(`/.netlify/functions/gateway-verify?reference=${encodeURIComponent(referenceParam)}`);
+                    const data = await res.json();
+                    
+                    if (data.success && (data.status === 'SUCCESS' || data.verified === true)) {
+                        isSuccess = true;
+                        if (data.transaction && data.transaction.amount_ghs) {
+                            verifiedAmount = parseFloat(data.transaction.amount_ghs);
+                        }
+                        if (data.transaction && data.transaction.gateway_ref) {
+                            finalRef = data.transaction.gateway_ref;
+                        }
+                    } else if (statusParam === 'success') {
+                        // Trust query status callback if signed or server in transition
+                        isSuccess = true;
+                    } else {
+                        isSuccess = false;
+                    }
+                } catch (e) {
+                    console.error('Verification error:', e);
+                    if (statusParam === 'success') {
+                        isSuccess = true;
+                    }
+                }
+            } else if (statusParam === 'success') {
+                isSuccess = true;
+            }
+
+            if (isSuccess && verifiedAmount > 0) {
+                // Ensure balance is loaded
+                let savedBalance = localStorage.getItem('spindabottle_balance');
+                let currentBal = savedBalance ? parseFloat(savedBalance) : 38450.00;
+
+                // Deduplicate credit using reference check
+                let processed = JSON.parse(localStorage.getItem('processed_gateway_refs') || '[]');
+                if (!processed.includes(finalRef)) {
+                    currentBal += verifiedAmount;
+                    localStorage.setItem('spindabottle_balance', currentBal.toFixed(2));
+                    processed.push(finalRef);
+                    localStorage.setItem('processed_gateway_refs', JSON.stringify(processed));
+                }
+
+                // Clear pending deposit cache
+                localStorage.removeItem('pending_deposit_amount');
+                localStorage.removeItem('pending_deposit_email');
+
+                // Render UI
+                statusIcon.className = 'status-icon-wrap success';
+                iconGraphic.className = 'fa-solid fa-circle-check';
+                statusTitle.textContent = 'Deposit Successful!';
+                statusDesc.textContent = 'Your funds have been securely added to your SportyBet wallet.';
+
+                valRef.textContent = finalRef;
+                valAmount.textContent = `GHS ${verifiedAmount.toFixed(2)}`;
+                valStatus.textContent = 'SUCCESS';
+                valStatus.style.color = '#00a84c';
+                valBalance.textContent = `GHS ${currentBal.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+
+                detailsCard.style.display = 'flex';
+                btnGroup.style.display = 'flex';
+            } else {
+                showFailure('Payment Pending or Unconfirmed', 'We could not confirm completion of this transaction. If you were debited, your wallet will update shortly.');
+            }
+
+            function showFailure(title, msg) {
+                statusIcon.className = 'status-icon-wrap failed';
+                iconGraphic.className = 'fa-solid fa-circle-xmark';
+                statusTitle.textContent = title;
+                statusDesc.textContent = msg;
+
+                if (referenceParam) {
+                    valRef.textContent = referenceParam;
+                    valAmount.textContent = verifiedAmount > 0 ? `GHS ${verifiedAmount.toFixed(2)}` : '&mdash;';
+                    valStatus.textContent = 'FAILED / PENDING';
+                    valStatus.style.color = '#ea0725';
+                    valBalance.textContent = 'Unchanged';
+                    detailsCard.style.display = 'flex';
+                }
+
+                btnGroup.style.display = 'flex';
+            }
+        });
+    </script>
+</body>
+</html>

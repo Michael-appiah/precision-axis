@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>SportyBet</title>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+    <link rel="icon" type="image/webp" href="unnamed.webp">
+    <link rel="apple-touch-icon" href="unnamed.png">
+</head>
+<body>
+    <div class="game-container">
+        <!-- Header -->
+        <header class="game-header">
+            <button class="btn-icon" id="backBtn">
+                <img src="chevron_left.e6b9fc31.svg" alt="Back">
+            </button>
+            <h1 class="game-title">Spin da' Bottle</h1>
+            <div class="header-right">
+                <button class="btn-icon" id="chatBtn">
+                    <!-- Green Chat Bubbles SVG matching prototype.png -->
+                    <svg width="26" height="22" viewBox="0 0 28 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M12 2C6.477 2 2 5.582 2 10c0 1.94.868 3.727 2.332 5.093L3 19l4.582-1.31C8.89 17.842 10.414 18 12 18c5.523 0 10-3.582 10-8S17.523 2 12 2z" fill="#00d000"/>
+                        <path d="M18 9c4.418 0 8 2.686 8 6 0 1.455-.694 2.795-1.866 3.82L25 22l-3.666-1.047C20.312 20.88 19.18 21 18 21c-4.418 0-8-2.686-8-6s3.582-6 8-6z" fill="#00b000" opacity="0.9"/>
+                    </svg>
+                </button>
+                <button class="btn-icon hamburger-btn" id="menuBtn">
+                    <img src="ham.8e4f6849.svg" alt="Menu">
+                    <span class="badge-dot"></span>
+                </button>
+            </div>
+        </header>
+
+        <!-- Status Bar (Wallet & Mission) -->
+        <div class="status-bar">
+            <!-- Wallet Info -->
+            <div class="wallet-section">
+                <div class="wallet-balance-row">
+                    <img src="wallet-icon.d598aa26.svg" alt="Wallet" class="wallet-icon">
+                    <span class="wallet-label">GHS</span>
+                    <span class="wallet-amount" id="walletBalance">38,450.00</span>
+                </div>
+                <button class="add-money-btn" id="addMoneyBtn">+ Add Money</button>
+            </div>
+
+            <!-- Mission Section -->
+            <div class="mission-section">
+                <span class="mission-text-container">
+                    Mission ends in <strong class="mission-time">4d</strong>
+                </span>
+                <div class="mission-chest-box">
+                    <!-- Gold Treasure Chest SVG matching prototype.png -->
+                    <svg width="28" height="24" viewBox="0 0 32 28" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <rect x="2" y="10" width="28" height="15" rx="2" fill="#8B4513" stroke="#D4AF37" stroke-width="2"/>
+                        <path d="M2 11C2 6 6 4 16 4C26 4 30 6 30 11H2Z" fill="#A0522D" stroke="#D4AF37" stroke-width="2"/>
+                        <rect x="13" y="12" width="6" height="7" rx="1" fill="#FFD700"/>
+                        <circle cx="16" cy="15.5" r="1.5" fill="#333"/>
+                        <line x1="6" y1="4" x2="6" y2="25" stroke="#FFD700" stroke-width="2"/>
+                        <line x1="26" y1="4" x2="26" y2="25" stroke="#FFD700" stroke-width="2"/>
+                    </svg>
+                </div>
+            </div>
+        </div>
+
+        <!-- Wheel Section -->
+        <div class="wheel-area">
+            <div class="wheel-outer">
+                <span class="wheel-text wheel-text-up">UP</span>
+                <span class="wheel-text wheel-text-down">DOWN</span>
+                <!-- Horizontal Green Glass Bottle (NO LID) -->
+                <div class="bottle-container" id="bottleContainer">
+                    <svg viewBox="0 0 160 28" fill="none" xmlns="http://www.w3.org/2000/svg" class="bottle-svg">
+                        <defs>
+                            <linearGradient id="glassGrad" x1="0" y1="0" x2="0" y2="1">
+                                <stop offset="0%" stop-color="#144d08"/>
+                                <stop offset="25%" stop-color="#228510"/>
+                                <stop offset="65%" stop-color="#55db27"/>
+                                <stop offset="90%" stop-color="#8cff5c"/>
+                                <stop offset="100%" stop-color="#40c418"/>
+                            </linearGradient>
+                            <linearGradient id="neckGrad" x1="0" y1="0" x2="0" y2="1">
+                                <stop offset="0%" stop-color="#144d08"/>
+                                <stop offset="50%" stop-color="#3eb820"/>
+                                <stop offset="100%" stop-color="#8cff5c"/>
+                            </linearGradient>
+                            <linearGradient id="shineGrad" x1="0" y1="0" x2="1" y2="0">
+                                <stop offset="0%" stop-color="#ffffff" stop-opacity="0"/>
+                                <stop offset="20%" stop-color="#ffffff" stop-opacity="0.8"/>
+                                <stop offset="70%" stop-color="#ffffff" stop-opacity="0.2"/>
+                                <stop offset="100%" stop-color="#ffffff" stop-opacity="0"/>
+                            </linearGradient>
+                        </defs>
+                        <!-- Main bottle body and shoulder -->
+                        <path d="M 12,2 H 105 C 113,2 118,9 120,9 H 152 V 8 H 155 C 156.5,8 156.5,20 155,20 H 152 V 19 H 120 C 118,19 113,26 105,26 H 12 Q 4,26 4,14 Q 4,2 12,2 Z" fill="url(#glassGrad)" stroke="#092d03" stroke-width="0.8"/>
+                        <!-- Inner liquid dark green line -->
+                        <path d="M 14,4 H 104 C 111,4 116,10 118,11 H 150 V 17 H 118 C 116,18 111,24 104,24 H 14 Q 6,24 6,14 Q 6,4 14,4 Z" fill="#0d4004" opacity="0.45"/>
+                        <!-- Top glass reflection highlight -->
+                        <path d="M 16,5.5 H 102 C 109,5.5 114,11 116,12 H 148" stroke="url(#shineGrad)" stroke-width="1.8" stroke-linecap="round"/>
+                        <!-- Lower subtle highlight -->
+                        <path d="M 16,8.5 H 90" stroke="#ffffff" stroke-width="0.8" stroke-linecap="round" opacity="0.25"/>
+                        <!-- Bottom reflection -->
+                        <ellipse cx="6" cy="14" rx="2" ry="10" fill="#ffffff" opacity="0.3"/>
+                        <!-- Open mouth mouth rim -->
+                        <ellipse cx="155" cy="14" rx="1" ry="5.5" fill="#031200" stroke="#092d03" stroke-width="0.5"/>
+                    </svg>
+                </div>
+            </div>
+        </div>
+
+        <!-- Notification Bar (Exceeded balance) -->
+        <div class="notification-bar" id="notificationBar">
+            <span class="error-text" id="errorText">Bet Amount seems to exceed Wallet Balance.</span>
+        </div>
+
+        <!-- Bet Display Box -->
+        <div class="bet-display-wrapper">
+            <div class="bet-display-box">
+                <span class="bet-display-label">Bet</span>
+                <span class="bet-display-value-row">
+                    <img src="green.ce1a9c61.svg" alt="Chip" class="bet-display-chip">
+                    <span id="betDisplayAmount">0.50</span>
+                </span>
+            </div>
+        </div>
+
+        <!-- Bet Selection (Slider) -->
+        <div class="slider-container">
+            <span class="slider-limit text-left">0.5</span>
+            <div class="slider-wrapper">
+                <input type="range" id="betSlider" min="0.5" max="50000" step="0.5" value="0.5">
+                <div class="slider-track-fill" id="sliderTrackFill"></div>
+            </div>
+            <span class="slider-limit text-right" id="maxLabel">50K</span>
+        </div>
+
+        <!-- Chip Selectors Capsule -->
+        <div class="chips-container-wrapper">
+            <div class="chips-capsule">
+                <!-- Gift Icon Button -->
+                <button class="chip-btn gift-btn" id="giftBtn">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="2">
+                        <rect x="3" y="8" width="18" height="13" rx="1.5" />
+                        <path d="M12 5V3m0 2a2.5 2.5 0 00-2.5-2.5m2.5 2.5a2.5 2.5 0 012.5-2.5m-5 2.5h5" />
+                        <path d="M12 8v13M3 12h18" />
+                    </svg>
+                </button>
+                
+                <!-- Chip values -->
+                <button class="chip-btn" data-value="0.5">
+                    <img src="green.ce1a9c61.svg" alt="0.5">
+                    <span class="chip-text">0.5</span>
+                </button>
+                <button class="chip-btn" data-value="1">
+                    <img src="red.84da4239.svg" alt="1">
+                    <span class="chip-text">1</span>
+                </button>
+                <button class="chip-btn" data-value="5">
+                    <img src="purple.e7efc560.svg" alt="5">
+                    <span class="chip-text">5</span>
+                </button>
+                <button class="chip-btn" data-value="10">
+                    <img src="sea_green.cb9cdcba.svg" alt="10">
+                    <span class="chip-text">10</span>
+                </button>
+                <button class="chip-btn" data-value="50">
+                    <img src="light_green.03da0ea5.svg" alt="50">
+                    <span class="chip-text">50</span>
+                </button>
+                <button class="chip-btn" data-value="100">
+                    <img src="dark_orange.18ff87ac.svg" alt="100">
+                    <span class="chip-text">100</span>
+                </button>
+                <button class="chip-btn" data-value="500">
+                    <img src="pink.1feafb0f.svg" alt="500">
+                    <span class="chip-text">500</span>
+                </button>
+                <button class="chip-btn" data-value="1000">
+                    <img src="light_purple.48dd33c4.svg" alt="1K">
+                    <span class="chip-text">1K</span>
+                </button>
+                <button class="chip-btn" data-value="5000">
+                    <img src="light_brown.ac8be6bd.svg" alt="5K">
+                    <span class="chip-text">5K</span>
+                </button>
+                <button class="chip-btn" data-value="10000">
+                    <img src="red.84da4239.svg" alt="10K">
+                    <span class="chip-text">10K</span>
+                </button>
+                <button class="chip-btn" data-value="50000">
+                    <img src="green.ce1a9c61.svg" alt="50K">
+                    <span class="chip-text">50K</span>
+                </button>
+            </div>
+        </div>
+
+        <div class="limits-info">
+            <span>Min : 0.5</span>
+            <span>Max : 50K</span>
+        </div>
+
+        <!-- Action / Bet Placement Buttons at Bottom -->
+        <div class="action-buttons">
+            <button class="action-btn btn-up" id="betUpBtn">
+                <span class="action-title">UP</span>
+                <span class="action-subtitle">Pays 2x</span>
+            </button>
+            <button class="action-btn btn-down" id="betDownBtn">
+                <span class="action-title">DOWN</span>
+                <span class="action-subtitle">Pays 2x</span>
+            </button>
+        </div>
+    </div>
+
+    <!-- Outcome Overlay Modal -->
+    <div class="outcome-overlay" id="outcomeOverlay">
+        <div class="outcome-card-container">
+            <div class="outcome-card" id="outcomeCard">
+                <div class="outcome-title" id="outcomeTitle">up</div>
+            </div>
+            <div class="outcome-amount-text" id="outcomeAmountText">
+                You Won ðŸ† <span id="outcomeAmountVal">GHS 1.00</span>
+            </div>
+        </div>
+        
+        <!-- Rebet and New Round Buttons at Bottom of Overlay -->
+        <div class="overlay-buttons">
+            <button class="overlay-btn btn-rebet" id="overlayRebetBtn">Rebet</button>
+            <button class="overlay-btn btn-newround" id="overlayNewRoundBtn">New Round</button>
+        </div>
+    </div>
+
+    <!-- Deposit Modal (Martha Solutions Gateway) -->
+    <div class="modal-overlay" id="addMoneyModal">
+        <div class="modal-content">
+            <h2>Deposit Funds</h2>
+            <p>Enter your email and the amount to deposit into your GHS wallet:</p>
+
+            <div style="display:flex;flex-direction:column;gap:12px;margin-top:8px;">
+                <input type="email" id="depositEmail" placeholder="Your email address"
+                    style="padding:12px;border-radius:8px;border:1px solid rgba(255,255,255,0.2);background:#1a1a2e;color:#fff;font-size:14px;outline:none;">
+
+                <div class="add-funds-options">
+                    <button class="fund-opt-btn" data-amount="10">GHS 10</button>
+                    <button class="fund-opt-btn" data-amount="50">GHS 50</button>
+                    <button class="fund-opt-btn" data-amount="100">GHS 100</button>
+                    <button class="fund-opt-btn" data-amount="500">GHS 500</button>
+                </div>
+
+                <div style="display:flex;align-items:center;gap:8px;">
+                    <span style="color:#9299a5;font-size:13px;">Or enter amount:</span>
+                    <input type="number" id="depositCustomAmount" min="5" max="10000" step="1" placeholder="e.g. 200"
+                        style="flex:1;padding:10px;border-radius:8px;border:1px solid rgba(255,255,255,0.2);background:#1a1a2e;color:#fff;font-size:14px;outline:none;">
+                </div>
+
+                <p id="depositError" style="color:#ff4d6d;font-size:12px;display:none;margin:0;"></p>
+            </div>
+
+            <button class="add-money-btn" id="proceedDepositBtn"
+                style="margin-top:14px;width:100%;padding:13px;font-size:15px;font-weight:700;border-radius:8px;background:#00a84c;border:none;color:#fff;cursor:pointer;">
+                Proceed to Pay
+            </button>
+            <button class="modal-close-btn" id="closeAddMoneyBtn" style="margin-top:8px;">Cancel</button>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+    <script src="app.js"></script>
+</body>
+</html>
+

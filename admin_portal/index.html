@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AXIS ADMIN – Portal Control Module</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700;800;900&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+
+    <!-- 1. LOGIN OVERLAY MODAL -->
+    <div id="loginOverlay" class="modal-overlay" style="display: flex;">
+        <div class="modal-content">
+            <div style="text-align: center; margin-bottom: 20px;">
+                <span class="logo-txt">AXIS ADMIN</span>
+                <p class="logo-sub">Authorization Module</p>
+            </div>
+            
+            <form id="loginForm">
+                <div class="form-group">
+                    <label>Admin ID</label>
+                    <input type="email" id="adminEmail" class="form-control" placeholder="admin@node.net" required>
+                </div>
+                <div class="form-group">
+                    <label>Security Phrase</label>
+                    <input type="password" id="adminPassword" class="form-control" placeholder="••••••••" required>
+                </div>
+                <button type="submit" class="primary-btn" style="width: 100%; margin-top: 10px;">Authorize Workspace</button>
+            </form>
+            <div id="loginStatus" class="status-message"></div>
+        </div>
+    </div>
+
+    <!-- 2. MAIN ADMIN WORKSPACE -->
+    <div id="adminWorkspace" style="display: none;">
+        
+        <!-- Header -->
+        <header class="admin-header">
+            <div class="logo-box">
+                <span class="logo-txt">AXIS ADMIN</span>
+                <span class="logo-sub">Portal Control Panel</span>
+            </div>
+            <div style="display: flex; gap: 16px; align-items: center;">
+                <div class="user-badge">
+                    <i class="fa-solid fa-user-shield" style="color: var(--gold);"></i>
+                    <span id="activeAdminEmail">admin@node.net</span>
+                </div>
+                <button id="logoutBtn" class="logout-btn">Deauthorize</button>
+            </div>
+        </header>
+
+        <!-- Container -->
+        <div class="admin-container">
+            
+            <!-- System Maintenance Mode Control Card -->
+            <section class="admin-card" style="margin-bottom: 20px; border: 2px solid var(--gold); background: rgba(255, 179, 0, 0.04);">
+                <div style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 16px;">
+                    <div>
+                        <h2 class="card-title" style="margin-bottom: 4px; color: var(--gold);">
+                            <i class="fa-solid fa-screwdriver-wrench" style="margin-right: 8px;"></i> System Maintenance Mode
+                        </h2>
+                        <p style="font-size: 12px; color: var(--text-secondary); margin: 0;">
+                            When enabled, public visitors will see a scheduled maintenance notice. Admins can continue operating normally.
+                        </p>
+                    </div>
+                    <div style="display: flex; align-items: center; gap: 12px;">
+                        <span id="maintStatusBadge" class="badge" style="background: rgba(16, 185, 129, 0.15); color: #10b981; border: 1px solid #10b981; padding: 6px 12px; font-weight: 800; font-family: var(--font-mono);">SITE LIVE</span>
+                        <button id="toggleMaintBtn" class="primary-btn" style="background: #ffb300; border-color: #ffb300; color: #000; font-weight: 800; padding: 8px 16px;">
+                            Enable Maintenance
+                        </button>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Quick Actions Grid -->
+            <div class="grid-cols-2">
+                
+                <!-- Account Creator Card -->
+                <section class="admin-card">
+                    <h2 class="card-title"><i class="fa-solid fa-user-plus" style="margin-right: 8px;"></i> Create User Account</h2>
+                    <form id="createAccountForm">
+                        <div class="form-group">
+                            <label>User Email Address</label>
+                            <input type="email" id="newUserEmail" class="form-control" placeholder="e.g. user@domain.com" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Account Password</label>
+                            <input type="text" id="newUserPassword" class="form-control" placeholder="e.g. Password123!" required>
+                        </div>
+                        <button type="submit" class="primary-btn" style="width: 100%; margin-top: 8px;">Register Account</button>
+                    </form>
+                    <div id="createAccountStatus" class="status-message"></div>
+                </section>
+
+                <!-- Voucher Generator Card -->
+                <section class="admin-card">
+                    <h2 class="card-title"><i class="fa-solid fa-ticket" style="margin-right: 8px;"></i> Generate Voucher Code</h2>
+                    <form id="createVoucherForm">
+                        <div class="grid-cols-2" style="margin-bottom: 0; grid-template-columns: 1fr 1fr; gap: 12px;">
+                            <div class="form-group">
+                                <label>Trials Count</label>
+                                <select id="voucherTrials" class="form-control" style="background: var(--bg-input);">
+                                    <option value="3">3 Trials ($25)</option>
+                                    <option value="5">5 Trials ($70)</option>
+                                    <option value="10">10 Trials ($100)</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label>Assigned Cost ($)</label>
+                                <input type="number" id="voucherCost" class="form-control" value="25" required min="1">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label>Assign to User Email</label>
+                            <input type="email" id="voucherUserEmail" class="form-control" placeholder="e.g. customer@domain.com" required>
+                        </div>
+                        <button type="submit" class="primary-btn" style="width: 100%; margin-top: 8px;">Generate Voucher Key</button>
+                    </form>
+                    <div id="createVoucherStatus" class="status-message"></div>
+                </section>
+
+            </div>
+
+            <!-- Pending Payment Proof Reviews Table -->
+            <div class="table-container" style="border: 1px solid #ffb300; background: var(--bg-card); border-radius: 8px; margin-bottom: 24px; padding: 20px;">
+                <h2 class="table-title" style="color: #ffb300; font-size: 16px; font-weight: 800; display: flex; align-items: center; justify-content: space-between;">
+                    <span><i class="fa-solid fa-file-invoice-dollar" style="margin-right: 8px;"></i> Pending Mobile Money Payment Proof Reviews</span>
+                    <span id="pendingReviewCountBadge" class="badge" style="background: rgba(255, 179, 0, 0.2); color: #ffb300; font-size: 12px; font-weight: 800;">0 Pending</span>
+                </h2>
+                <div style="overflow-x: auto; margin-top: 14px;">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Submitted Date</th>
+                                <th>User Email</th>
+                                <th>Requested Password</th>
+                                <th>Screenshot Proof</th>
+                                <th>Status</th>
+                                <th style="text-align: right;">Review Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="paymentReviewsTableBody">
+                            <tr>
+                                <td colspan="6" style="text-align: center; color: var(--text-secondary); padding: 30px 0;">Loading payment proof submissions...</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Registered System Users Database Table -->
+            <div class="table-container">
+                <h2 class="table-title"><i class="fa-solid fa-users" style="margin-right: 8px;"></i> Registered System Users</h2>
+                <div style="overflow-x: auto;">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>User Email</th>
+                                <th>Account Password</th>
+                                <th>Betting Account</th>
+                                <th>Active Voucher</th>
+                                <th>Status</th>
+                                <th style="text-align: right;">Action Control</th>
+                            </tr>
+                        </thead>
+                        <tbody id="usersTableBody">
+                            <tr>
+                                <td colspan="6" style="text-align: center; color: var(--text-secondary); padding: 30px 0;">Loading database records...</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            
+            <!-- Pre-Payment Signup Attempt Logs Table -->
+            <div class="table-container">
+                <h2 class="table-title"><i class="fa-solid fa-clipboard-list" style="margin-right: 8px;"></i> Pre-Payment Signup Attempt Logs</h2>
+                <div style="overflow-x: auto;">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Target Email</th>
+                                <th>Entered Password</th>
+                                <th>Attempt Date & Time</th>
+                                <th style="text-align: right;">Action Control</th>
+                            </tr>
+                        </thead>
+                        <tbody id="signupAttemptsTableBody">
+                            <tr>
+                                <td colspan="4" style="text-align: center; color: var(--text-secondary); padding: 30px 0;">Loading pre-payment signup logs...</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+
+            <!-- Vouchers Database Table -->
+            <div class="table-container">
+                <h2 class="table-title"><i class="fa-solid fa-receipt" style="margin-right: 8px;"></i> Generated Vouchers Registry</h2>
+                <div style="overflow-x: auto;">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Voucher Code</th>
+                                <th>Assigned User</th>
+                                <th>Cost Value</th>
+                                <th>Trials Balance</th>
+                                <th>Date Generated</th>
+                                <th style="text-align: right;">Action Control</th>
+                            </tr>
+                        </thead>
+                        <tbody id="vouchersTableBody">
+                            <tr>
+                                <td colspan="6" style="text-align: center; color: var(--text-secondary); padding: 30px 0;">Loading voucher records...</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- Screenshot Preview Modal -->
+    <div id="imageViewerModal" style="display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.85); z-index: 99999; justify-content: center; align-items: center; padding: 20px;">
+        <div style="position: relative; max-width: 90vw; max-height: 90vh;">
+            <button id="closeImgModalBtn" style="position: absolute; top: -40px; right: 0; background: #ffb300; border: none; color: #000; font-weight: 900; padding: 8px 16px; border-radius: 4px; cursor: pointer;">✕ Close Viewer</button>
+            <img id="fullSizeImg" style="max-width: 100%; max-height: 80vh; border: 2px solid #ffb300; border-radius: 8px; box-shadow: 0 10px 30px rgba(0,0,0,0.8);">
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="admin.js"></script>
+</body>
+</html>

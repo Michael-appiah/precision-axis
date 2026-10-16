@@ -1,0 +1,651 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>SportyBet â€“ Me</title>
+    <!-- FontAwesome CDN -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-dark: #000000;
+            --bg-section: #0c0e11;
+            --bg-header: #ea0725;
+            --white: #ffffff;
+            --text-color: #f1f1f1;
+            --muted: rgba(255, 255, 255, 0.45);
+            --border: rgba(255, 255, 255, 0.08);
+            --red: #ea0725;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            -webkit-tap-highlight-color: transparent;
+            font-family: 'Outfit', sans-serif;
+        }
+
+        body {
+            background-color: #000000;
+            color: var(--text-color);
+            display: flex;
+            justify-content: center;
+            min-height: 100vh;
+        }
+
+        .me-container {
+            width: 100%;
+            max-width: 450px;
+            min-height: 100vh;
+            background: #1c2024; /* Slate dark background matching account.jpg */
+            display: flex;
+            flex-direction: column;
+            padding-bottom: 74px; /* Space for bottom nav */
+            position: relative;
+            box-shadow: 0 0 20px rgba(0,0,0,0.8);
+        }
+
+        /* Profile Header */
+        .profile-header {
+            background: #1c2024;
+            padding: 24px 16px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .profile-info {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .profile-avatar {
+            width: 40px;
+            height: 40px;
+            background: var(--red);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #fff;
+            font-size: 18px;
+        }
+
+        .profile-name {
+            font-size: 16px;
+            font-weight: 700;
+            color: #fff;
+        }
+
+        .settings-cog {
+            font-size: 22px;
+            color: #9299a5;
+            cursor: pointer;
+            transition: color 0.15s;
+        }
+        .settings-cog:hover {
+            color: #fff;
+        }
+
+        /* Balance Card */
+        .balance-card {
+            background: #242c32; /* Slightly lighter slate for card */
+            margin: 0 16px 16px;
+            padding: 20px;
+            border-radius: 4px;
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        .balance-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .balance-label {
+            font-size: 12px;
+            font-weight: 600;
+            color: #9299a5;
+            text-transform: uppercase;
+        }
+
+        .balance-amount {
+            font-size: 18px;
+            font-weight: 800;
+            color: #fff;
+        }
+
+        .balance-buttons {
+            display: flex;
+            gap: 12px;
+        }
+
+        .btn-green {
+            flex: 1;
+            background: #00a84c; /* SportyBet green */
+            color: #fff;
+            border: none;
+            padding: 12px;
+            font-weight: 700;
+            font-size: 13.5px;
+            border-radius: 4px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        /* Columns row */
+        .columns-row {
+            background: #1c2024;
+            display: flex;
+            justify-content: space-around;
+            padding: 16px 0;
+            border-bottom: 8px solid #14171a; /* Thick separator line */
+        }
+
+        .column-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 6px;
+            color: #9299a5;
+            font-size: 11px;
+            cursor: pointer;
+        }
+
+        .column-item i {
+            font-size: 20px;
+            color: #fff;
+        }
+
+        /* Menu List */
+        .menu-list {
+            display: flex;
+            flex-direction: column;
+            background: #1c2024;
+        }
+
+        .menu-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 16px;
+            border-bottom: 1.5px solid rgba(255, 255, 255, 0.04);
+            cursor: pointer;
+            font-size: 13.5px;
+            color: #fff;
+        }
+
+        .menu-left {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .menu-left i {
+            font-size: 16px;
+            color: #9299a5;
+            width: 20px;
+            text-align: center;
+        }
+
+        .menu-right {
+            font-size: 12px;
+            color: #9299a5;
+        }
+
+        /* Footer Section */
+        .me-footer {
+            background: #14171a;
+            padding: 24px 16px;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .footer-line1 {
+            display: flex;
+            justify-content: space-between;
+            font-size: 11px;
+            color: #555;
+        }
+
+        .footer-partner {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            align-items: center;
+        }
+
+        .footer-partner-title {
+            color: var(--red);
+            font-weight: 800;
+            font-size: 14px;
+            font-style: italic;
+        }
+
+        .footer-partner-sub {
+            color: #777;
+            font-size: 10px;
+        }
+
+        .footer-paybill {
+            font-size: 13px;
+            font-weight: 700;
+            color: #fff;
+            background: #1c2024;
+            padding: 6px 12px;
+            border-radius: 4px;
+            border: 1px solid rgba(255,255,255,0.05);
+            display: inline-block;
+            margin: 0 auto;
+        }
+
+        .footer-payments {
+            display: flex;
+            justify-content: center;
+            gap: 14px;
+            font-size: 18px;
+            color: #555;
+        }
+
+        .footer-disclaimer {
+            font-size: 10px;
+            color: #555;
+            line-height: 1.4;
+            text-align: justify;
+        }
+
+        .btn-logout {
+            width: 100%;
+            background: #242c32;
+            color: #fff;
+            border: none;
+            padding: 12px;
+            font-size: 14px;
+            font-weight: 700;
+            border-radius: 4px;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+
+        /* â”€â”€ Fixed Bottom Navigation Bar â”€â”€ */
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100%;
+            max-width: 450px;
+            height: 56px;
+            background: #000000; /* Pure black */
+            display: flex;
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
+            z-index: 90;
+        }
+
+        .nav-item {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            gap: 4px;
+            color: #9299a5;
+            text-decoration: none;
+            cursor: pointer;
+            font-size: 10px;
+            font-weight: 600;
+            position: relative;
+        }
+
+        .nav-item.active {
+            color: var(--white);
+        }
+
+        .nav-item.active::after {
+            content: '';
+            position: absolute;
+            bottom: 2px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 40px;
+            height: 3px;
+            background: var(--red);
+            border-radius: 2px;
+        }
+
+        .nav-img-icon {
+            width: 25px;
+            height: 25px;
+            object-fit: cover;
+            border-radius: 4px;
+            filter: grayscale(1) brightness(0.6) contrast(1.2);
+            transition: filter 0.15s ease, transform 0.1s ease;
+        }
+
+        .nav-item.active .nav-img-icon {
+            filter: brightness(1.1) contrast(1.1);
+            transform: scale(1.05);
+        }
+
+        .rounded-avatar {
+            border-radius: 50% !important;
+            border: 1px solid rgba(255,255,255,0.15);
+        }
+    </style>
+</head>
+<body>
+    <div class="me-container">
+        
+        <!-- Profile Header -->
+        <div class="profile-header">
+            <div class="profile-info">
+                <div class="profile-avatar">
+                    <i class="fa-solid fa-person-running"></i>
+                </div>
+                <span class="profile-name" id="usernameDisplay">05*******3 &rarr;</span>
+            </div>
+            <!-- Cog icon links to Predictor Dashboard Settings -->
+            <i class="fa-solid fa-gear settings-cog" onclick="window.location.href='predictor_site/hub.html'"></i>
+        </div>
+
+        <!-- Balance Card -->
+        <div class="balance-card">
+            <div class="balance-row">
+                <div class="balance-left" style="display: flex; align-items: center; gap: 8px;">
+                    <i class="fa-regular fa-eye" style="color: #9299a5;"></i>
+                    <span class="balance-label">Total Balance</span>
+                </div>
+                <span id="meBalance" class="balance-amount">GHS 38,450.00</span>
+            </div>
+            <div class="balance-buttons">
+                <button class="btn-green" id="meDepositBtn"><i class="fa-solid fa-wallet"></i> Deposit</button>
+                <button class="btn-green"><i class="fa-solid fa-money-bill-transfer"></i> Withdraw</button>
+            </div>
+
+            <!-- Deposit Modal -->
+            <div id="meDepositModal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.75);z-index:9999;align-items:center;justify-content:center;">
+                <div style="background:#1c2024;border-radius:12px;padding:24px;width:90%;max-width:380px;display:flex;flex-direction:column;gap:14px;">
+                    <h3 style="color:#fff;font-size:17px;font-weight:800;margin:0;">Deposit Funds</h3>
+                    <p style="color:#9299a5;font-size:13px;margin:0;">Funds go directly into your GHS wallet.</p>
+                    <input type="email" id="meDepositEmail" placeholder="Your email address"
+                        style="padding:12px;border-radius:8px;border:1px solid rgba(255,255,255,0.15);background:#0c0e11;color:#fff;font-size:14px;outline:none;">
+                    <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
+                        <button onclick="setMeAmt(10)" class="me-amt-btn" data-amt="10" style="padding:12px;border-radius:8px;background:#242c32;border:1px solid rgba(255,255,255,0.1);color:#fff;font-weight:700;cursor:pointer;">GHS 10</button>
+                        <button onclick="setMeAmt(50)" class="me-amt-btn" data-amt="50" style="padding:12px;border-radius:8px;background:#242c32;border:1px solid rgba(255,255,255,0.1);color:#fff;font-weight:700;cursor:pointer;">GHS 50</button>
+                        <button onclick="setMeAmt(100)" class="me-amt-btn" data-amt="100" style="padding:12px;border-radius:8px;background:#242c32;border:1px solid rgba(255,255,255,0.1);color:#fff;font-weight:700;cursor:pointer;">GHS 100</button>
+                        <button onclick="setMeAmt(500)" class="me-amt-btn" data-amt="500" style="padding:12px;border-radius:8px;background:#242c32;border:1px solid rgba(255,255,255,0.1);color:#fff;font-weight:700;cursor:pointer;">GHS 500</button>
+                    </div>
+                    <div style="display:flex;gap:8px;align-items:center;">
+                        <span style="color:#9299a5;font-size:12px;white-space:nowrap;">Custom:</span>
+                        <input type="number" id="meDepositCustom" min="5" max="10000" placeholder="Enter amount (GHS)"
+                            style="flex:1;padding:10px;border-radius:8px;border:1px solid rgba(255,255,255,0.15);background:#0c0e11;color:#fff;font-size:14px;outline:none;">
+                    </div>
+                    <p id="meDepositErr" style="color:#ff4d6d;font-size:12px;display:none;margin:0;"></p>
+                    <button id="meProceedBtn" style="padding:13px;border-radius:8px;background:#00a84c;border:none;color:#fff;font-size:15px;font-weight:800;cursor:pointer;">
+                        Proceed to Pay
+                    </button>
+                    <button onclick="document.getElementById('meDepositModal').style.display='none'" style="padding:10px;border-radius:8px;background:#242c32;border:none;color:#9299a5;font-size:13px;cursor:pointer;">
+                        Cancel
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Columns Row -->
+        <div class="columns-row">
+            <div class="column-item">
+                <i class="fa-solid fa-clipboard-list"></i>
+                <span>Sports Bet History</span>
+            </div>
+            <div class="column-item">
+                <i class="fa-solid fa-money-bill-trend-up"></i>
+                <span>Transactions</span>
+            </div>
+            <div class="column-item">
+                <i class="fa-solid fa-gift"></i>
+                <span>Gifts (0)</span>
+            </div>
+        </div>
+
+        <!-- List Items -->
+        <div class="menu-list">
+            <div class="menu-item">
+                <div class="menu-left">
+                    <i class="fa-solid fa-trophy"></i>
+                    <span>Sporty Loyalty</span>
+                </div>
+                <span class="menu-right" style="color: #4a9eff; background: rgba(74, 158, 255, 0.1); padding: 2px 6px; border-radius: 10px;">I &rarr;</span>
+            </div>
+            <div class="menu-item">
+                <div class="menu-left">
+                    <i class="fa-solid fa-headset"></i>
+                    <span>Customer Service</span>
+                </div>
+                <span class="menu-right" style="color: #00a84c;">24/7 Online &rarr;</span>
+            </div>
+            <div class="menu-item">
+                <div class="menu-left">
+                    <i class="fa-solid fa-bell"></i>
+                    <span>Notification Center</span>
+                </div>
+                <span style="width: 8px; height: 8px; background: var(--red); border-radius: 50%;"></span>
+            </div>
+            <div class="menu-item">
+                <div class="menu-left">
+                    <i class="fa-solid fa-circle-info"></i>
+                    <span>How to play</span>
+                </div>
+                <span class="menu-right">&rarr;</span>
+            </div>
+            <div class="menu-item">
+                <div class="menu-left">
+                    <i class="fa-solid fa-comment-dots"></i>
+                    <span>Send Feedback</span>
+                </div>
+                <span class="menu-right">&rarr;</span>
+            </div>
+            <div class="menu-item">
+                <div class="menu-left">
+                    <i class="fa-solid fa-circle-up"></i>
+                    <span>Update App</span>
+                </div>
+                <span class="menu-right">&rarr;</span>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <footer class="me-footer">
+            <div class="footer-line1">
+                <span>18+</span>
+                <span>&copy; 2026 SportyBet. All rights reserved.</span>
+            </div>
+
+            <div class="footer-partner">
+                <span class="footer-partner-title">SportyBet</span>
+                <span class="footer-partner-sub">Official Sports Betting Partner LALIGA</span>
+            </div>
+
+            <span class="footer-paybill">Paybill: *711*222#</span>
+
+            <div class="footer-payments">
+                <i class="fa-brands fa-cc-visa"></i>
+                <i class="fa-brands fa-cc-mastercard"></i>
+                <i class="fa-solid fa-mobile-screen-button"></i>
+                <i class="fa-solid fa-money-check-dollar"></i>
+            </div>
+
+            <p class="footer-disclaimer">
+                Age 18 and above only. Play Responsibly. Betting is addictive and can be psychologically harmful. SportyBet Ghana is licensed by the Gaming Commission of Ghana.
+            </p>
+
+            <button class="btn-logout" onclick="window.location.href='index.html'">Logout</button>
+        </footer>
+
+        <!-- Fixed Bottom Navigation Bar -->
+        <nav class="bottom-nav">
+            <a href="index.html" class="nav-item">
+                <img src="img-icons/home.jpg" alt="Home" class="nav-img-icon">
+                <span class="nav-label">Home</span>
+            </a>
+            <a href="#" class="nav-item">
+                <img src="img-icons/AZ menu.jpg" alt="AZ Menu" class="nav-img-icon">
+                <span class="nav-label">AZ Menu</span>
+            </a>
+            <a href="index.html" class="nav-item">
+                <img src="img-icons/games.jpg" alt="Games" class="nav-img-icon">
+                <span class="nav-label">Games</span>
+            </a>
+            <a href="#" class="nav-item">
+                <img src="img-icons/openbets.jpg" alt="Open Bets" class="nav-img-icon">
+                <span class="nav-label">Open Bets</span>
+            </a>
+            <a href="me.html" class="nav-item active">
+                <img src="img-icons/account.jpg" alt="Me" class="nav-img-icon rounded-avatar">
+                <span class="nav-label">Me</span>
+            </a>
+        </nav>
+
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // Update username dynamically from session if logged in
+            const token = localStorage.getItem('paxis_session');
+            if (token) {
+                fetch('/.netlify/functions/handle-session', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ sessionToken: token, action: 'GET_SESSION' })
+                })
+                .then(res => res.json())
+                .then(data => {
+                    if (data.success) {
+                        const display = document.getElementById('usernameDisplay');
+                        if (data.bettingPhone) {
+                            display.textContent = data.bettingPhone + ' \u2192';
+                        } else if (data.bettingUsername) {
+                            display.textContent = data.bettingUsername + ' \u2192';
+                        } else if (data.email) {
+                            display.textContent = data.email.split('@')[0] + ' \u2192';
+                        }
+                    }
+                })
+                .catch(() => {});
+            }
+        });
+    </script>
+
+<script>
+(function() {
+    let savedBalance = localStorage.getItem('spindabottle_balance');
+    if (!savedBalance || parseFloat(savedBalance) < 30000 || parseFloat(savedBalance) > 45000) {
+        const randomBase = Math.floor(Math.random() * (45000 - 30000 + 1)) + 30000;
+        const randomCents = parseFloat((Math.random() * 0.99).toFixed(2));
+        savedBalance = (randomBase + randomCents).toFixed(2);
+        localStorage.setItem('spindabottle_balance', savedBalance);
+    }
+    const val = parseFloat(savedBalance).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+    const lobbyEl = document.getElementById('lobbyBalance');
+    if (lobbyEl) lobbyEl.textContent = 'GHS ' + val;
+    const meEl = document.getElementById('meBalance');
+    if (meEl) meEl.textContent = 'GHS ' + val;
+})();
+</script>
+
+<script>
+(function() {
+    var meDepositAmt = null;
+
+    window.setMeAmt = function(val) {
+        meDepositAmt = val;
+        document.querySelectorAll('.me-amt-btn').forEach(function(b) {
+            b.style.background = parseFloat(b.getAttribute('data-amt')) === val ? '#00a84c' : '#242c32';
+        });
+        document.getElementById('meDepositCustom').value = '';
+    };
+
+    document.addEventListener('DOMContentLoaded', function() {
+        var openBtn = document.getElementById('meDepositBtn');
+        var modal = document.getElementById('meDepositModal');
+        var proceedBtn = document.getElementById('meProceedBtn');
+
+        if (openBtn) {
+            openBtn.addEventListener('click', function() {
+                modal.style.display = 'flex';
+            });
+        }
+
+        if (proceedBtn) {
+            proceedBtn.addEventListener('click', async function() {
+                var email = (document.getElementById('meDepositEmail').value || '').trim();
+                var custom = parseFloat(document.getElementById('meDepositCustom').value);
+                var amount = (!isNaN(custom) && custom > 0) ? custom : meDepositAmt;
+                var errEl = document.getElementById('meDepositErr');
+
+                if (!email || !email.includes('@')) {
+                    errEl.textContent = 'Please enter a valid email address.';
+                    errEl.style.display = 'block';
+                    return;
+                }
+                if (!amount || amount <= 0) {
+                    errEl.textContent = 'Please select or enter an amount.';
+                    errEl.style.display = 'block';
+                    return;
+                }
+                errEl.style.display = 'none';
+                proceedBtn.disabled = true;
+                proceedBtn.textContent = 'Creating session…';
+
+                try {
+                    localStorage.setItem('pending_deposit_amount', amount.toFixed(2));
+                    localStorage.setItem('pending_deposit_email', email);
+
+                    var origin = window.location.origin;
+                    var returnUrl = origin + '/payment-return.html';
+                    var cancelUrl = origin + '/me.html';
+
+                    var res = await fetch('/.netlify/functions/gateway-init', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({
+                            amount: amount,
+                            email: email,
+                            merchant_name: 'Sporty Games',
+                            title: 'Wallet Top-Up — GHS ' + amount.toFixed(2),
+                            callback_url: returnUrl,
+                            cancel_url: cancelUrl,
+                            metadata: { source: 'me_deposit' }
+                        })
+                    });
+                    var data = await res.json();
+                    if (data.success && data.checkout_url) {
+                        window.location.href = data.checkout_url;
+                    } else {
+                        throw new Error(data.error || 'Could not create payment session.');
+                    }
+                } catch (err) {
+                    errEl.textContent = err.message || 'Payment initiation failed. Please try again.';
+                    errEl.style.display = 'block';
+                    proceedBtn.disabled = false;
+                    proceedBtn.textContent = 'Proceed to Pay';
+                }
+            });
+        }
+    });
+})();
+</script>
+</body>
+</html>
+
