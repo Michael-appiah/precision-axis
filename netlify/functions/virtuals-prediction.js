@@ -40,7 +40,9 @@ exports.handler = async (event) => {
                 market: item.market,
                 pick: item.pick,
                 score: item.score,
-                index: currentIndex
+                index: currentIndex,
+                analyzedTeams: item.analyzedTeams || null,
+                predictedList: item.predictedList || (item.analyzedTeams && item.analyzedTeams.allWinningTeams) || null
             })
         };
     }
@@ -56,7 +58,8 @@ exports.handler = async (event) => {
                 market: body.market || '1X2',
                 pick: body.pick || '1',
                 score: body.score || '2-1',
-                analyzedTeams: body.analyzedTeams || null
+                analyzedTeams: body.analyzedTeams || null,
+                predictedList: body.predictedList || (body.analyzedTeams && body.analyzedTeams.allWinningTeams) || null
             };
         } else {
             currentActivePrediction = VIRTUAL_OUTCOME_SEQUENCE[currentIndex];
