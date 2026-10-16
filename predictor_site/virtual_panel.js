@@ -200,43 +200,77 @@
             const ocrDebugDetails = document.getElementById('ocrDebugDetails');
             const ocrDebugText = document.getElementById('ocrDebugText');
 
-            // Run Tesseract OCR
+            // Preprocess image with HTML5 Canvas (Grayscale + Thresholding) for maximum OCR accuracy on dark/mobile UI
+            const preprocessImage = (dataUrl) => {
+                return new Promise((resolve) => {
+                    const img = new Image();
+                    img.onload = () => {
+                        const canvas = document.createElement('canvas');
+                        const ctx = canvas.getContext('2d');
+                        // Scale up by 1.5x for sharp text rendering
+                        canvas.width = Math.min(1600, img.width * 1.5);
+                        canvas.height = Math.min(2400, img.height * 1.5);
+                        ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+                        
+                        const imgData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+                        const d = imgData.data;
+                        // High-contrast conversion: boosts text edges against dark backgrounds
+                        for (let i = 0; i < d.length; i += 4) {
+                            const gray = 0.299 * d[i] + 0.587 * d[i + 1] + 0.114 * d[i + 2];
+                            // Boost whites and bright text
+                            const b = gray > 140 ? 255 : (gray < 80 ? 0 : gray);
+                            d[i] = b;
+                            d[i + 1] = b;
+                            d[i + 2] = b;
+                        }
+                        ctx.putImageData(imgData, 0, 0);
+                        resolve(canvas.toDataURL('image/png'));
+                    };
+                    img.onerror = () => resolve(dataUrl);
+                    img.src = dataUrl;
+                });
+            };
+
+            // Run Tesseract OCR with enhanced preprocessing
             if (window.Tesseract) {
                 try {
-                    const result = await Tesseract.recognize(currentSelectedImage, 'eng', {
+                    const enhancedDataUrl = await preprocessImage(currentSelectedImage);
+                    const result = await Tesseract.recognize(enhancedDataUrl, 'eng', {
                         logger: m => {
                             if (m.status === 'recognizing text') {
-                                detectedTeamsText.textContent = `OCR Scanning (${Math.round(m.progress * 100)}%)...`;
+                                detectedTeamsText.textContent = `AI Vision OCR (${Math.round(m.progress * 100)}%)...`;
                             }
                         }
                     });
 
                     const rawText = result.data.text || '';
-                    const textLower = rawText.toLowerCase();
+                    const textClean = rawText.replace(/[^a-zA-Z0-9\s]/g, ' ').toLowerCase();
 
                     if (ocrDebugDetails && ocrDebugText) {
                         ocrDebugDetails.style.display = 'block';
-                        ocrDebugText.textContent = `OCR Detected Raw Words: ${rawText.replace(/\s+/g, ' ').slice(0, 150)}...`;
+                        ocrDebugText.textContent = `AI OCR Words: ${rawText.replace(/\s+/g, ' ').slice(0, 180)}...`;
                     }
 
-                    // Detect which league is shown in the screenshot
-                    if (textLower.includes('spain') || textLower.includes('laliga')) selectedLeague = 'spain';
-                    else if (textLower.includes('germany') || textLower.includes('bundesliga')) selectedLeague = 'germany';
-                    else if (textLower.includes('italy') || textLower.includes('serie a')) selectedLeague = 'italy';
-                    else if (textLower.includes('england') || textLower.includes('premier')) selectedLeague = 'england';
+                    // Auto-detect league
+                    if (textClean.includes('spain') || textClean.includes('laliga')) selectedLeague = 'spain';
+                    else if (textClean.includes('germany') || textClean.includes('bundesliga')) selectedLeague = 'germany';
+                    else if (textClean.includes('italy') || textClean.includes('serie a')) selectedLeague = 'italy';
+                    else if (textClean.includes('england') || textClean.includes('premier')) selectedLeague = 'england';
 
-                    // Update league buttons
                     leagueButtons.forEach(b => {
-                        if (b.getAttribute('data-league') === selectedLeague) {
-                            b.click();
-                        }
+                        if (b.getAttribute('data-league') === selectedLeague) b.click();
                     });
 
-                    // Search for known teams in the OCR text
+                    // Match all teams from the OCR words (including partial and code matches)
+                    const words = textClean.split(/\s+/).filter(w => w.length >= 2);
+                    
                     KNOWN_TEAMS.forEach(t => {
                         const matched = t.aliases.some(alias => {
-                            const regex = new RegExp(`\\b${alias}\\b`, 'i');
-                            return regex.test(textLower) || textLower.includes(alias);
+                            if (alias.length <= 3) {
+                                return words.includes(alias);
+                            }
+                            // For multi-word team names or substring
+                            return textClean.includes(alias) || words.some(w => w.includes(alias) || (alias.length > 4 && w.startsWith(alias.slice(0, 4))));
                         });
                         if (matched && !extractedTeams.some(x => x.code === t.code)) {
                             extractedTeams.push(t);
@@ -476,17 +510,22 @@
 
             if (ticks >= maxTicks) {
                 clearInterval(interval);
-                outcomeEl.textContent = `${primaryTarget.winningTeam} TO WIN (${primaryTarget.score})`;
-                outcomeEl.className = 'status-value ' + primaryTarget.prediction.replace(/\s+/g, '').toLowerCase();
+                outcomeEl.textContent = `${predictedList.length} MATCH WINNERS RESOLVED`;
+                outcomeEl.className = 'status-value homewin';
 
                 // Render the complete list of predicted winning teams
                 if (predictedTeamsContainer) {
                     predictedTeamsContainer.style.display = 'flex';
-                    predictedTeamsContainer.innerHTML = predictedList.map(item => `
+                    predictedTeamsContainer.innerHTML = predictedList.map((item, idx) => `
                         <div class="predicted-team-row">
                             <div>
-                                <div class="matchup-text">${item.home} vs ${item.away}</div>
-                                <div style="font-size: 11px; color: var(--muted); margin-top: 2px;">Predicted Score: ${item.score}</div>
+                                <div class="matchup-text">
+                                    <span style="color: var(--gold); font-size: 11px; margin-right: 6px;">#${idx + 1}</span>
+                                    ${item.home} vs ${item.away}
+                                </div>
+                                <div style="font-size: 11.5px; color: #00E676; font-weight: 700; margin-top: 3px;">
+                                    🏆 Winner: ${item.winningTeam} · Score: ${item.score}
+                                </div>
                             </div>
                             <span class="pick-badge">${item.pickLabel}</span>
                         </div>
@@ -497,7 +536,7 @@
                     gameSyncNotice.style.display = 'block';
                 }
 
-                statusMsg.textContent = `Analysis complete! Extracted ${predictedList.length} winning picks. Instant Virtuals is synced.`;
+                statusMsg.textContent = `All ${predictedList.length} match fixtures extracted and predictions locked! Game engine is synchronized.`;
                 statusMsg.style.color = '#34c759';
 
                 predictBtn.disabled = false;
