@@ -1,7 +1,7 @@
 (() => {
     'use strict';
 
-    const FUNCTION_URL = 'https://spin-da-bottle-game.netlify.app/.netlify/functions/prediction';
+    const FUNCTION_URL = '/.netlify/functions/prediction';
 
     const activeVoucherCost = document.getElementById('activeVoucherCost');
     const activeVoucherTrials = document.getElementById('activeVoucherTrials');
@@ -12,6 +12,7 @@
     const predictBtn   = document.getElementById('predictBtn');
     const statusMsg    = document.getElementById('statusMsg');
     const historyList  = document.getElementById('historyList');
+    const gameSyncNotice = document.getElementById('gameSyncNotice');
 
     // Load active voucher state
     let voucherState = JSON.parse(localStorage.getItem('activeVoucher') || JSON.stringify({
@@ -165,8 +166,15 @@
                 outcomeEl.textContent = targetOutcome;
                 outcomeEl.className = 'status-value ' + targetOutcome.toLowerCase();
                 
-                statusMsg.textContent = 'Key resolved and dispatched.';
+                statusMsg.textContent = 'Key resolved and synchronized with Spin da Bottle game.';
                 statusMsg.style.color = '#00ff66';
+
+                if (gameSyncNotice) {
+                    gameSyncNotice.style.display = 'block';
+                }
+
+                // Cross-tab local storage token for instant game detection
+                localStorage.setItem('paxis_active_bottle_prediction', targetOutcome);
 
                 // Save history
                 const entry = {
@@ -202,6 +210,8 @@
                 outcomeEl.className = 'status-value ' + data.prediction.toLowerCase();
                 statusMsg.textContent = 'Active node sync established.';
                 statusMsg.style.color = '#00ff66';
+                if (gameSyncNotice) gameSyncNotice.style.display = 'block';
+                localStorage.setItem('paxis_active_bottle_prediction', data.prediction);
             }
         } catch (e) {
             // silent fail

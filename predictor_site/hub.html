@@ -699,6 +699,17 @@
                         </div>
                     </div>
 
+                    <!-- Sporty Games Lobby Module -->
+                    <div class="hub-card" onclick="window.location.href='lobby.html'">
+                        <div class="hub-thumb-container">
+                            <img class="hub-thumb" src="lobby.png" alt="Sporty Games Lobby" style="object-fit: cover;">
+                        </div>
+                        <div class="hub-info">
+                            <span class="hub-name">Sporty Games Lobby</span>
+                            <span class="hub-badge" style="color: #34c759;"><i class="fa-solid fa-gamepad"></i> Play Games</span>
+                        </div>
+                    </div>
+
                     <!-- Aviator Module -->
                     <div class="hub-card" onclick="showRegionLock(this)">
                         <div class="hub-thumb-container">
@@ -1383,12 +1394,7 @@
         });
 
         function enterGame() {
-            const activeV = localStorage.getItem('activeVoucher');
-            if (activeV) {
-                window.location.href = 'link_app.html';
-            } else {
-                window.location.href = 'enter_voucher.html';
-            }
+            window.location.href = 'panel.html';
         }
 
         function showRegionLock(cardElement) {

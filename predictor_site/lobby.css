@@ -1,0 +1,512 @@
+:root {
+    --font-main: 'Outfit', sans-serif;
+    --bg-dark: #000000;
+    --bg-section: #0c0e11;
+    --bg-header: #e02020;
+    --bg-subheader: #181a1f;
+    --border: rgba(255,255,255,0.08);
+    --red: #e02020;
+    --white: #ffffff;
+    --muted: rgba(255,255,255,0.45);
+    --text-color: #f1f1f1;
+}
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    -webkit-tap-highlight-color: transparent;
+    font-family: var(--font-main);
+}
+
+html, body {
+    background: #000000;
+    color: var(--text-color);
+    height: 100%;
+    min-height: 100dvh;
+    display: flex;
+    justify-content: center;
+    overflow-x: hidden;
+}
+
+.lobby-container {
+    width: 100%;
+    max-width: 450px;
+    min-height: 100dvh;
+    background: #0c0e11;
+    display: flex;
+    flex-direction: column;
+    padding-bottom: 70px; /* Safe space for bottom navigation bar */
+    position: relative;
+    box-shadow: 0 0 20px rgba(0,0,0,0.8);
+}
+
+/* ── Red Header ── */
+.lobby-header {
+    background: var(--bg-header);
+    height: calc(120px + env(safe-area-inset-top)); /* 120px tall header */
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: env(safe-area-inset-top) 14px 0;
+    box-sizing: border-box;
+    z-index: 10;
+    position: sticky;
+    top: 0;
+}
+
+.lobby-logo {
+    font-size: 24px; /* Slightly enlarged */
+    font-weight: 800;
+    color: var(--white);
+    font-style: italic;
+    letter-spacing: -0.5px;
+}
+
+.lobby-logo .logo-bold {
+    font-weight: 900;
+    margin-left: 2px;
+}
+
+.header-buttons {
+    display: flex;
+    gap: 10px;
+}
+
+.btn-join {
+    background: var(--white);
+    color: var(--red);
+    border: none;
+    padding: 8px 16px; /* Increased padding */
+    border-radius: 4px;
+    font-size: 14px;
+    font-weight: 700;
+    cursor: pointer;
+}
+
+.btn-login {
+    background: transparent;
+    color: var(--white);
+    border: 1.5px solid var(--white);
+    padding: 7px 16px; /* Increased padding */
+    border-radius: 4px;
+    font-size: 14px;
+    font-weight: 700;
+    cursor: pointer;
+}
+
+/* ── Subheader Search & Home Dropdown ── */
+.subheader-bar {
+    background: var(--bg-subheader);
+    height: 54px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 14px;
+    gap: 12px;
+    border-bottom: 1.5px solid rgba(255,255,255,0.03);
+    margin-top: 8px; /* Moved down a little bit to make room */
+}
+
+.search-wrapper {
+    flex-grow: 1;
+    background: #000000;
+    border-radius: 6px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    padding: 0 10px;
+    gap: 8px;
+}
+
+.search-icon {
+    font-size: 14px;
+    color: var(--muted);
+}
+
+.search-input {
+    background: transparent;
+    border: none;
+    outline: none;
+    color: var(--white);
+    font-size: 13px;
+    width: 100%;
+}
+
+.home-dropdown {
+    background: #25282d;
+    border: none;
+    height: 32px;
+    padding: 0 12px;
+    border-radius: 6px;
+    color: var(--white);
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 13px;
+    font-weight: 700;
+    cursor: pointer;
+}
+
+.home-icon {
+    font-size: 16px;
+}
+
+.arrow-down {
+    font-size: 10px;
+    color: var(--muted);
+}
+
+/* ── Sections ── */
+.lobby-section {
+    padding: 16px 14px 4px;
+}
+
+.section-title {
+    font-size: 15px;
+    font-weight: 700;
+    color: #e3e6eb;
+    margin-bottom: 12px;
+}
+
+/* ── Promotions Scroll ── */
+.promotions-scroll {
+    display: flex;
+    gap: 12px;
+    overflow-x: auto;
+    scrollbar-width: none;
+}
+
+.promotions-scroll::-webkit-scrollbar {
+    display: none;
+}
+
+.promo-card {
+    flex-shrink: 0;
+    width: 180px;
+    height: 98px;
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+.promo-card img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+/* ── Top 6 Games Grid (3 Columns) ── */
+.top-games-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10px;
+}
+
+.game-card {
+    position: relative;
+    border-radius: 8px;
+    overflow: hidden;
+    aspect-ratio: 1;
+    background: #14171a;
+    cursor: pointer;
+    border: 1px solid var(--border);
+    transition: transform 0.15s;
+}
+
+.game-card:active {
+    transform: scale(0.97);
+}
+
+.game-thumbnail {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+/* Diagonal Rank Badge */
+.rank-badge {
+    position: absolute;
+    top: 0;
+    left: 0;
+    background: var(--red);
+    color: var(--white);
+    font-size: 11px;
+    font-weight: 900;
+    width: 26px;
+    height: 26px;
+    display: flex;
+    justify-content: flex-start;
+    align-items: flex-start;
+    padding-top: 2px;
+    padding-left: 5px;
+    clip-path: polygon(0 0, 100% 0, 0 100%);
+    z-index: 2;
+}
+
+/* ── Games of the Week Banner ── */
+.banner-section {
+    padding-bottom: 12px;
+}
+
+.laliga-banner {
+    width: 100%;
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+.laliga-banner img {
+    width: 100%;
+    display: block;
+}
+
+.slider-dots {
+    display: flex;
+    justify-content: center;
+    gap: 6px;
+    margin-top: 10px;
+}
+
+.dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.2);
+}
+
+.dot.active {
+    background: var(--white);
+}
+
+/* ── Crash Games Header ── */
+.category-header-section {
+    padding-top: 8px;
+}
+
+.category-header-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.category-header-row .section-title {
+    margin-bottom: 0;
+}
+
+.btn-show-all {
+    background: #1e2227;
+    color: #00d000;
+    border: none;
+    padding: 4px 10px;
+    border-radius: 12px;
+    font-size: 11px;
+    font-weight: 700;
+    cursor: pointer;
+}
+
+/* ── Bottom Navigation Bar ── */
+.bottom-nav {
+    position: fixed;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 100%;
+    max-width: 450px;
+    height: 56px;
+    background: #000000; /* Pure black */
+    display: flex;
+    border-top: 1px solid rgba(255, 255, 255, 0.05);
+    z-index: 90;
+}
+
+.nav-item {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 4px;
+    color: #9299a5;
+    cursor: pointer;
+    font-size: 10px;
+    font-weight: 600;
+    position: relative;
+}
+
+.nav-icon {
+    font-size: 20px;
+}
+
+.nav-item.active {
+    color: var(--white);
+}
+
+.nav-item.active::after {
+    content: '';
+    position: absolute;
+    bottom: 2px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 40px;
+    height: 3px;
+    background: var(--red);
+    border-radius: 2px;
+}
+
+.nav-img-icon {
+    width: 25px;
+    height: 25px;
+    object-fit: cover;
+    border-radius: 4px;
+    filter: grayscale(1) brightness(0.6) contrast(1.2);
+    transition: filter 0.15s ease, transform 0.1s ease;
+}
+
+.nav-item.active .nav-img-icon {
+    filter: brightness(1.1) contrast(1.1);
+    transform: scale(1.05);
+}
+
+.rounded-avatar {
+    border-radius: 50% !important;
+    border: 1px solid rgba(255,255,255,0.15);
+}
+
+.nav-svg {
+    stroke: #9299a5;
+    transition: stroke 0.15s ease, transform 0.1s ease;
+}
+
+.nav-item.active .nav-svg {
+    stroke: #ffffff;
+    transform: scale(1.05);
+}
+
+/* AZ Hamburger Icon */
+.hamburger-icon {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+    width: 16px;
+}
+
+.hamburger-icon span {
+    width: 100%;
+    height: 2px;
+    background: #9299a5;
+    border-radius: 1px;
+}
+
+.nav-item.active .hamburger-icon span {
+    background: var(--white);
+}
+
+/* ── Loading Screen Overlay ── */
+.loader-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    height: 100dvh;
+    background: #000000 url('loader_bg.ddbd7899.png') no-repeat center center;
+    background-size: cover;
+    z-index: 1000;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 0;
+    box-sizing: border-box;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.35s ease;
+}
+
+.loader-overlay.show {
+    opacity: 1;
+    pointer-events: auto;
+}
+
+.loader-logo-wrapper {
+    flex-grow: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.loader-watermark {
+    max-width: 80%;
+    max-height: 80%;
+    object-fit: contain;
+}
+
+.loader-progress-container {
+    width: 100%;
+    max-width: 300px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+}
+
+.loader-spinner {
+    width: 36px;
+    height: 36px;
+    border: 3px solid rgba(255,255,255,0.1);
+    border-top-color: var(--red);
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+}
+
+.loader-bar-bg {
+    width: 100%;
+    height: 4px;
+    background: rgba(255,255,255,0.12);
+    border-radius: 2px;
+    overflow: hidden;
+}
+
+.loader-bar-fill {
+    width: 0%;
+    height: 100%;
+    background: var(--red);
+    border-radius: 2px;
+    transition: width 0.1s linear;
+}
+
+.loader-percentage {
+    font-size: 13.5px;
+    font-weight: 700;
+    color: var(--muted);
+}
+
+@keyframes spin {
+    to { transform: rotate(360deg); }
+}
+
+/* ── Toast Alert ── */
+.toast-alert {
+    position: fixed;
+    bottom: 80px; /* Aligned above the bottom navigation bar */
+    left: 50%;
+    transform: translateX(-50%) translateY(20px);
+    background: rgba(20, 22, 26, 0.95);
+    border: 1px solid var(--border);
+    color: var(--white);
+    padding: 12px 24px;
+    border-radius: 30px;
+    font-size: 13.5px;
+    font-weight: 700;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.5);
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.25s, transform 0.25s;
+    z-index: 1000;
+    white-space: nowrap;
+}
+
+.toast-alert.show {
+    opacity: 1;
+    pointer-events: auto;
+    transform: translateX(-50%) translateY(0);
+}

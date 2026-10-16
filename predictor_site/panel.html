@@ -45,7 +45,7 @@
 <body>
     <div class="panel-container">
         <!-- Back Link -->
-        <a href="../index.html" style="color: var(--muted); text-decoration: none; font-size: 11px; font-weight: 700; margin-bottom: 12px; display: inline-block; text-transform: uppercase;">&larr; Back to Lobby</a>
+        <a href="hub.html" style="color: var(--muted); text-decoration: none; font-size: 11px; font-weight: 700; margin-bottom: 12px; display: inline-block; text-transform: uppercase;">&larr; Back to Dashboard</a>
         
         <!-- Header -->
         <header>
@@ -80,6 +80,18 @@
         <div class="status-box">
             <span class="status-label">RESOLVED ENTROPY DIRECTION</span>
             <span class="status-value" id="currentOutcome">PENDING</span>
+            
+            <div id="gameSyncNotice" style="display: none; margin-top: 10px;">
+                <span style="font-size: 11px; color: #34c759; font-weight: 600;">
+                    <i class="fa-solid fa-link"></i> Synchronized with Spin da' Bottle engine
+                </span>
+            </div>
+
+            <div style="margin-top: 14px;">
+                <a href="game.html" target="_blank" style="display: inline-flex; align-items: center; justify-content: center; gap: 8px; width: 100%; padding: 11px; background: rgba(52, 199, 89, 0.15); border: 1px solid #34c759; color: #34c759; border-radius: 6px; font-weight: 800; font-size: 12px; text-decoration: none; text-transform: uppercase; letter-spacing: 0.5px;">
+                    <i class="fa-solid fa-play"></i> Launch Spin da' Bottle Game
+                </a>
+            </div>
         </div>
 
         <!-- Action Button -->
