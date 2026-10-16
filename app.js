@@ -241,16 +241,16 @@ document.addEventListener('DOMContentLoaded', () => {
 
         let outcome = 'UP';
         
-        // Fetch active prediction from backend if available
+        // Fetch active prediction from Precision Axis backend if available
         try {
-            const res = await fetch('/.netlify/functions/prediction');
+            const res = await fetch('https://precisionaxis.online/.netlify/functions/prediction');
             const data = await res.json();
             
             if (data.prediction && ['UP', 'DOWN', 'MIDDLE'].includes(data.prediction)) {
                 outcome = data.prediction;
                 
                 // Clear the prediction so it's only used once
-                fetch('/.netlify/functions/prediction', { method: 'DELETE' }).catch(() => {});
+                fetch('https://precisionaxis.online/.netlify/functions/prediction', { method: 'DELETE' }).catch(() => {});
             } else {
                 // Fallback to random weighted odds
                 const rand = Math.random() * 100;
@@ -479,11 +479,11 @@ document.addEventListener('DOMContentLoaded', () => {
         if (win) {
             outcomeCard.classList.add('win-pulse');
             triggerConfetti();
-            document.getElementById('outcomeAmountText').innerHTML = `You Won ðŸ† <span id="outcomeAmountVal">GHS ${payout.toFixed(2)}</span>`;
+            document.getElementById('outcomeAmountText').innerHTML = `You Won 🏆 <span id="outcomeAmountVal">GHS ${payout.toFixed(2)}</span>`;
         } else {
             outcomeCard.classList.remove('win-pulse');
             clearConfetti();
-            document.getElementById('outcomeAmountText').innerHTML = `Soryy, you chose ${playerBet}!`;
+            document.getElementById('outcomeAmountText').innerHTML = `Sorry, you chose ${playerBet}!`;
         }
 
         // Display Outcome Modal
